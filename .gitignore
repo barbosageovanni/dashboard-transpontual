@@ -1,0 +1,86 @@
+# Sistema de Atualização CTE PostgreSQL
+
+# Uploads temporários
+uploads/*.xlsx
+uploads/*.xls
+uploads/*.csv
+uploads/temp_*
+uploads/exemplo_*
+uploads/teste_*
+
+# Logs do sistema
+logs/*.log
+logs/*.txt
+
+# Backups (podem ser grandes)
+backups/*.json
+backups/*.sql
+
+# Relatórios gerados
+reports/*.json
+reports/*.xlsx
+
+# Templates temporários
+templates/temp_*
+templates/exemplo_*
+
+# Scripts temporários
+scripts/temp_*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Configurações locais
+config/local.json
+config/production.json
+
+# Temporary files
+*.tmp
+*.temp
+temp_*
+test_*
+exemplo_*

@@ -1,0 +1,48 @@
+================================================================================
+RELATÓRIO DE SETUP - SISTEMA DE IMPORTAÇÃO INCREMENTAL
+================================================================================
+Data/Hora: 16/08/2025 10:19:43
+Diretório: C:\Users\Geovane\Documents\Transpontual\dashboard_baker_flask
+
+LOG DO SETUP:
+[10:19:42] ℹ️ 🚀 INICIANDO SETUP - SISTEMA DE IMPORTAÇÃO INCREMENTAL
+[10:19:42] ℹ️ ================================================================================
+[10:19:42] ℹ️ 🔍 Verificando estrutura do projeto...
+[10:19:42] ℹ️ ❌ Verificar Estrutura do Projeto: ERRO - 'str' object has no attribute 'exists'
+[10:19:42] ℹ️ --------------------------------------------------
+[10:19:42] ℹ️ 📦 Verificando dependências...
+[10:19:43] ✅ Todas as dependências estão instaladas
+[10:19:43] ℹ️ ✅ Verificar Dependências: CONCLUÍDA
+[10:19:43] ℹ️ --------------------------------------------------
+[10:19:43] ℹ️ 📁 Criando diretórios necessários...
+[10:19:43] ✅ Diretórios criados com sucesso
+[10:19:43] ℹ️ ✅ Criar Diretórios: CONCLUÍDA
+[10:19:43] ℹ️ --------------------------------------------------
+[10:19:43] ℹ️ ⚙️ Criando serviço de importação...
+[10:19:43] ✅ Serviço criado: C:\Users\Geovane\Documents\Transpontual\dashboard_baker_flask\app\services\importacao_service.py
+[10:19:43] ℹ️ ✅ Criar Serviço de Importação: CONCLUÍDA
+[10:19:43] ℹ️ --------------------------------------------------
+[10:19:43] ℹ️ 🎨 Criando templates HTML...
+[10:19:43] ✅ Templates criados: C:\Users\Geovane\Documents\Transpontual\dashboard_baker_flask\app\templates\ctes
+[10:19:43] ℹ️ ✅ Criar Templates: CONCLUÍDA
+[10:19:43] ℹ️ --------------------------------------------------
+[10:19:43] ℹ️ 🛣️ Atualizando rotas...
+[10:19:43] ⚠️ Rotas de importação já existem
+[10:19:43] ℹ️ ✅ Atualizar Rotas: CONCLUÍDA
+[10:19:43] ℹ️ --------------------------------------------------
+[10:19:43] ℹ️ 🧪 Testando instalação...
+[10:19:43] ✅ Serviço de importação funcionando
+[10:19:43] ℹ️ ✅ Testar Instalação: CONCLUÍDA
+[10:19:43] ℹ️ --------------------------------------------------
+[10:19:43] ℹ️ 🎯 RESULTADO DO SETUP
+[10:19:43] ℹ️ ==============================
+[10:19:43] ℹ️ Total de etapas: 7
+[10:19:43] ℹ️ Sucessos: 6
+[10:19:43] ℹ️ Falhas: 1
+[10:19:43] ℹ️ Taxa de sucesso: 85.7%
+[10:19:43] ✅ 🎉 SETUP CONCLUÍDO COM SUCESSO!
+[10:19:43] ℹ️ 🎯 PRÓXIMOS PASSOS:
+[10:19:43] ℹ️ 1. Reinicie a aplicação Flask
+[10:19:43] ℹ️ 2. Acesse /ctes/importar
+[10:19:43] ℹ️ 3. Teste a importação de CTEs
+[10:19:43] ℹ️ 4. Implemente funcionalidades completas conforme necessário

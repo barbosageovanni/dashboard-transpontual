@@ -1,0 +1,456 @@
+<!-- app/templates/ctes/importar.html -->
+{% extends "base.html" %}
+
+{% block title %}Importação de CTEs - Dashboard Baker{% endblock %}
+
+{% block extra_css %}
+<style>
+.import-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.import-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 5px solid #28a745;
+}
+
+.dropzone {
+    border: 3px dashed #28a745;
+    border-radius: 15px;
+    padding: 3rem 1rem;
+    text-align: center;
+    background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dropzone.dragover {
+    border-color: #20c997;
+    background: linear-gradient(135deg, #e8fff9 0%, #d4edda 100%);
+    transform: scale(1.02);
+}
+
+.dropzone:hover {
+    border-color: #20c997;
+    background: linear-gradient(135deg, #e8fff9 0%, #d4edda 100%);
+}
+
+.file-icon {
+    font-size: 4rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #007bff;
+}
+
+.stats-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.stats-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.progress-section {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    border-left: 4px solid #ffc107;
+}
+
+.result-section {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    border-left: 4px solid #28a745;
+}
+
+.format-info {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid #ffc107;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="import-header">
+            <h1><i class="fas fa-upload"></i> Sistema de Importação de CTEs</h1>
+            <p class="lead">Importação em lote com validação automática e controle de duplicatas</p>
+        </div>
+    </div>
+</div>
+
+<!-- Estatísticas Atuais -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ stats.total_ctes or 0 }}</div>
+            <div class="stats-label">CTEs Total</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ (stats.valor_total or 0) | int }}</div>
+            <div class="stats-label">Valor Total (R$)</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ stats.importacoes_recentes or 0 }}</div>
+            <div class="stats-label">Importações (30 dias)</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card">
+            <div class="stats-number">{{ stats.ctes_sem_baixa or 0 }}</div>
+            <div class="stats-label">CTEs Pendentes</div>
+        </div>
+    </div>
+</div>
+
+<!-- Sistema de Importação -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="import-section">
+            <h5><i class="fas fa-file-upload text-success"></i> Processamento em Lote</h5>
+            
+            <!-- Formato do CSV -->
+            <div class="format-info mb-3">
+                <h6><i class="fas fa-info-circle"></i> Formato do CSV:</h6>
+                <ul class="mb-0">
+                    <li><strong>numero_cte</strong>: Número do CTE (obrigatório)</li>
+                    <li><strong>destinatario_nome</strong>: Nome do cliente (obrigatório)</li>
+                    <li><strong>valor_total</strong>: Valor em R$ (obrigatório)</li>
+                    <li><strong>data_emissao</strong>: Data no formato DD/MM/AAAA (opcional)</li>
+                    <li><strong>veiculo_placa, numero_fatura, observacao</strong>: Campos opcionais</li>
+                </ul>
+            </div>
+            
+            <!-- Área de Drop -->
+            <div class="dropzone" id="dropzone">
+                <div class="file-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h5>Clique ou arraste o arquivo CSV aqui</h5>
+                <p class="text-muted">
+                    Máximo 50MB • Apenas arquivos .CSV<br>
+                    <small>Sistema detecta automaticamente CTEs existentes</small>
+                </p>
+                <input type="file" id="fileInput" accept=".csv" style="display: none;">
+                <div class="mt-3">
+                    <button class="btn btn-outline-success" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open"></i> Selecionar Arquivo
+                    </button>
+                    <a href="{{ url_for('ctes.download_template') }}" class="btn btn-outline-info">
+                        <i class="fas fa-download"></i> Template CSV
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Seção de Progresso -->
+            <div class="progress-section" id="progressSection">
+                <h6><i class="fas fa-spinner fa-spin"></i> Processando Importação...</h6>
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" style="width: 0%" id="progressBar"></div>
+                </div>
+                <p class="text-muted" id="progressText">Iniciando processamento...</p>
+            </div>
+            
+            <!-- Seção de Resultados -->
+            <div class="result-section" id="resultSection">
+                <h6><i class="fas fa-check-circle text-success"></i> Importação Concluída!</h6>
+                <div id="resultDetails"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Instruções -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-question-circle"></i> Como Importar</h6>
+            </div>
+            <div class="card-body">
+                <ol class="small">
+                    <li>Baixe o template CSV</li>
+                    <li>Preencha com seus dados</li>
+                    <li>Mantenha as colunas obrigatórias</li>
+                    <li>Use formato DD/MM/AAAA para datas</li>
+                    <li>Valores sem R$ ou pontos</li>
+                    <li>Arraste o arquivo ou clique para selecionar</li>
+                </ol>
+                
+                <div class="alert alert-warning alert-sm">
+                    <strong>Atenção:</strong> CTEs duplicados serão ignorados automaticamente.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Últimas Importações -->
+        <div class="card mt-3">
+            <div class="card-header bg-secondary text-white">
+                <h6 class="mb-0"><i class="fas fa-history"></i> Últimas Importações</h6>
+            </div>
+            <div class="card-body">
+                <div class="small text-muted">
+                    <p>• Hoje: 0 CTEs importados</p>
+                    <p>• Esta semana: {{ stats.importacoes_recentes or 0 }} CTEs</p>
+                    <p>• Sucesso médio: 98.5%</p>
+                </div>
+                <a href="{{ url_for('ctes.historico_importacoes') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-list"></i> Ver Histórico
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    configurarImportacao();
+});
+
+function configurarImportacao() {
+    const dropzone = $('#dropzone');
+    const fileInput = $('#fileInput');
+    
+    // Configurar dropzone
+    dropzone.on('dragover', function(e) {
+        e.preventDefault();
+        $(this).addClass('dragover');
+    });
+    
+    dropzone.on('dragleave', function(e) {
+        e.preventDefault();
+        $(this).removeClass('dragover');
+    });
+    
+    dropzone.on('drop', function(e) {
+        e.preventDefault();
+        $(this).removeClass('dragover');
+        
+        const files = e.originalEvent.dataTransfer.files;
+        if (files.length > 0) {
+            processarArquivo(files[0]);
+        }
+    });
+    
+    // Click no dropzone
+    dropzone.on('click', function() {
+        fileInput.click();
+    });
+    
+    // Mudança no input file
+    fileInput.on('change', function() {
+        const files = this.files;
+        if (files.length > 0) {
+            processarArquivo(files[0]);
+        }
+    });
+}
+
+function processarArquivo(file) {
+    // Validações básicas
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+        alert('❌ Apenas arquivos CSV são permitidos');
+        return;
+    }
+    
+    if (file.size > 50 * 1024 * 1024) {
+        alert('❌ Arquivo muito grande. Máximo: 50MB');
+        return;
+    }
+    
+    // Mostrar progresso
+    mostrarProgresso('Validando arquivo...');
+    
+    // Primeiro: validar arquivo
+    validarArquivo(file).then(function(validacao) {
+        if (validacao.sucesso) {
+            mostrarPreview(validacao.estatisticas);
+            
+            if (confirm(`Arquivo válido! Deseja importar?\n\n` +
+                       `• ${validacao.estatisticas.arquivo.linhas_validas} registros válidos\n` +
+                       `• ${validacao.estatisticas.analise.ctes_novos} CTEs novos\n` +
+                       `• ${validacao.estatisticas.analise.ctes_existentes} já existem no banco`)) {
+                
+                processarImportacao(file);
+            } else {
+                esconderProgresso();
+            }
+        } else {
+            esconderProgresso();
+            alert('❌ ' + validacao.erro);
+        }
+    }).catch(function(error) {
+        esconderProgresso();
+        alert('❌ Erro na validação: ' + error);
+    });
+}
+
+function validarArquivo(file) {
+    return new Promise(function(resolve, reject) {
+        const formData = new FormData();
+        formData.append('arquivo_csv', file);
+        
+        $.ajax({
+            url: '/ctes/validar-csv',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            timeout: 30000,
+            success: function(response) {
+                resolve(response);
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                reject(response ? response.erro : 'Erro na validação');
+            }
+        });
+    });
+}
+
+function processarImportacao(file) {
+    mostrarProgresso('Importando CTEs...');
+    
+    const formData = new FormData();
+    formData.append('arquivo', file);
+    
+    $.ajax({
+        url: '/ctes/api/importar/lote',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        timeout: 300000, // 5 minutos
+        success: function(response) {
+            if (response.sucesso) {
+                mostrarResultados(response.resultados);
+                
+                // Recarregar estatísticas se estivermos na página de CTEs
+                if (typeof carregarListaCTEs === 'function') {
+                    setTimeout(carregarListaCTEs, 2000);
+                }
+            } else {
+                esconderProgresso();
+                alert('❌ ' + response.erro);
+            }
+        },
+        error: function(xhr) {
+            esconderProgresso();
+            const response = xhr.responseJSON;
+            alert('❌ ' + (response ? response.erro : 'Erro na importação'));
+        }
+    });
+}
+
+function mostrarProgresso(texto) {
+    $('#progressText').text(texto);
+    $('#progressSection').show();
+    $('#resultSection').hide();
+    
+    // Animar barra de progresso
+    let progress = 0;
+    const interval = setInterval(function() {
+        progress += Math.random() * 15;
+        if (progress > 90) progress = 90;
+        $('#progressBar').css('width', progress + '%');
+    }, 500);
+    
+    // Limpar interval após 30 segundos
+    setTimeout(function() {
+        clearInterval(interval);
+    }, 30000);
+}
+
+function esconderProgresso() {
+    $('#progressSection').hide();
+}
+
+function mostrarPreview(stats) {
+    const preview = `
+        <div class="alert alert-info">
+            <strong>Prévia do Arquivo:</strong><br>
+            • Linhas válidas: ${stats.arquivo.linhas_validas}<br>
+            • CTEs novos: ${stats.analise.ctes_novos}<br>
+            • CTEs existentes: ${stats.analise.ctes_existentes}<br>
+            ${stats.duplicatas.tem_duplicatas ? `• Duplicatas encontradas: ${stats.duplicatas.quantidade}` : ''}
+        </div>
+    `;
+    
+    $('#progressSection').html(preview).show();
+}
+
+function mostrarResultados(resultados) {
+    const detalhes = `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <h3 class="text-success">${resultados.sucessos}</h3>
+                        <p class="card-text">CTEs Inseridos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-info">
+                    <div class="card-body text-center">
+                        <h3 class="text-info">${resultados.ctes_existentes}</h3>
+                        <p class="card-text">CTEs Existentes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        ${resultados.erros > 0 ? `
+        <div class="alert alert-warning mt-3">
+            <strong>Atenção:</strong> ${resultados.erros} registros com erro foram ignorados.
+        </div>
+        ` : ''}
+        
+        <div class="text-center mt-3">
+            <button class="btn btn-primary" onclick="location.reload()">
+                <i class="fas fa-sync"></i> Nova Importação
+            </button>
+            <a href="/ctes" class="btn btn-outline-primary">
+                <i class="fas fa-list"></i> Ver CTEs
+            </a>
+        </div>
+    `;
+    
+    $('#resultDetails').html(detalhes);
+    $('#progressSection').hide();
+    $('#resultSection').show();
+}
+</script>
+{% endblock %}

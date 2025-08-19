@@ -1,0 +1,329 @@
+<!-- app/templates/baixas/index.html - VERSÃO ATUALIZADA -->
+{% extends "base.html" %}
+
+{% block title %}Sistema de Baixas{% endblock %}
+
+{% block extra_css %}
+<style>
+.upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.upload-area:hover {
+    border-color: #28a745;
+    background: #f0f8f5;
+}
+
+.upload-area.dragover {
+    border-color: #007bff !important;
+    background: #e7f1ff !important;
+    transform: scale(1.02);
+}
+
+.cte-info {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.cte-info.error {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.btn-template {
+    margin: 5px;
+    border-radius: 20px;
+}
+
+.file-type-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.stats-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-money-check-alt text-success"></i> Sistema de Baixas</h2>
+                <div class="btn-group">
+                    <button class="btn btn-outline-info btn-sm" onclick="carregarEstatisticasBaixas()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas Rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card text-white bg-success">
+                <div class="card-body text-center">
+                    <h3 id="totalBaixas">0</h3>
+                    <p class="mb-0">Baixas Efetuadas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card text-white bg-info">
+                <div class="card-body text-center">
+                    <h3 id="valorBaixado">R$ 0,00</h3>
+                    <p class="mb-0">Valor Baixado</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card text-white bg-warning">
+                <div class="card-body text-center">
+                    <h3 id="baixasPendentes">0</h3>
+                    <p class="mb-0">Baixas Pendentes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card text-white bg-danger">
+                <div class="card-body text-center">
+                    <h3 id="valorPendente">R$ 0,00</h3>
+                    <p class="mb-0">Valor Pendente</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs de Navegação -->
+    <ul class="nav nav-tabs" id="baixasTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="individual-tab" data-bs-toggle="tab" href="#individual" role="tab">
+                <i class="fas fa-user"></i> Baixa Individual
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="lote-tab" data-bs-toggle="tab" href="#lote" role="tab">
+                <i class="fas fa-upload"></i> Processamento em Lote
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="baixasTabContent">
+        <!-- Baixa Individual -->
+        <div class="tab-pane fade show active" id="individual" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-user"></i> Baixa Individual</h5>
+                    
+                    <form id="formBaixaIndividual">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Número do CTE *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="numero_cte" required>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="buscarCTE()">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Data da Baixa *</label>
+                                <input type="date" class="form-control" id="data_baixa" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Valor da Baixa</label>
+                                <input type="number" class="form-control" id="valor_baixa" step="0.01" placeholder="Opcional">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-check"></i> Registrar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label class="form-label">Observação</label>
+                                <textarea class="form-control" id="observacao" rows="2" placeholder="Observações sobre a baixa..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Informações do CTE -->
+                    <div id="cteInfo" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Baixa em Lote -->
+        <div class="tab-pane fade" id="lote" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-upload"></i> Processamento em Lote</h5>
+                    
+                    <!-- Informações sobre Formatos Suportados -->
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Formatos Suportados e Estrutura do Arquivo:</h6>
+                        
+                        <!-- Badges dos Formatos -->
+                        <div class="mb-3">
+                            <span class="file-type-badge bg-success text-white">
+                                <i class="fas fa-file-csv"></i> CSV (.csv)
+                            </span>
+                            <span class="file-type-badge bg-primary text-white">
+                                <i class="fas fa-file-excel"></i> Excel (.xlsx)
+                            </span>
+                            <span class="file-type-badge bg-info text-white">
+                                <i class="fas fa-file-excel"></i> Excel Legado (.xls)
+                            </span>
+                        </div>
+
+                        <!-- Estrutura Obrigatória -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Colunas Obrigatórias:</strong>
+                                <ul class="mb-0">
+                                    <li><code>numero_cte</code> - Número do CTE</li>
+                                    <li><code>data_baixa</code> - Data da baixa (DD/MM/YYYY ou YYYY-MM-DD)</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Colunas Opcionais:</strong>
+                                <ul class="mb-0">
+                                    <li><code>valor_baixa</code> - Valor da baixa</li>
+                                    <li><code>observacao</code> - Observações</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <strong>Variações aceitas de nomes:</strong>
+                            <small class="text-muted d-block">
+                                O sistema detecta automaticamente variações como: "num_cte", "cte", "numero", 
+                                "data_pagamento", "baixa", "obs", "comentario", etc.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Templates para Download -->
+                    <div class="text-center mb-4">
+                        <h6>📥 Baixar Templates:</h6>
+                        <button class="btn btn-outline-success btn-template" onclick="baixarTemplate('csv')">
+                            <i class="fas fa-download"></i> Template CSV
+                        </button>
+                        <button class="btn btn-outline-primary btn-template" onclick="baixarTemplate('excel')">
+                            <i class="fas fa-download"></i> Template Excel
+                        </button>
+                    </div>
+
+                    <!-- Área de Upload -->
+                    <div class="upload-area mb-4" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
+                        <h5>Clique ou arraste o arquivo aqui</h5>
+                        <p class="text-muted mb-3">
+                            Suporte para: <strong>CSV, Excel (.xlsx), Excel Legado (.xls)</strong><br>
+                            <span class="badge bg-secondary">Tamanho máximo: 50MB</span>
+                        </p>
+                        
+                        <!-- Detecção Automática -->
+                        <div class="row text-muted">
+                            <div class="col-md-4">
+                                <small>
+                                    <i class="fas fa-magic"></i> <strong>CSV:</strong><br>
+                                    Detecção automática de encoding e separador
+                                </small>
+                            </div>
+                            <div class="col-md-4">
+                                <small>
+                                    <i class="fas fa-table"></i> <strong>Excel:</strong><br>
+                                    Leitura da primeira planilha automaticamente
+                                </small>
+                            </div>
+                            <div class="col-md-4">
+                                <small>
+                                    <i class="fas fa-shield-alt"></i> <strong>Segurança:</strong><br>
+                                    Validação de duplicatas e CTEs existentes
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;">
+                    </div>
+
+                    <!-- Botão de Processamento -->
+                    <div class="text-center mb-3">
+                        <button class="btn btn-secondary btn-lg" id="btnProcessarLote" onclick="processarArquivoLote()" disabled>
+                            <i class="fas fa-cogs"></i> Processar Arquivo
+                        </button>
+                    </div>
+
+                    <!-- Resultados do Processamento -->
+                    <div id="resultadosLote" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/baixas.js') }}"></script>
+
+<script>
+// Inicialização adicional
+$(document).ready(function() {
+    // Tooltip para elementos com data-bs-toggle
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Mensagem de boas-vindas sobre os novos formatos
+    if (localStorage.getItem('baixas_novos_formatos_info') !== 'shown') {
+        setTimeout(() => {
+            const alert = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <h6><i class="fas fa-star"></i> Novidade!</h6>
+                    <p class="mb-0">
+                        O sistema agora suporta <strong>arquivos Excel</strong> além de CSV! 
+                        Baixe os templates atualizados e experimente a nova funcionalidade.
+                    </p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            $('.container-fluid').prepend(alert);
+            localStorage.setItem('baixas_novos_formatos_info', 'shown');
+        }, 1000);
+    }
+});
+
+// Função para resetar tutorial
+function resetarTutorial() {
+    localStorage.removeItem('baixas_novos_formatos_info');
+    location.reload();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+<!-- app/templates/ctes/importar_lote.html -->
+{% extends "base.html" %}
+
+{% block title %}Importação de CTEs em Lote{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-upload"></i> Importação de CTEs em Lote</h5>
+            </div>
+            <div class="card-body">
+                
+                <!-- Instruções -->
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle"></i> Como usar:</h6>
+                    <ol>
+                        <li>Baixe o template CSV</li>
+                        <li>Preencha com os dados dos CTEs</li>
+                        <li>Faça upload do arquivo</li>
+                        <li>Aguarde o processamento</li>
+                    </ol>
+                    <p class="mb-0"><strong>Observação:</strong> CTEs já existentes serão ignorados automaticamente.</p>
+                </div>
+                
+                <!-- Área de Upload -->
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label">Arquivo CSV:</label>
+                            <div id="dropAreaLote" class="border border-2 border-dashed rounded p-4 text-center mb-3" 
+                                 style="min-height: 150px; cursor: pointer;">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <h6>Clique ou arraste o arquivo CSV aqui</h6>
+                                <p class="text-muted">Máximo 50MB • Apenas arquivos .CSV</p>
+                                <input type="file" id="fileInputLote" accept=".csv" style="display: none;">
+                                <button type="button" class="btn btn-outline-primary" 
+                                        onclick="$('#fileInputLote').click()">
+                                    <i class="fas fa-folder-open"></i> Selecionar Arquivo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Prévia do Arquivo -->
+                        <div id="previaArquivo" style="display: none;"></div>
+                        
+                        <!-- Botão de Processar -->
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-success btn-lg" onclick="processarArquivoLote()">
+                                <i class="fas fa-cogs"></i> Processar Importação
+                            </button>
+                        </div>
+                        
+                        <!-- Resultados -->
+                        <div id="resultadosLote" style="display: none;" class="mt-4"></div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Download Template -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fas fa-download"></i> Template CSV</h6>
+                            </div>
+                            <div class="card-body text-center">
+                                <p>Baixe o template com exemplo de dados:</p>
+                                <button type="button" class="btn btn-outline-info" onclick="baixarTemplateCTE()">
+                                    <i class="fas fa-download"></i> Baixar Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Formato Esperado -->
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6><i class="fas fa-list"></i> Colunas Obrigatórias</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="small mb-0">
+                                    <li><strong>numero_cte:</strong> Número do CTE</li>
+                                    <li><strong>destinatario_nome:</strong> Nome do cliente</li>
+                                    <li><strong>valor_total:</strong> Valor em R$</li>
+                                </ul>
+                                <hr>
+                                <p class="small mb-0"><strong>Opcionais:</strong> data_emissao, veiculo_placa, numero_fatura, etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ctes.js') }}"></script>
+{% endblock %}

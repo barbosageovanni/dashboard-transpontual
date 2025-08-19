@@ -1,0 +1,502 @@
+{% extends "base.html" %}
+
+{% block title %}Análise Financeira - Dashboard Baker{% endblock %}
+
+{% block extra_css %}
+<style>
+.module-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.metric-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 12px 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 120px;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+}
+
+.metric-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(40, 167, 69, 0.3);
+    border-color: rgba(40, 167, 69, 0.5);
+}
+
+.metric-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.metric-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.metric-subtitle {
+    font-size: 0.8rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+/* Variações de cores para cards */
+.variacao-positiva { border-left: 4px solid #28a745; }
+.variacao-negativa { border-left: 4px solid #dc3545; }
+.variacao-neutra { border-left: 4px solid #6c757d; }
+
+.tendencia-positiva { color: #28a745; }
+.tendencia-negativa { color: #dc3545; }
+.tendencia-neutra { color: #6c757d; }
+
+.concentracao-alta { color: #dc3545; font-weight: bold; }
+.concentracao-media { color: #ffc107; font-weight: bold; }
+.concentracao-baixa { color: #28a745; font-weight: bold; }
+
+.chart-container-financeira {
+    position: relative;
+    height: 400px;
+    padding: 20px;
+}
+
+.stress-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 8px 0;
+    border-left: 4px solid;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 60px;
+    color: #28a745;
+}
+
+/* 🆕 ESTILO PARA NOVO CARD DE INCLUSÃO FATURA */
+.card-inclusao-fatura {
+    background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+    color: white;
+    border: none;
+}
+
+.card-inclusao-fatura .metric-number {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+}
+
+.card-inclusao-fatura .metric-title,
+.card-inclusao-fatura .metric-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.filtro-inclusao {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-exportacao {
+    transition: all 0.3s ease;
+}
+
+.btn-exportacao:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-exportacao.loading {
+    position: relative;
+}
+
+.btn-exportacao.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="module-header">
+            <h1><i class="fas fa-chart-line"></i> Análise Financeira Avançada</h1>
+            <p class="lead">Dashboard completo de métricas financeiras e indicadores de performance</p>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h6><i class="fas fa-filter"></i> Filtros de Análise</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="filtroPeriodo" class="form-label">Período</label>
+                        <select class="form-select" id="filtroPeriodo">
+                            <option value="30">Últimos 30 dias</option>
+                            <option value="90">Últimos 90 dias</option>
+                            <option value="180" selected>Últimos 180 dias</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filtroCliente" class="form-label">Cliente</label>
+                        <select class="form-select" id="filtroCliente">
+                            <option value="">Todos os Clientes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" onclick="aplicarFiltros()">
+                                <i class="fas fa-search"></i> Aplicar
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="limparFiltros()">
+                                <i class="fas fa-times"></i> Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small id="statusFiltro" class="text-muted">Período: 180 dias</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 🆕 NOVO FILTRO: Faturamento por Inclusão -->
+    <div class="col-md-4">
+        <div class="card card-inclusao-fatura">
+            <div class="card-body">
+                <h6><i class="fas fa-file-invoice"></i> Faturamento por Inclusão</h6>
+                <div class="filtro-inclusao">
+                    <label for="filtroInclusao" class="form-label">Período de Inclusão</label>
+                    <select class="form-select" id="filtroInclusao" onchange="carregarFaturamentoInclusao()">
+                        <option value="30" selected>Últimos 30 dias</option>
+                        <option value="60">Últimos 60 dias</option>
+                        <option value="90">Últimos 90 dias</option>
+                    </select>
+                </div>
+                <small class="text-white-50">Baseado em data_inclusao_fatura</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Global -->
+<div id="loadingGlobal" class="loading-spinner" style="display: none;">
+    <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-3 loading-text">Carregando análise financeira...</p>
+</div>
+
+<!-- Métricas Principais -->
+<div id="metricas-principais">
+    <!-- Cards de Métricas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="metric-card" id="cardReceitaAtual">
+                <div class="metric-number" id="receitaAtual">R$ 0,00</div>
+                <div class="metric-title">💰 Receita Mês Atual</div>
+                <div class="metric-subtitle" id="variacao">📈 0% vs mês anterior</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="ticketMedio">R$ 0,00</div>
+                <div class="metric-title">🎯 Ticket Médio</div>
+                <div class="metric-subtitle" id="medianaTicket">📊 Mediana: R$ 0,00</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="tempoCobranca">0 dias</div>
+                <div class="metric-title">⏱️ Tempo Médio Cobrança</div>
+                <div class="metric-subtitle" id="tempoMediana">📅 Mediana: 0 dias</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="concentracao">0%</div>
+                <div class="metric-title">🎯 Concentração Top 5</div>
+                <div class="metric-subtitle" id="maiorCliente">👑 Maior cliente</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linha 2: Tendência + Novo Card Inclusão Fatura -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="metric-card">
+                <div class="metric-number" id="tendenciaValor">0</div>
+                <div class="metric-title">📈 Tendência Linear (R$/mês)</div>
+                <div class="metric-subtitle" id="rSquared">📊 R²: 0</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="metric-card">
+                <div class="metric-number" id="previsaoProximo">R$ 0,00</div>
+                <div class="metric-title">🔮 Previsão Próximo Mês</div>
+                <div class="metric-subtitle" id="mesesAnalise">📅 Base: 0 meses</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🆕 NOVO CARD: Receita por Inclusão Fatura -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="metric-card card-inclusao-fatura" id="cardReceitaInclusaoFatura" style="cursor: pointer;">
+                <div class="metric-number" id="faturamentoTotalInclusao">R$ 0,00</div>
+                <div class="metric-title">📋 Faturamento por Inclusão</div>
+                <div class="metric-subtitle" id="quantidadeCTEsInclusao">0 CTEs processados</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card">
+                <div class="metric-number" id="ticketMedioInclusao">R$ 0,00</div>
+                <div class="metric-title">💳 Ticket Médio Inclusão</div>
+                <div class="metric-subtitle" id="statusInclusao">Status: Carregando...</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card">
+                <div class="metric-number" id="variacaoInclusao">0%</div>
+                <div class="metric-title">📊 Variação Mensal</div>
+                <div class="metric-subtitle" id="periodoInclusao">Período: Carregando...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6>📈 Evolução da Receita Mensal</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-financeira">
+                        <canvas id="chartReceitaMensal"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6>🎯 Concentração de Clientes</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-financeira">
+                        <canvas id="chartConcentracao"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6>📊 Análise de Tendência</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-financeira">
+                        <canvas id="chartTendencia"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6>⏱️ Distribuição Tempo de Cobrança</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-financeira">
+                        <canvas id="chartTempoCobranca"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🆕 NOVO GRÁFICO: Faturamento por Inclusão -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6><i class="fas fa-chart-area"></i> Evolução do Faturamento por Inclusão de Fatura</h6>
+                    <small>Baseado em data_inclusao_fatura - permite análise de performance de faturamento</small>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-financeira">
+                        <canvas id="chartFaturamentoInclusao"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Clientes -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h6>👑 Top 10 Clientes por Receita</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm" id="tabelaTopClientes">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Cliente</th>
+                                    <th>Receita</th>
+                                    <th>% Total</th>
+                                    <th>Risco</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Carregando dados...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6>⚠️ Stress Test de Receita</h6>
+                </div>
+                <div class="card-body">
+                    <div id="stressTestContainer">
+                        <p class="text-center text-muted">Carregando cenários...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema de Exportação -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h6><i class="fas fa-download"></i> Sistema de Exportação</h6>
+                    <small>Exporte os dados da análise em múltiplos formatos</small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="btn-group me-2" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-export-json btn-exportacao" 
+                                        title="Exportar dados estruturados em JSON">
+                                    <i class="fas fa-code"></i> JSON
+                                </button>
+                                <button type="button" class="btn btn-outline-success btn-export-excel btn-exportacao"
+                                        title="Exportar planilha Excel com múltiplas abas">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </button>
+                                <button type="button" class="btn btn-outline-info btn-export-csv btn-exportacao"
+                                        title="Exportar dados em formato CSV">
+                                    <i class="fas fa-file-csv"></i> CSV
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-export-pdf btn-exportacao"
+                                        title="Gerar relatório completo em PDF">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </button>
+                            </div>
+                            <div id="statusExportacao" class="text-muted small" style="display: none;"></div>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <button type="button" class="btn btn-warning btn-export-multiplo btn-exportacao"
+                                    title="Exportar múltiplos formatos">
+                                <i class="fas fa-archive"></i> Exportação Múltipla
+                            </button>
+                        </div>
+                    </div>
+                    <div id="infoExportacao" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug (apenas em desenvolvimento) -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-bug"></i> Debug & Testes</h6>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-outline-warning" onclick="testarAPI()">
+                        <i class="fas fa-flask"></i> Testar API
+                    </button>
+                    <div id="resultadoTeste" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Análise Financeira -->
+<script src="{{ url_for('static', filename='js/analise_financeira.js') }}"></script>
+{% endblock %}

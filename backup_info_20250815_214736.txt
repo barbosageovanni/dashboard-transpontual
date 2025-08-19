@@ -1,0 +1,4 @@
+Backup realizado em: 2025-08-15 21:47:36.469865
+Total de registros substituídos: 2293
+Novo arquivo: dashboard_baker.csv
+Operação: Substituição completa

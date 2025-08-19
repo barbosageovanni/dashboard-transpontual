@@ -1,0 +1,51 @@
+{
+  "sistema": {
+    "nome": "Sistema de Atualização CTE PostgreSQL",
+    "versao": "2.0.0",
+    "banco": "PostgreSQL Supabase",
+    "tabela": "dashboard_baker"
+  },
+  "database": {
+    "host": "db.lijtncazuwnbydeqtoyz.supabase.co",
+    "port": 5432,
+    "database": "postgres",
+    "ssl_required": true
+  },
+  "performance": {
+    "batch_size_default": 100,
+    "max_batch_size": 500,
+    "timeout_seconds": 300,
+    "retry_attempts": 3
+  },
+  "backup": {
+    "auto_backup": true,
+    "format": "json",
+    "max_backups": 15,
+    "compress": false
+  },
+  "validation": {
+    "required_fields": [
+      "numero_cte"
+    ],
+    "date_fields": [
+      "data_emissao",
+      "data_baixa",
+      "data_inclusao_fatura",
+      "data_envio_processo",
+      "primeiro_envio",
+      "data_rq_tmc",
+      "data_atesto",
+      "envio_final"
+    ],
+    "numeric_fields": [
+      "valor_total"
+    ],
+    "max_cte_number": 999999999
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(levelname)s - %(message)s",
+    "max_log_files": 30,
+    "auto_cleanup_days": 30
+  }
+}
