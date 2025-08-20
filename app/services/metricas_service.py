@@ -1,17 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Serviço de Métricas Expandidas - Dashboard Baker
+Serviço de Métricas Expandidas - Dashboard Transpontual
 Sistema completo de análise financeira e produtividade
+VERSÃO SEM PANDAS - Deploy Básico
 """
 
-import pandas as pd
-import numpy as np
+# 🔄 IMPORTS MODIFICADOS - SEM PANDAS/NUMPY
+try:
+    import pandas as pd
+    import numpy as np
+    PANDAS_AVAILABLE = True
+    print("✅ Pandas disponível - funcionalidades completas")
+except ImportError:
+    pd = None
+    np = None
+    PANDAS_AVAILABLE = False
+    print("⚠️ Pandas não disponível - modo básico ativado")
+
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 from app.models.cte import CTE
 from app import db
 from sqlalchemy import func, and_, or_
+import statistics
 
 # Configurações de Alertas Inteligentes - ATUALIZADAS
 ALERTAS_CONFIG = {
@@ -120,40 +132,126 @@ class MetricasService:
             if not ctes:
                 return MetricasService._metricas_vazias()
             
-            # Converter para DataFrame para análise
-            dados = []
-            for cte in ctes:
-                dados.append({
-                    'numero_cte': cte.numero_cte,
-                    'destinatario_nome': cte.destinatario_nome,
-                    'veiculo_placa': cte.veiculo_placa,
-                    'valor_total': float(cte.valor_total or 0),
-                    'data_emissao': cte.data_emissao,
-                    'data_baixa': cte.data_baixa,
-                    'numero_fatura': cte.numero_fatura,
-                    'data_inclusao_fatura': cte.data_inclusao_fatura,
-                    'data_envio_processo': cte.data_envio_processo,
-                    'primeiro_envio': cte.primeiro_envio,
-                    'data_rq_tmc': cte.data_rq_tmc,
-                    'data_atesto': cte.data_atesto,
-                    'envio_final': cte.envio_final,
-                    'has_baixa': cte.has_baixa,
-                    'processo_completo': cte.processo_completo
-                })
-            
-            df = pd.DataFrame(dados)
-            
-            # Calcular métricas
-            return MetricasService._calcular_metricas(df)
+            if PANDAS_AVAILABLE:
+                # Usar versão com pandas se disponível
+                return MetricasService._calcular_metricas_pandas(ctes)
+            else:
+                # Usar versão nativa Python
+                return MetricasService._calcular_metricas_nativas(ctes)
             
         except Exception as e:
             print(f"Erro ao gerar métricas: {e}")
             return MetricasService._metricas_vazias()
     
     @staticmethod
-    def _calcular_metricas(df: pd.DataFrame) -> Dict:
-        """Calcula todas as métricas do DataFrame"""
+    def _calcular_metricas_nativas(ctes: List) -> Dict:
+        """Calcula métricas usando Python nativo (sem pandas)"""
         
+        total_ctes = len(ctes)
+        
+        # Extrair dados básicos
+        valores = [float(cte.valor_total or 0) for cte in ctes]
+        clientes = [cte.destinatario_nome for cte in ctes if cte.destinatario_nome]
+        veiculos = [cte.veiculo_placa for cte in ctes if cte.veiculo_placa]
+        
+        # Métricas básicas
+        valor_total = sum(valores)
+        clientes_unicos = len(set(clientes))
+        veiculos_ativos = len(set(veiculos))
+        
+        # Métricas de faturamento
+        ctes_com_baixa = [cte for cte in ctes if cte.has_baixa]
+        ctes_sem_baixa = [cte for cte in ctes if not cte.has_baixa]
+        
+        faturas_pagas = len(ctes_com_baixa)
+        faturas_pendentes = len(ctes_sem_baixa)
+        valor_pago = sum(float(cte.valor_total or 0) for cte in ctes_com_baixa)
+        valor_pendente = sum(float(cte.valor_total or 0) for cte in ctes_sem_baixa)
+        
+        # Métricas de fatura
+        ctes_com_fatura = [cte for cte in ctes if cte.numero_fatura and cte.numero_fatura.strip()]
+        ctes_sem_fatura = [cte for cte in ctes if not cte.numero_fatura or not cte.numero_fatura.strip()]
+        
+        valor_com_fatura = sum(float(cte.valor_total or 0) for cte in ctes_com_fatura)
+        valor_sem_fatura = sum(float(cte.valor_total or 0) for cte in ctes_sem_fatura)
+        
+        # Métricas de envio final
+        ctes_com_envio_final = [cte for cte in ctes if cte.envio_final]
+        ctes_sem_envio_final = [cte for cte in ctes if not cte.envio_final]
+        
+        valor_com_envio_final = sum(float(cte.valor_total or 0) for cte in ctes_com_envio_final)
+        valor_sem_envio_final = sum(float(cte.valor_total or 0) for cte in ctes_sem_envio_final)
+        
+        # Processos completos
+        processos_completos = len([cte for cte in ctes if cte.processo_completo])
+        processos_incompletos = total_ctes - processos_completos
+        
+        # Métricas financeiras avançadas
+        ticket_medio = statistics.mean(valores) if valores else 0.0
+        maior_valor = max(valores) if valores else 0.0
+        menor_valor = min(valores) if valores else 0.0
+        
+        # Análise temporal simplificada
+        receita_mensal_media, crescimento_mensal = MetricasService._calcular_crescimento_nativo(ctes)
+        
+        return {
+            'total_ctes': total_ctes,
+            'valor_total': valor_total,
+            'clientes_unicos': clientes_unicos,
+            'veiculos_ativos': veiculos_ativos,
+            'faturas_pagas': faturas_pagas,
+            'faturas_pendentes': faturas_pendentes,
+            'valor_pago': valor_pago,
+            'valor_pendente': valor_pendente,
+            'ctes_com_fatura': len(ctes_com_fatura),
+            'ctes_sem_fatura': len(ctes_sem_fatura),
+            'valor_com_fatura': valor_com_fatura,
+            'valor_sem_fatura': valor_sem_fatura,
+            'ctes_com_envio_final': len(ctes_com_envio_final),
+            'ctes_sem_envio_final': len(ctes_sem_envio_final),
+            'valor_com_envio_final': valor_com_envio_final,
+            'valor_sem_envio_final': valor_sem_envio_final,
+            'processos_completos': processos_completos,
+            'processos_incompletos': processos_incompletos,
+            'ticket_medio': ticket_medio,
+            'maior_valor': maior_valor,
+            'menor_valor': menor_valor,
+            'receita_mensal_media': receita_mensal_media,
+            'crescimento_mensal': crescimento_mensal,
+            # Taxas calculadas
+            'taxa_conclusao': (processos_completos / total_ctes * 100) if total_ctes > 0 else 0,
+            'taxa_pagamento': (faturas_pagas / total_ctes * 100) if total_ctes > 0 else 0,
+            'taxa_faturamento': (len(ctes_com_fatura) / total_ctes * 100) if total_ctes > 0 else 0,
+            'pandas_disponivel': False
+        }
+    
+    @staticmethod
+    def _calcular_metricas_pandas(ctes: List) -> Dict:
+        """Calcula métricas usando pandas (se disponível)"""
+        # Converter para DataFrame para análise
+        dados = []
+        for cte in ctes:
+            dados.append({
+                'numero_cte': cte.numero_cte,
+                'destinatario_nome': cte.destinatario_nome,
+                'veiculo_placa': cte.veiculo_placa,
+                'valor_total': float(cte.valor_total or 0),
+                'data_emissao': cte.data_emissao,
+                'data_baixa': cte.data_baixa,
+                'numero_fatura': cte.numero_fatura,
+                'data_inclusao_fatura': cte.data_inclusao_fatura,
+                'data_envio_processo': cte.data_envio_processo,
+                'primeiro_envio': cte.primeiro_envio,
+                'data_rq_tmc': cte.data_rq_tmc,
+                'data_atesto': cte.data_atesto,
+                'envio_final': cte.envio_final,
+                'has_baixa': cte.has_baixa,
+                'processo_completo': cte.processo_completo
+            })
+        
+        df = pd.DataFrame(dados)
+        
+        # Calcular métricas com pandas (código original)
         total_ctes = len(df)
         
         # Métricas básicas
@@ -193,7 +291,7 @@ class MetricasService:
         # Análise temporal
         receita_mensal_media, crescimento_mensal = MetricasService._calcular_crescimento_mensal(df)
         
-        return {
+        resultado = {
             'total_ctes': total_ctes,
             'valor_total': valor_total,
             'clientes_unicos': clientes_unicos,
@@ -220,12 +318,53 @@ class MetricasService:
             # Taxas calculadas
             'taxa_conclusao': (processos_completos / total_ctes * 100) if total_ctes > 0 else 0,
             'taxa_pagamento': (faturas_pagas / total_ctes * 100) if total_ctes > 0 else 0,
-            'taxa_faturamento': (ctes_com_fatura / total_ctes * 100) if total_ctes > 0 else 0
+            'taxa_faturamento': (ctes_com_fatura / total_ctes * 100) if total_ctes > 0 else 0,
+            'pandas_disponivel': True
         }
+        
+        return resultado
     
     @staticmethod
-    def _calcular_crescimento_mensal(df: pd.DataFrame) -> Tuple[float, float]:
-        """Calcula receita mensal média e crescimento"""
+    def _calcular_crescimento_nativo(ctes: List) -> Tuple[float, float]:
+        """Calcula crescimento usando Python nativo"""
+        try:
+            # Agrupar por mês usando Python nativo
+            receitas_mensais = {}
+            
+            for cte in ctes:
+                if cte.data_emissao:
+                    mes_ano = cte.data_emissao.strftime('%Y-%m')
+                    if mes_ano not in receitas_mensais:
+                        receitas_mensais[mes_ano] = 0
+                    receitas_mensais[mes_ano] += float(cte.valor_total or 0)
+            
+            if not receitas_mensais:
+                return 0.0, 0.0
+            
+            # Ordenar por mês
+            meses_ordenados = sorted(receitas_mensais.keys())
+            valores = [receitas_mensais[mes] for mes in meses_ordenados]
+            
+            # Calcular média
+            receita_media = statistics.mean(valores) if valores else 0.0
+            
+            # Calcular crescimento (últimos 2 meses)
+            crescimento = 0.0
+            if len(valores) >= 2:
+                ultimo = valores[-1]
+                penultimo = valores[-2]
+                if penultimo > 0:
+                    crescimento = ((ultimo - penultimo) / penultimo) * 100
+            
+            return receita_media, crescimento
+            
+        except Exception as e:
+            print(f"Erro no cálculo de crescimento nativo: {e}")
+            return 0.0, 0.0
+    
+    @staticmethod
+    def _calcular_crescimento_mensal(df) -> Tuple[float, float]:
+        """Calcula receita mensal média e crescimento (versão pandas)"""
         try:
             df_temp = df[df['data_emissao'].notna()].copy()
             if df_temp.empty:
@@ -358,6 +497,9 @@ class MetricasService:
     @staticmethod
     def calcular_variacoes_tempo_expandidas() -> Dict:
         """Sistema de análise de variações temporais expandido"""
+        if not PANDAS_AVAILABLE:
+            return {'erro': 'Análise de variações temporais requer pandas - funcionalidade temporariamente indisponível'}
+            
         variacoes = {}
         
         try:
@@ -453,12 +595,22 @@ class MetricasService:
             'processos_completos': 0, 'processos_incompletos': 0,
             'ticket_medio': 0.0, 'maior_valor': 0.0, 'menor_valor': 0.0,
             'receita_mensal_media': 0.0, 'crescimento_mensal': 0.0,
-            'taxa_conclusao': 0.0, 'taxa_pagamento': 0.0, 'taxa_faturamento': 0.0
+            'taxa_conclusao': 0.0, 'taxa_pagamento': 0.0, 'taxa_faturamento': 0.0,
+            'pandas_disponivel': PANDAS_AVAILABLE
         }
     
     @staticmethod
     def gerar_dados_graficos() -> Dict:
         """Gera dados para todos os gráficos do dashboard"""
+        if not PANDAS_AVAILABLE:
+            return {
+                'erro': 'Gráficos requerem pandas - funcionalidade temporariamente indisponível',
+                'evolucao_mensal': {'labels': [], 'valores': [], 'quantidades': []},
+                'top_clientes': {'labels': [], 'valores': []},
+                'distribuicao_status': {'baixas': {'labels': [], 'valores': []}, 'processos': {'labels': [], 'valores': []}},
+                'performance_veiculos': {'labels': [], 'valores': [], 'quantidades': []}
+            }
+            
         try:
             ctes = CTE.query.all()
             
@@ -506,7 +658,7 @@ class MetricasService:
             return {'erro': str(e)}
     
     @staticmethod
-    def _calcular_evolucao_mensal(df: pd.DataFrame) -> Dict:
+    def _calcular_evolucao_mensal(df) -> Dict:
         """Calcula evolução da receita mensal"""
         try:
             df_temp = df[df['data_emissao'].notna()].copy()
@@ -529,7 +681,7 @@ class MetricasService:
             return {'labels': [], 'valores': [], 'quantidades': []}
     
     @staticmethod
-    def _calcular_top_clientes(df: pd.DataFrame) -> Dict:
+    def _calcular_top_clientes(df) -> Dict:
         """Calcula top 10 clientes por receita"""
         try:
             top_clientes = df.groupby('destinatario_nome')['valor_total'].sum().sort_values(ascending=False).head(10)
@@ -543,7 +695,7 @@ class MetricasService:
             return {'labels': [], 'valores': []}
     
     @staticmethod
-    def _calcular_distribuicao_status(df: pd.DataFrame) -> Dict:
+    def _calcular_distribuicao_status(df) -> Dict:
         """Calcula distribuição de status"""
         try:
             com_baixa = len(df[df['has_baixa'] == True])
@@ -566,7 +718,7 @@ class MetricasService:
             return {'baixas': {'labels': [], 'valores': []}, 'processos': {'labels': [], 'valores': []}}
     
     @staticmethod
-    def _calcular_performance_veiculos(df: pd.DataFrame) -> Dict:
+    def _calcular_performance_veiculos(df) -> Dict:
         """Calcula performance por veículo"""
         try:
             df_veiculos = df[df['veiculo_placa'].notna()]
