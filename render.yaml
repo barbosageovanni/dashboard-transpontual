@@ -3,7 +3,7 @@ services:
     name: dashboard-transpontual
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn --bind 0.0.0.0:$PORT wsgi:app"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT iniciar:app"
     plan: free
     autoDeploy: false
     envVars:
@@ -13,3 +13,13 @@ services:
         generateValue: true
       - key: DATABASE_URL
         value: postgresql://postgres:Mariaana953%407334@db.lijtncazuwnbydeqtoyz.supabase.co:5432/postgres
+      - key: DB_HOST
+        value: db.lijtncazuwnbydeqtoyz.supabase.co
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        value: postgres
+      - key: DB_USER
+        value: postgres
+      - key: DB_PASSWORD
+        value: Mariaana953@7334
