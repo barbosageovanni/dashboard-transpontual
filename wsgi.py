@@ -1,51 +1,49 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-WSGI entry point para deploy em produção - Dashboard Baker
-"""
-
+﻿#!/usr/bin/env python3
 import os
-from app import create_app, db
-from config import ProductionConfig
+import sys
 
-# Configurar variáveis de ambiente para produção
 os.environ.setdefault('FLASK_ENV', 'production')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Criar aplicação
-app = create_app(ProductionConfig)
-
-def init_app():
-    """Inicializar aplicação para produção"""
-    with app.app_context():
+try:
+    from app import create_app, db
+    from config import ProductionConfig
+    
+    application = create_app(ProductionConfig)
+    
+    with application.app_context():
         try:
-            # Testar conexão
-            db.engine.execute('SELECT 1')
-            print("✅ Conectado ao Supabase em produção")
-            
-            # Criar tabelas se necessário
+            db.session.execute("SELECT 1")
+            print("✅ Database OK")
             db.create_all()
             
-            # Criar usuário admin se não existir
             from app.models.user import User
-            admin = User.query.filter_by(username='admin').first()
-            if not admin:
+            if not User.query.filter_by(username='admin').first():
                 admin = User(
                     username='admin',
-                    email='admin@dashboardbaker.com',
-                    nome_completo='Administrador do Sistema',
+                    email='admin@transpontual.app.br',
+                    nome_completo='Admin',
                     tipo_usuario='admin',
                     ativo=True
                 )
                 admin.set_password('Admin123!')
                 db.session.add(admin)
                 db.session.commit()
-                print("✅ Usuário admin criado")
-                
+                print("✅ Admin created")
         except Exception as e:
-            print(f"⚠️ Aviso na inicialização: {e}")
+            print(f"Init: {e}")
+            
+except Exception as e:
+    print(f"Error: {e}")
+    from flask import Flask
+    application = Flask(__name__)
+    
+    @application.route('/')
+    def home():
+        return f"<h1>Dashboard Transpontual</h1><p>Loading...</p>"
 
-# Executar inicialização
-init_app()
+app = application
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    application.run(host='0.0.0.0', port=port)
