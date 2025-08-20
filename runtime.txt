@@ -1,0 +1,2 @@
+# Na raiz do projeto, criar arquivo com:
+python-3.11.9
