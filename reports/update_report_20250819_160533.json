@@ -1,0 +1,7649 @@
+{
+  "timestamp": "2025-08-19T16:05:33.446568",
+  "statistics": {
+    "total_processados": 758,
+    "atualizados": 758,
+    "sem_alteracao": 0,
+    "nao_encontrados": 0,
+    "erros": 0,
+    "campos_atualizados": {
+      "data_inclusao_fatura": 758,
+      "primeiro_envio": 3,
+      "data_atesto": 3,
+      "envio_final": 3,
+      "data_rq_tmc": 1,
+      "data_envio_processo": 1,
+      "numero_fatura": 1
+    }
+  },
+  "update_log": [
+    {
+      "timestamp": "2025-08-19T16:05:01.403898",
+      "numero_cte": 22084,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.479331",
+      "numero_cte": 22083,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.521206",
+      "numero_cte": 22082,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-23"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.563900",
+      "numero_cte": 22081,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.604224",
+      "numero_cte": 22080,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.647000",
+      "numero_cte": 22079,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.703062",
+      "numero_cte": 22078,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.742566",
+      "numero_cte": 22077,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.782719",
+      "numero_cte": 22076,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.823416",
+      "numero_cte": 22075,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.863079",
+      "numero_cte": 22074,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.905852",
+      "numero_cte": 22073,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.948155",
+      "numero_cte": 22072,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:01.989190",
+      "numero_cte": 22071,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.032696",
+      "numero_cte": 22070,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.072248",
+      "numero_cte": 22069,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.117613",
+      "numero_cte": 22068,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.162136",
+      "numero_cte": 22067,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.202629",
+      "numero_cte": 22066,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.241417",
+      "numero_cte": 22065,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.281328",
+      "numero_cte": 22064,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.321472",
+      "numero_cte": 22063,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.364618",
+      "numero_cte": 22062,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.405284",
+      "numero_cte": 22061,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.445000",
+      "numero_cte": 22060,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.484027",
+      "numero_cte": 22059,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.524629",
+      "numero_cte": 22058,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.596034",
+      "numero_cte": 22057,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.635614",
+      "numero_cte": 22056,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.674176",
+      "numero_cte": 22055,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.714525",
+      "numero_cte": 22054,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.755106",
+      "numero_cte": 22053,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.794931",
+      "numero_cte": 22051,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.838621",
+      "numero_cte": 22050,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.879089",
+      "numero_cte": 22049,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.920961",
+      "numero_cte": 22048,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:02.962661",
+      "numero_cte": 22047,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.003196",
+      "numero_cte": 22046,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.044493",
+      "numero_cte": 22045,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.082320",
+      "numero_cte": 22043,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.123764",
+      "numero_cte": 22042,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.164518",
+      "numero_cte": 22041,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.207057",
+      "numero_cte": 22040,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.246927",
+      "numero_cte": 22039,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.288249",
+      "numero_cte": 22038,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.328419",
+      "numero_cte": 22037,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.367580",
+      "numero_cte": 22036,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.406201",
+      "numero_cte": 22035,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.446965",
+      "numero_cte": 22034,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.487638",
+      "numero_cte": 22033,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.527542",
+      "numero_cte": 22032,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.568605",
+      "numero_cte": 22031,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.607627",
+      "numero_cte": 22030,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.646854",
+      "numero_cte": 22029,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.689157",
+      "numero_cte": 22028,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.729444",
+      "numero_cte": 22027,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.772740",
+      "numero_cte": 22025,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.814529",
+      "numero_cte": 22024,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.857103",
+      "numero_cte": 22023,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.898430",
+      "numero_cte": 22022,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.939779",
+      "numero_cte": 22021,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:03.985822",
+      "numero_cte": 22020,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.028852",
+      "numero_cte": 22019,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.073437",
+      "numero_cte": 22018,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.118417",
+      "numero_cte": 22010,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.161729",
+      "numero_cte": 22009,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.207993",
+      "numero_cte": 22008,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.248964",
+      "numero_cte": 22007,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.298909",
+      "numero_cte": 22006,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.351015",
+      "numero_cte": 22005,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.402470",
+      "numero_cte": 22004,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.446470",
+      "numero_cte": 22002,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.486749",
+      "numero_cte": 22001,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.527342",
+      "numero_cte": 22000,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.569242",
+      "numero_cte": 21999,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.612320",
+      "numero_cte": 21989,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.655938",
+      "numero_cte": 21988,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.702191",
+      "numero_cte": 21987,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.760946",
+      "numero_cte": 21986,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.801744",
+      "numero_cte": 21985,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.844333",
+      "numero_cte": 21984,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.885557",
+      "numero_cte": 21983,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.927883",
+      "numero_cte": 21982,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:04.972369",
+      "numero_cte": 21981,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.015018",
+      "numero_cte": 21980,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.058444",
+      "numero_cte": 21979,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.106753",
+      "numero_cte": 21978,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.150553",
+      "numero_cte": 21977,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.196196",
+      "numero_cte": 21976,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.239901",
+      "numero_cte": 21975,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.284030",
+      "numero_cte": 21974,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.333922",
+      "numero_cte": 21973,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.381505",
+      "numero_cte": 21972,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.424261",
+      "numero_cte": 21971,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.468933",
+      "numero_cte": 21970,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.513647",
+      "numero_cte": 21969,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.556840",
+      "numero_cte": 21968,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.601711",
+      "numero_cte": 21967,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.647042",
+      "numero_cte": 21966,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.691939",
+      "numero_cte": 21965,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.798526",
+      "numero_cte": 21964,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.847676",
+      "numero_cte": 21963,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.893341",
+      "numero_cte": 21962,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.937754",
+      "numero_cte": 21961,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:05.981144",
+      "numero_cte": 21960,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.026827",
+      "numero_cte": 21959,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.067432",
+      "numero_cte": 21958,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.109959",
+      "numero_cte": 21957,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.148638",
+      "numero_cte": 21956,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.188059",
+      "numero_cte": 21955,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.228276",
+      "numero_cte": 21954,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.267939",
+      "numero_cte": 21953,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.310482",
+      "numero_cte": 21952,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.349580",
+      "numero_cte": 21951,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.393631",
+      "numero_cte": 21950,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.432206",
+      "numero_cte": 21949,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.473504",
+      "numero_cte": 21948,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.513474",
+      "numero_cte": 21947,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.553453",
+      "numero_cte": 21946,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.593796",
+      "numero_cte": 21945,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.635836",
+      "numero_cte": 21944,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.677644",
+      "numero_cte": 21943,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.719070",
+      "numero_cte": 21942,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.761367",
+      "numero_cte": 21939,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.802316",
+      "numero_cte": 21938,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.841827",
+      "numero_cte": 21937,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.909273",
+      "numero_cte": 21936,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.948492",
+      "numero_cte": 21935,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:06.989180",
+      "numero_cte": 21934,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.031274",
+      "numero_cte": 21933,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.071109",
+      "numero_cte": 21931,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.111448",
+      "numero_cte": 21930,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.151842",
+      "numero_cte": 21929,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.192328",
+      "numero_cte": 21928,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.230180",
+      "numero_cte": 21926,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.269837",
+      "numero_cte": 21924,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.311444",
+      "numero_cte": 21921,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.353872",
+      "numero_cte": 21919,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.393846",
+      "numero_cte": 21916,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.435468",
+      "numero_cte": 21914,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.474165",
+      "numero_cte": 21912,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.519334",
+      "numero_cte": 21910,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.562117",
+      "numero_cte": 21909,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.605504",
+      "numero_cte": 21907,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.645292",
+      "numero_cte": 21905,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.687021",
+      "numero_cte": 21904,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.729759",
+      "numero_cte": 21903,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.769298",
+      "numero_cte": 21902,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.810545",
+      "numero_cte": 21901,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.851745",
+      "numero_cte": 21900,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.893951",
+      "numero_cte": 21899,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.933801",
+      "numero_cte": 21898,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:07.973258",
+      "numero_cte": 21897,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.013660",
+      "numero_cte": 21896,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.053532",
+      "numero_cte": 21895,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.095045",
+      "numero_cte": 21894,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.136713",
+      "numero_cte": 21893,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.180728",
+      "numero_cte": 21892,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.221339",
+      "numero_cte": 21891,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.262562",
+      "numero_cte": 21890,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.303790",
+      "numero_cte": 21889,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-04"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-04-04"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-04"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "04/04/2025"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-04-04"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-04-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-04-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.348694",
+      "numero_cte": 21887,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.389329",
+      "numero_cte": 21886,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.431673",
+      "numero_cte": 21885,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.471947",
+      "numero_cte": 21884,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.513676",
+      "numero_cte": 21883,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.555978",
+      "numero_cte": 21881,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.597759",
+      "numero_cte": 21880,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.645038",
+      "numero_cte": 21879,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.687170",
+      "numero_cte": 21878,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.728256",
+      "numero_cte": 21877,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.768823",
+      "numero_cte": 21876,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.807981",
+      "numero_cte": 21875,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.852398",
+      "numero_cte": 21874,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.892690",
+      "numero_cte": 21873,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.932677",
+      "numero_cte": 21872,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:08.978814",
+      "numero_cte": 21871,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.019013",
+      "numero_cte": 21870,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.059184",
+      "numero_cte": 21868,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.097181",
+      "numero_cte": 21867,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.177771",
+      "numero_cte": 21866,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.219293",
+      "numero_cte": 21865,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.257794",
+      "numero_cte": 21864,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.297480",
+      "numero_cte": 21863,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.337956",
+      "numero_cte": 21862,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.380598",
+      "numero_cte": 21860,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.421470",
+      "numero_cte": 21859,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.462636",
+      "numero_cte": 21858,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.502334",
+      "numero_cte": 21857,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.541033",
+      "numero_cte": 21856,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.579702",
+      "numero_cte": 21855,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.619795",
+      "numero_cte": 21854,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.658221",
+      "numero_cte": 21853,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.698246",
+      "numero_cte": 21852,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.743667",
+      "numero_cte": 21851,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.784332",
+      "numero_cte": 21850,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.823723",
+      "numero_cte": 21849,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.862933",
+      "numero_cte": 21848,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.903874",
+      "numero_cte": 21847,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:09.944388",
+      "numero_cte": 21846,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.036322",
+      "numero_cte": 21845,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.077768",
+      "numero_cte": 21844,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.120139",
+      "numero_cte": 21843,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.161466",
+      "numero_cte": 21842,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.204254",
+      "numero_cte": 21841,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.243639",
+      "numero_cte": 21840,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.282493",
+      "numero_cte": 21839,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.321479",
+      "numero_cte": 21838,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.361036",
+      "numero_cte": 21837,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.404417",
+      "numero_cte": 21836,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.447184",
+      "numero_cte": 21835,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.516951",
+      "numero_cte": 21834,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.559072",
+      "numero_cte": 21833,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.600179",
+      "numero_cte": 21832,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.641301",
+      "numero_cte": 21831,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.684439",
+      "numero_cte": 21830,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.731483",
+      "numero_cte": 21829,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.772993",
+      "numero_cte": 21828,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.824240",
+      "numero_cte": 21827,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.871675",
+      "numero_cte": 21826,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.913755",
+      "numero_cte": 21825,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:10.959215",
+      "numero_cte": 21824,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.002312",
+      "numero_cte": 21823,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.043122",
+      "numero_cte": 21822,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.084210",
+      "numero_cte": 21821,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.127886",
+      "numero_cte": 21820,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.169649",
+      "numero_cte": 21819,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.209594",
+      "numero_cte": 21818,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.249442",
+      "numero_cte": 21817,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.290969",
+      "numero_cte": 21816,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.330052",
+      "numero_cte": 21815,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.385712",
+      "numero_cte": 21814,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.424603",
+      "numero_cte": 21813,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.463217",
+      "numero_cte": 21812,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.503565",
+      "numero_cte": 21811,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.545921",
+      "numero_cte": 21810,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.585660",
+      "numero_cte": 21809,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.625993",
+      "numero_cte": 21808,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.668142",
+      "numero_cte": 21807,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.709554",
+      "numero_cte": 21806,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.747602",
+      "numero_cte": 21804,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.786893",
+      "numero_cte": 21803,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.829541",
+      "numero_cte": 21799,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.874443",
+      "numero_cte": 21798,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.912328",
+      "numero_cte": 21797,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.954472",
+      "numero_cte": 21795,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:11.993640",
+      "numero_cte": 21794,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.031970",
+      "numero_cte": 21793,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.071789",
+      "numero_cte": 21792,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.111275",
+      "numero_cte": 21790,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.154170",
+      "numero_cte": 21787,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.197442",
+      "numero_cte": 21784,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.239913",
+      "numero_cte": 21782,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.283045",
+      "numero_cte": 21779,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.324321",
+      "numero_cte": 21776,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.364756",
+      "numero_cte": 21772,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.406187",
+      "numero_cte": 21771,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.447232",
+      "numero_cte": 21769,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.488036",
+      "numero_cte": 21768,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.531848",
+      "numero_cte": 21767,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.579440",
+      "numero_cte": 21765,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.620589",
+      "numero_cte": 21763,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.662064",
+      "numero_cte": 21762,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.703517",
+      "numero_cte": 21760,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.773271",
+      "numero_cte": 21758,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.819572",
+      "numero_cte": 21756,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.864009",
+      "numero_cte": 21754,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.904751",
+      "numero_cte": 21753,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.945576",
+      "numero_cte": 21752,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:12.987207",
+      "numero_cte": 21751,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.028440",
+      "numero_cte": 21750,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.070983",
+      "numero_cte": 21747,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.112727",
+      "numero_cte": 21746,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.153788",
+      "numero_cte": 21745,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.194549",
+      "numero_cte": 21744,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.237966",
+      "numero_cte": 21743,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.279298",
+      "numero_cte": 21742,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.320622",
+      "numero_cte": 21741,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.362069",
+      "numero_cte": 21740,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.407494",
+      "numero_cte": 21739,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.449559",
+      "numero_cte": 21738,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.491168",
+      "numero_cte": 21736,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.533627",
+      "numero_cte": 21735,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.588331",
+      "numero_cte": 21734,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.631661",
+      "numero_cte": 21733,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.672731",
+      "numero_cte": 21732,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.715997",
+      "numero_cte": 21731,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.757108",
+      "numero_cte": 21730,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.810629",
+      "numero_cte": 21729,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.854346",
+      "numero_cte": 21727,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.895271",
+      "numero_cte": 21726,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.935063",
+      "numero_cte": 21725,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:13.976246",
+      "numero_cte": 21724,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.014335",
+      "numero_cte": 21723,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.053647",
+      "numero_cte": 21721,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.094932",
+      "numero_cte": 21720,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.135269",
+      "numero_cte": 21719,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.175107",
+      "numero_cte": 21718,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.217032",
+      "numero_cte": 21717,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.255710",
+      "numero_cte": 21716,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.353584",
+      "numero_cte": 21715,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.392626",
+      "numero_cte": 21714,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.431101",
+      "numero_cte": 21713,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.469609",
+      "numero_cte": 21709,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.510095",
+      "numero_cte": 21708,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.548543",
+      "numero_cte": 21707,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.587659",
+      "numero_cte": 21705,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.627459",
+      "numero_cte": 21704,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.669321",
+      "numero_cte": 21703,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.710305",
+      "numero_cte": 21702,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.752197",
+      "numero_cte": 21701,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.790957",
+      "numero_cte": 21700,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.829933",
+      "numero_cte": 21699,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.871186",
+      "numero_cte": 21698,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.911334",
+      "numero_cte": 21697,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.950917",
+      "numero_cte": 21696,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:14.988494",
+      "numero_cte": 21695,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.028531",
+      "numero_cte": 21694,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.067494",
+      "numero_cte": 21693,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.105624",
+      "numero_cte": 21692,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.144925",
+      "numero_cte": 21691,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.185743",
+      "numero_cte": 21690,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.246267",
+      "numero_cte": 21689,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.285855",
+      "numero_cte": 21688,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.327110",
+      "numero_cte": 21687,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.371499",
+      "numero_cte": 21686,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.427325",
+      "numero_cte": 21685,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.475422",
+      "numero_cte": 21684,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.527619",
+      "numero_cte": 21683,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.570939",
+      "numero_cte": 21682,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.612941",
+      "numero_cte": 21681,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.653348",
+      "numero_cte": 21680,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.693291",
+      "numero_cte": 21679,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.735480",
+      "numero_cte": 21678,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.777707",
+      "numero_cte": 21677,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.816753",
+      "numero_cte": 21676,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.857235",
+      "numero_cte": 21675,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.894930",
+      "numero_cte": 21674,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.935467",
+      "numero_cte": 21673,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:15.977550",
+      "numero_cte": 21672,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.019784",
+      "numero_cte": 21671,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.060152",
+      "numero_cte": 21670,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.105594",
+      "numero_cte": 21669,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.145810",
+      "numero_cte": 21617,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.185707",
+      "numero_cte": 21615,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.228663",
+      "numero_cte": 21614,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.268966",
+      "numero_cte": 21612,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.310277",
+      "numero_cte": 21611,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.350331",
+      "numero_cte": 21610,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.393384",
+      "numero_cte": 21608,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.434456",
+      "numero_cte": 21607,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.473836",
+      "numero_cte": 21606,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.512745",
+      "numero_cte": 21605,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.552906",
+      "numero_cte": 21604,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.594940",
+      "numero_cte": 21603,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.634991",
+      "numero_cte": 21602,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.676179",
+      "numero_cte": 21601,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.717469",
+      "numero_cte": 21600,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.758034",
+      "numero_cte": 21599,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.795627",
+      "numero_cte": 21598,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.835113",
+      "numero_cte": 21597,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.877642",
+      "numero_cte": 21596,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.919823",
+      "numero_cte": 21595,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.960183",
+      "numero_cte": 21594,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:16.998980",
+      "numero_cte": 21593,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.037546",
+      "numero_cte": 21592,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.079596",
+      "numero_cte": 21591,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.119599",
+      "numero_cte": 21590,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.163043",
+      "numero_cte": 21589,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.202683",
+      "numero_cte": 21588,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.243085",
+      "numero_cte": 21587,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.283474",
+      "numero_cte": 21586,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.328899",
+      "numero_cte": 21585,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.370101",
+      "numero_cte": 21583,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.410418",
+      "numero_cte": 21582,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.451255",
+      "numero_cte": 21581,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.493704",
+      "numero_cte": 21580,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.553038",
+      "numero_cte": 21579,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.593638",
+      "numero_cte": 21578,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.635474",
+      "numero_cte": 21577,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.676275",
+      "numero_cte": 21574,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.715932",
+      "numero_cte": 21572,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.761604",
+      "numero_cte": 21571,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.805251",
+      "numero_cte": 21570,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.845415",
+      "numero_cte": 21569,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.886915",
+      "numero_cte": 21568,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.929171",
+      "numero_cte": 21567,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:17.969548",
+      "numero_cte": 21566,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.009564",
+      "numero_cte": 21565,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.053556",
+      "numero_cte": 21564,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.096124",
+      "numero_cte": 21563,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.138599",
+      "numero_cte": 21562,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.178927",
+      "numero_cte": 21561,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.220662",
+      "numero_cte": 21560,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.262435",
+      "numero_cte": 21559,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.303863",
+      "numero_cte": 21558,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.346015",
+      "numero_cte": 21557,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.386395",
+      "numero_cte": 21556,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.426104",
+      "numero_cte": 21555,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.465510",
+      "numero_cte": 21554,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.560907",
+      "numero_cte": 21553,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.603428",
+      "numero_cte": 21552,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.644882",
+      "numero_cte": 21551,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.686751",
+      "numero_cte": 21550,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.727781",
+      "numero_cte": 21549,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.772162",
+      "numero_cte": 21548,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.814112",
+      "numero_cte": 21547,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.859319",
+      "numero_cte": 21546,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.898701",
+      "numero_cte": 21545,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.938554",
+      "numero_cte": 21544,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:18.980405",
+      "numero_cte": 21543,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.020123",
+      "numero_cte": 21542,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.060410",
+      "numero_cte": 21541,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.103090",
+      "numero_cte": 21540,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.143142",
+      "numero_cte": 21539,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.183129",
+      "numero_cte": 21537,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.223781",
+      "numero_cte": 21536,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.262025",
+      "numero_cte": 21535,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.302681",
+      "numero_cte": 21534,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.343897",
+      "numero_cte": 21533,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.384448",
+      "numero_cte": 21532,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.423530",
+      "numero_cte": 21531,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.463570",
+      "numero_cte": 21530,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.502336",
+      "numero_cte": 21529,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.543626",
+      "numero_cte": 21528,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.585528",
+      "numero_cte": 21527,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.627905",
+      "numero_cte": 21526,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.668742",
+      "numero_cte": 21525,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.710461",
+      "numero_cte": 21524,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.787266",
+      "numero_cte": 21523,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.828017",
+      "numero_cte": 21522,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.867935",
+      "numero_cte": 21521,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.908034",
+      "numero_cte": 21520,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.948681",
+      "numero_cte": 21519,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:19.985718",
+      "numero_cte": 21518,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.025160",
+      "numero_cte": 21517,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.063510",
+      "numero_cte": 21516,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.103300",
+      "numero_cte": 21515,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.145629",
+      "numero_cte": 21514,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.187428",
+      "numero_cte": 21513,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.226877",
+      "numero_cte": 21512,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.269165",
+      "numero_cte": 21511,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.310492",
+      "numero_cte": 21510,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.353087",
+      "numero_cte": 21508,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.393742",
+      "numero_cte": 21506,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.433304",
+      "numero_cte": 21505,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.471512",
+      "numero_cte": 21504,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.511559",
+      "numero_cte": 21503,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.550951",
+      "numero_cte": 21502,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.592866",
+      "numero_cte": 21501,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.635286",
+      "numero_cte": 21500,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.677570",
+      "numero_cte": 21499,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.718762",
+      "numero_cte": 21498,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.761014",
+      "numero_cte": 21497,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.802325",
+      "numero_cte": 21496,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.842911",
+      "numero_cte": 21495,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.883714",
+      "numero_cte": 21490,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.927198",
+      "numero_cte": 21489,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:20.968765",
+      "numero_cte": 21488,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.009760",
+      "numero_cte": 21487,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.049295",
+      "numero_cte": 21485,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.090355",
+      "numero_cte": 21484,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.131832",
+      "numero_cte": 21483,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.170265",
+      "numero_cte": 21478,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.209262",
+      "numero_cte": 21477,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.247765",
+      "numero_cte": 21476,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.288039",
+      "numero_cte": 21473,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.326747",
+      "numero_cte": 21471,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.369628",
+      "numero_cte": 21470,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.410058",
+      "numero_cte": 21469,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.451417",
+      "numero_cte": 21468,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.492489",
+      "numero_cte": 21467,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.533012",
+      "numero_cte": 21466,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.570459",
+      "numero_cte": 21465,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.610978",
+      "numero_cte": 21464,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.651987",
+      "numero_cte": 21463,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.693385",
+      "numero_cte": 21462,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.734045",
+      "numero_cte": 21461,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.772355",
+      "numero_cte": 21460,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.814688",
+      "numero_cte": 21459,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.853038",
+      "numero_cte": 21458,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.892827",
+      "numero_cte": 21457,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.932336",
+      "numero_cte": 21456,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:21.992584",
+      "numero_cte": 21455,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.034091",
+      "numero_cte": 21454,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.072370",
+      "numero_cte": 21453,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.112549",
+      "numero_cte": 21452,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.153486",
+      "numero_cte": 21451,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.193405",
+      "numero_cte": 21450,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.234350",
+      "numero_cte": 21449,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.273641",
+      "numero_cte": 21448,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.313183",
+      "numero_cte": 21447,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.352072",
+      "numero_cte": 21446,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.393599",
+      "numero_cte": 21445,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.432720",
+      "numero_cte": 21444,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.471596",
+      "numero_cte": 21443,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.514435",
+      "numero_cte": 21442,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.552585",
+      "numero_cte": 21441,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.591942",
+      "numero_cte": 21440,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.631666",
+      "numero_cte": 21439,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.728219",
+      "numero_cte": 21438,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.767325",
+      "numero_cte": 21437,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.806734",
+      "numero_cte": 21436,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.845589",
+      "numero_cte": 21435,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.883823",
+      "numero_cte": 21434,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.922956",
+      "numero_cte": 21433,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:22.962397",
+      "numero_cte": 21432,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.031454",
+      "numero_cte": 21431,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.070391",
+      "numero_cte": 21430,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.109757",
+      "numero_cte": 21429,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.150845",
+      "numero_cte": 21428,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.190871",
+      "numero_cte": 21427,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.229660",
+      "numero_cte": 21426,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.268889",
+      "numero_cte": 21425,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.308871",
+      "numero_cte": 21424,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.353342",
+      "numero_cte": 21423,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.393471",
+      "numero_cte": 21422,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.431812",
+      "numero_cte": 21421,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.471823",
+      "numero_cte": 21420,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.511821",
+      "numero_cte": 21417,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.551941",
+      "numero_cte": 21416,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.590735",
+      "numero_cte": 21415,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.629521",
+      "numero_cte": 21414,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.667562",
+      "numero_cte": 21413,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.706896",
+      "numero_cte": 21412,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.745831",
+      "numero_cte": 21411,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.785164",
+      "numero_cte": 21410,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.854681",
+      "numero_cte": 21409,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.922127",
+      "numero_cte": 21408,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:23.960739",
+      "numero_cte": 21407,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.001313",
+      "numero_cte": 21406,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.044588",
+      "numero_cte": 21405,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.083246",
+      "numero_cte": 21404,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.127181",
+      "numero_cte": 21403,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.166812",
+      "numero_cte": 21402,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.221942",
+      "numero_cte": 21401,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.261292",
+      "numero_cte": 21400,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.302937",
+      "numero_cte": 21399,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.345336",
+      "numero_cte": 21398,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.386295",
+      "numero_cte": 21397,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.426721",
+      "numero_cte": 21395,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.464661",
+      "numero_cte": 21394,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.503984",
+      "numero_cte": 21393,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.544498",
+      "numero_cte": 21380,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.587858",
+      "numero_cte": 21370,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.628857",
+      "numero_cte": 21368,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.668682",
+      "numero_cte": 21365,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.708557",
+      "numero_cte": 21360,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.747407",
+      "numero_cte": 21355,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.788716",
+      "numero_cte": 21354,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.830184",
+      "numero_cte": 21348,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.869738",
+      "numero_cte": 21343,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.910236",
+      "numero_cte": 21342,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.948149",
+      "numero_cte": 21341,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:24.987361",
+      "numero_cte": 21340,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.028603",
+      "numero_cte": 21339,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.069417",
+      "numero_cte": 21338,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.112278",
+      "numero_cte": 21337,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.151541",
+      "numero_cte": 21336,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.189970",
+      "numero_cte": 21335,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.229575",
+      "numero_cte": 21334,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.272375",
+      "numero_cte": 21333,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.315072",
+      "numero_cte": 21332,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.358738",
+      "numero_cte": 21331,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.402115",
+      "numero_cte": 21330,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.440853",
+      "numero_cte": 21329,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.478550",
+      "numero_cte": 21328,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.518523",
+      "numero_cte": 21327,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.563161",
+      "numero_cte": 21326,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.603071",
+      "numero_cte": 21325,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.641552",
+      "numero_cte": 21324,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.681150",
+      "numero_cte": 21323,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.726285",
+      "numero_cte": 21322,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.764711",
+      "numero_cte": 21320,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-24"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.803300",
+      "numero_cte": 21319,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.842669",
+      "numero_cte": 21318,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.882291",
+      "numero_cte": 21317,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.921711",
+      "numero_cte": 21316,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:25.962452",
+      "numero_cte": 21315,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.001925",
+      "numero_cte": 21314,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.042642",
+      "numero_cte": 21313,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.081849",
+      "numero_cte": 21312,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.130594",
+      "numero_cte": 21311,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.170876",
+      "numero_cte": 21310,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.210826",
+      "numero_cte": 21309,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.249752",
+      "numero_cte": 21308,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.290625",
+      "numero_cte": 21307,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.331178",
+      "numero_cte": 21306,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.371519",
+      "numero_cte": 21305,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.412432",
+      "numero_cte": 21304,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.453544",
+      "numero_cte": 21303,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.496422",
+      "numero_cte": 21302,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.535220",
+      "numero_cte": 21301,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.574739",
+      "numero_cte": 21300,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.615794",
+      "numero_cte": 21299,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.655218",
+      "numero_cte": 21298,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.694843",
+      "numero_cte": 21297,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.737523",
+      "numero_cte": 21296,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.779575",
+      "numero_cte": 21295,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.819880",
+      "numero_cte": 21294,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.915423",
+      "numero_cte": 21293,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.954268",
+      "numero_cte": 21292,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:26.995343",
+      "numero_cte": 21291,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.035009",
+      "numero_cte": 21289,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.073458",
+      "numero_cte": 21288,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.119772",
+      "numero_cte": 21287,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.160002",
+      "numero_cte": 21286,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.198303",
+      "numero_cte": 21285,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.238123",
+      "numero_cte": 21284,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.276891",
+      "numero_cte": 21283,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.320565",
+      "numero_cte": 21282,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.363255",
+      "numero_cte": 21281,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.403185",
+      "numero_cte": 21280,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.445069",
+      "numero_cte": 21275,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.484228",
+      "numero_cte": 21274,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.527748",
+      "numero_cte": 21273,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.568433",
+      "numero_cte": 21272,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.614255",
+      "numero_cte": 21271,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.657319",
+      "numero_cte": 21270,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.697672",
+      "numero_cte": 21269,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.737939",
+      "numero_cte": 21268,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.780065",
+      "numero_cte": 21267,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.820021",
+      "numero_cte": 21266,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.859723",
+      "numero_cte": 21265,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.901624",
+      "numero_cte": 21264,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.941248",
+      "numero_cte": 21263,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:27.979568",
+      "numero_cte": 21262,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.019432",
+      "numero_cte": 21261,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.060198",
+      "numero_cte": 21256,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.099489",
+      "numero_cte": 21255,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.139855",
+      "numero_cte": 21254,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.178895",
+      "numero_cte": 21253,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.222215",
+      "numero_cte": 21252,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.262009",
+      "numero_cte": 21251,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.301753",
+      "numero_cte": 21250,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.343828",
+      "numero_cte": 21249,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.382810",
+      "numero_cte": 21248,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.423823",
+      "numero_cte": 21246,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.463142",
+      "numero_cte": 21244,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.502981",
+      "numero_cte": 21243,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.544751",
+      "numero_cte": 21242,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.583646",
+      "numero_cte": 21241,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.623304",
+      "numero_cte": 21240,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.665839",
+      "numero_cte": 21239,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.706982",
+      "numero_cte": 21238,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.746197",
+      "numero_cte": 21237,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.785789",
+      "numero_cte": 21236,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.825088",
+      "numero_cte": 21235,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.869092",
+      "numero_cte": 21234,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.910536",
+      "numero_cte": 21233,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.953289",
+      "numero_cte": 21232,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-25"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:28.993735",
+      "numero_cte": 21231,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.032425",
+      "numero_cte": 21229,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.074347",
+      "numero_cte": 21228,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.114578",
+      "numero_cte": 21227,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.153816",
+      "numero_cte": 21226,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.194518",
+      "numero_cte": 21225,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.234883",
+      "numero_cte": 21224,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.274130",
+      "numero_cte": 21223,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.312621",
+      "numero_cte": 21219,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.352942",
+      "numero_cte": 21218,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.392578",
+      "numero_cte": 21217,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.430810",
+      "numero_cte": 21215,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.470222",
+      "numero_cte": 21214,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.510070",
+      "numero_cte": 21213,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.548480",
+      "numero_cte": 21211,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.587895",
+      "numero_cte": 21210,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.628278",
+      "numero_cte": 21209,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.668878",
+      "numero_cte": 21208,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.708879",
+      "numero_cte": 21207,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.747169",
+      "numero_cte": 21206,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.786956",
+      "numero_cte": 21204,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.826632",
+      "numero_cte": 21203,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.865661",
+      "numero_cte": 21202,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.904632",
+      "numero_cte": 21201,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.947734",
+      "numero_cte": 21200,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:29.987385",
+      "numero_cte": 21199,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.027531",
+      "numero_cte": 21198,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.070839",
+      "numero_cte": 21197,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.112890",
+      "numero_cte": 21196,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.153418",
+      "numero_cte": 21195,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.193548",
+      "numero_cte": 21194,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.233831",
+      "numero_cte": 21193,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.273042",
+      "numero_cte": 21192,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.311693",
+      "numero_cte": 21191,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.352433",
+      "numero_cte": 21190,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.396198",
+      "numero_cte": 21189,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.435456",
+      "numero_cte": 21188,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.477002",
+      "numero_cte": 21187,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.536498",
+      "numero_cte": 21186,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.577196",
+      "numero_cte": 21185,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.615492",
+      "numero_cte": 21183,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.657469",
+      "numero_cte": 21182,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.701158",
+      "numero_cte": 21181,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.741285",
+      "numero_cte": 21180,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.783437",
+      "numero_cte": 21179,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.822367",
+      "numero_cte": 21177,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-26"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.863750",
+      "numero_cte": 21176,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-26"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.904222",
+      "numero_cte": 21175,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:30.944767",
+      "numero_cte": 21174,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.037771",
+      "numero_cte": 21173,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.079289",
+      "numero_cte": 21172,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.119019",
+      "numero_cte": 21171,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.156846",
+      "numero_cte": 21170,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.194863",
+      "numero_cte": 21169,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.235053",
+      "numero_cte": 21168,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.277412",
+      "numero_cte": 21167,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.317168",
+      "numero_cte": 21166,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.354770",
+      "numero_cte": 21165,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.396693",
+      "numero_cte": 21164,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.437030",
+      "numero_cte": 21163,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.477591",
+      "numero_cte": 21162,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.518838",
+      "numero_cte": 21161,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.559101",
+      "numero_cte": 21160,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.603849",
+      "numero_cte": 21159,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.643679",
+      "numero_cte": 21158,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.685829",
+      "numero_cte": 21157,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.727630",
+      "numero_cte": 21156,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.769416",
+      "numero_cte": 21155,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-26"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.811342",
+      "numero_cte": 21154,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.853969",
+      "numero_cte": 21153,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.894923",
+      "numero_cte": 21152,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.936929",
+      "numero_cte": 21151,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:31.977281",
+      "numero_cte": 21150,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.016090",
+      "numero_cte": 21149,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.055500",
+      "numero_cte": 21148,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.100553",
+      "numero_cte": 21147,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.139289",
+      "numero_cte": 21146,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.178716",
+      "numero_cte": 21145,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.219634",
+      "numero_cte": 21144,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.261298",
+      "numero_cte": 21143,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.301267",
+      "numero_cte": 21142,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.343179",
+      "numero_cte": 21141,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.383914",
+      "numero_cte": 21140,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.430869",
+      "numero_cte": 21139,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.471423",
+      "numero_cte": 21138,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.516896",
+      "numero_cte": 21137,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.563393",
+      "numero_cte": 21136,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.607204",
+      "numero_cte": 21135,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.651929",
+      "numero_cte": 21134,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.692103",
+      "numero_cte": 21133,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.733370",
+      "numero_cte": 21132,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.804947",
+      "numero_cte": 21131,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.846165",
+      "numero_cte": 21130,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.886099",
+      "numero_cte": 21129,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.926802",
+      "numero_cte": 21128,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:32.966614",
+      "numero_cte": 21127,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.004263",
+      "numero_cte": 21126,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.044317",
+      "numero_cte": 21125,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.085132",
+      "numero_cte": 21124,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.123718",
+      "numero_cte": 21123,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.162311",
+      "numero_cte": 21122,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.201867",
+      "numero_cte": 21121,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.241765",
+      "numero_cte": 21120,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.280454",
+      "numero_cte": 21119,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-09-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.321331",
+      "numero_cte": 21118,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-08-27"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.363798",
+      "numero_cte": 21117,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-08-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T16:05:33.404026",
+      "numero_cte": 21115,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-08-30"
+        }
+      }
+    }
+  ]
+}

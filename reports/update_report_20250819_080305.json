@@ -1,0 +1,5994 @@
+{
+  "timestamp": "2025-08-19T08:03:05.167286",
+  "statistics": {
+    "total_processados": 368,
+    "atualizados": 368,
+    "sem_alteracao": 0,
+    "nao_encontrados": 0,
+    "erros": 0,
+    "campos_atualizados": {
+      "data_rq_tmc": 23,
+      "data_envio_processo": 364,
+      "observacao": 161,
+      "data_inclusao_fatura": 314,
+      "numero_fatura": 34,
+      "primeiro_envio": 2,
+      "data_atesto": 21,
+      "envio_final": 22
+    }
+  },
+  "update_log": [
+    {
+      "timestamp": "2025-08-19T08:02:49.220290",
+      "numero_cte": 22427,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524340836   BRA IM 25 2660 - 2735   ALS CC 140010000 CONTA CONTABIL 500210   Veiculo Placa: KYN6481  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.285780",
+      "numero_cte": 22426,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524340836   BRA IM 25 2577- 2813   DS CC 120158023 CONTA CONTABIL 500210    Veiculo Placa: KYN6481  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.327125",
+      "numero_cte": 22425,
+      "changes": {
+        "observacao": {
+          "old": null,
+          "new": "  Carga agendada #: 524035136      BRA EX 25 0363 - DB160160010  CONTA CONTABIL 500210   Veiculo Placa: KQO5E26  -  Motorista: JOAM SANTOS DE SOUZA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.369159",
+      "numero_cte": 22424,
+      "changes": {
+        "observacao": {
+          "old": null,
+          "new": "  Carga agendada #: 524035136      BRA EX 25 0368- 0374     WS 110141008  CONTA CONTABIL 500210   Veiculo Placa: KQO5E26  -  Motorista: JOAM SANTOS DE SOUZA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.411653",
+      "numero_cte": 22423,
+      "changes": {
+        "observacao": {
+          "old": null,
+          "new": "  Carga agendada #: 524035136     BRA EX 25 0371- DS 120158023    CONTA ONTABIL 500210     Veiculo Placa: KQO5E26  -  Motorista: JOAM SANTOS DE SOUZA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.483149",
+      "numero_cte": 22422,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524158375              BRA IM 25 2662   CWI  CC 870151700  CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.528859",
+      "numero_cte": 22421,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524158375       BRA IM 25 2558  WS CC 110141008  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.570440",
+      "numero_cte": 22420,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524158375          BRA IM 25 2816-  2591- 2511   DS CC 120158023 CONTA CONTABIL 500210 Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.610756",
+      "numero_cte": 22419,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524158375               BRA IM 25 2690    PP  CC 175160000  CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.652057",
+      "numero_cte": 22418,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524044828  BRA IM 25 2712 PP CC 175160000 CONTA CONTABIL 500210   F OUTROS 2 = MAD QUIMICO    Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.693358",
+      "numero_cte": 22417,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524044828   BRA IM 25 2497   DS CC 120158023 CONTA CONTABIL 500210   Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.735010",
+      "numero_cte": 22416,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524044828    BRA IM 25 2782  WS  CC 110141008  CONTA CONTABIL 500210   Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.776241",
+      "numero_cte": 22415,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524044828      BRA IM 25 2676   CWI  CC 870151700 CONTA CONTABIL 500210      Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.819982",
+      "numero_cte": 22409,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-04"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523695951   BRA IM 25 1949   PPS  CC 175160000 CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.865197",
+      "numero_cte": 22407,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-04"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523695951  BRA IM 25 2756-2462  PPS 150105200   CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.946698",
+      "numero_cte": 22406,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-04"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523695951    BRA IM 25 2623  - 2663    CWI  CC 870151700  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:49.987381",
+      "numero_cte": 22405,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-04"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523695951    BRA IM 25 2653- 2734 ALS CC 140010000 CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.027487",
+      "numero_cte": 22404,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-04"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523695951 BRA IM 25 1836  DB CC 160053200 CONTA CONTABIL 500210     Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.073670",
+      "numero_cte": 22401,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523336240     BRA EX 25 0352-      DB160160010  CONTA CONTABIL 500210    Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.121427",
+      "numero_cte": 22400,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-05"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523336240       BRA EX 25 0326 -DS120158023  CONTA CONTABIL 500210       Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.176401",
+      "numero_cte": 22399,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523495743     BRA IM 25 2624 - 2386   PP  CC 175160000  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.218094",
+      "numero_cte": 22398,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523495743    BRA IM 25 1837   DB CC 160053200   CONTA CONTABIL 500210 Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.260018",
+      "numero_cte": 22397,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523495743     BRA IM 25 2544 - 2379   WS CC 110141008  CONTA CONTABIL 500210       Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.302805",
+      "numero_cte": 22396,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523495743  BRA IM 25 2499  DS  CC 120158023 CONTA CONTABIL 500210     Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.346440",
+      "numero_cte": 22395,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523495743   BRA IM 25 2657-2659- 2731- 2655  ALS CC 140010000 CONTA CONTABIL 500210     Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.388740",
+      "numero_cte": 22394,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523495743   BRA IM 25 2612  - 2604   CWI  CC 870151700  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.449702",
+      "numero_cte": 22393,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522917663   BRAEX 25 0348 -    DS120158023   CONTA CONTABIL 500210  Veiculo Placa: LSB2007  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.504283",
+      "numero_cte": 22392,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522785732   BRA EX 25 0351 DB160160010  CONTA CONTABIL 500210      Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.548261",
+      "numero_cte": 22391,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522785732    BRA EX 25 0355   ALS140010000   CONTA CONTABIL 500210       Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.589224",
+      "numero_cte": 22390,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522785732    BRA EX 25 0354   DS120158023  CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.628047",
+      "numero_cte": 22388,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523325777   BRA IM 25 2294  -2565- 2585   DS CC 120158023 CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.668525",
+      "numero_cte": 22387,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523325777     BRA IM 25 2661   CWI CC 870151700  CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.708199",
+      "numero_cte": 22386,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523325777   BRA IM 25 2654   ALS CC 140010000  CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.750823",
+      "numero_cte": 22384,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523325777    BRA IM 25 2412   -2644  PP  CC 175160000     CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.793624",
+      "numero_cte": 22381,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523276064 - BRA IM 25 2648- 2403- 2626- 2639- 2414  PP - CC 175160000 - CONTA CONTABIL 500210;\nVeiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.834210",
+      "numero_cte": 22380,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523276064 - BRA IM 25 2014- 2552  WS - CC 110141008 - CONTA CONTABIL 500210;\nVeiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.875283",
+      "numero_cte": 22379,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523276064 - BRA IM 25 2438- 2031  ALS - CC 140010000 - CONTA CONTABIL 500210;\nVeiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.915597",
+      "numero_cte": 22378,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523276064  - BRA IM 25 2587- 2568- 2586- 2579- 2513- 2574- 2495- 2489- 2515  DS - CC 120158023  - CONTA CONTABIL 500210;\nVeiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:50.958946",
+      "numero_cte": 22377,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523065934  - BRA IM 25 2382- 2629  PP - CC 175160000 - CONTA CONTABIL 500210;\nVeiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.002494",
+      "numero_cte": 22376,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523065934  - BRA IM 25 2548  WS - CC 110141008- CONTA CONTABIL 500210;\nVeiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.042986",
+      "numero_cte": 22375,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523065934  - BRA IM 25 2416  CWI - CC 870151700  - CONTA CONTABIL 500210;\nVeiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.083194",
+      "numero_cte": 22374,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025053.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 523065934  - BRA IM 25 2580- 2581- 2582  DS - CC 120158023  - CONTA CONTABIL 500210;\nVeiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.125874",
+      "numero_cte": 22373,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025052.0"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 2553- 2554- 2550- 2547  WS - CC 110141008  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.168380",
+      "numero_cte": 22372,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025051.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 2174- 2601  PP - CC 175092701  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.210962",
+      "numero_cte": 22371,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025050.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 2725  PPS - CC 150105200  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.252171",
+      "numero_cte": 22370,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025049.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 2578- 2572  DS - CC 120158023  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.295343",
+      "numero_cte": 22369,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025048.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 1835 DB - CC 160053200  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.337126",
+      "numero_cte": 22368,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025047.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 2336 CWI  - CC 870151700  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.377771",
+      "numero_cte": 22366,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025046.0"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-30"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522927848  - BRA IM 25 2652  AL - CC 140010000  - CONTA CONTABIL 500210;\nVeiculo Placa: KXO7J95  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.419248",
+      "numero_cte": 22365,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025045.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522770419      BRA IM 25 2608- 2402-     PP   CC  175092701  CONTA CONTABIL 500210 Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.461488",
+      "numero_cte": 22364,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025044.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522770419      BRA IM 25 2488- 2510-  2494- 2476  DS CC 120158023 CONTA CONTABIL 500210  Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.502495",
+      "numero_cte": 22363,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025043.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522770419     BRA IM 25 1167- 2543-  2546 - 2539- 2019   WS  CC 110141008  CONTA CONTABIL 500210 Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.542780",
+      "numero_cte": 22362,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025042.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522770419    BRAIM 25 2636 CWI   CC 870151700  CONTA CONTABIL 500210 Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.583209",
+      "numero_cte": 22361,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025041.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522770419    BRA IM 25 2431  AL CC 140010000  CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.623547",
+      "numero_cte": 22360,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-31"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025040.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": " Carga agendada #: 522514318     BRAEX 25 0341- 0342   DS CC 120158023 CONTA CONTABIL 500210   Veiculo Placa: KYE1I22  -  Motorista: DANIEL LADEIRA PRAZERES;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.667743",
+      "numero_cte": 22359,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025039.0"
+        },
+        "observacao": {
+          "old": null,
+          "new": "              Carga agendada #: 522192513          BRA EX 25 0344   -WS 110141008  CONTA CONTABIL 500210           Veiculo Placa: KXO7J95  -  Motorista: DANIEL LADEIRA PRAZERES;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.709262",
+      "numero_cte": 22358,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025038.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522192513       BRA EX 25 0333- 0309 DS 120158023  CONTA CONTABIL 500210              Veiculo Placa: KXO7J95  -  Motorista: DANIEL LADEIRA PRAZERES;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.751198",
+      "numero_cte": 22357,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-28"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025037.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522579431  BRA IM 25 2278-2517- 1626- 2570 - 2302- 1939- 2487 DS CC 120158023 CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.794431",
+      "numero_cte": 22356,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-28"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025036.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522579431  BRA IM 25 2622-2630 - 2637- 2393- 2417- 2618- 2072- 2334 -2387   CWI  CC 870151700 CONTA CONTABIL 500210 Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.838016",
+      "numero_cte": 22355,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-28"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025035.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522579431    BRA IM 25 2532-2533-  2528 -2534- 1890  WS  CC 110141008  CONTA CONTABIL 500210     Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.882733",
+      "numero_cte": 22354,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-28"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025034.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522579431  BRAIM 25 1832- 1833    DB CC 160053200 CONTA CONTABIL 500210  Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.923545",
+      "numero_cte": 22353,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-28"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025033.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522579431   BRA IM 25 1064  -2058  AL CC 140010000 CONTA CONTABIL 500210    Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:51.970592",
+      "numero_cte": 22352,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-28"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025032.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522579431    BRA IM 25 2425- 2621 PP  CC 175160000 CONTA CONTABIL 500210   Veiculo Placa: KPG7I19  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.012360",
+      "numero_cte": 22351,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025031.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522007647   BRA EX 25 0316    ALS 140010000  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.052457",
+      "numero_cte": 22350,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025030.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522007647   BRA EX 25 0315- DS 175093101   CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.096059",
+      "numero_cte": 22349,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025029.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522007647   BRA EX 25 0299- DS CC 120158023  CONTA CONTABIL 500210 Veiculo Placa: KXO7J95  -  Motorista: DANIEL LADEIRA PRAZERES;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.135559",
+      "numero_cte": 22348,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025028.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522497185    BRA IM 25 2380  OIC 350090753  CONTA  CONTABIL 500210    Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.178391",
+      "numero_cte": 22347,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025027.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522497185    BRA IM 25 1476 DCF   CC  120161004  CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.220363",
+      "numero_cte": 22346,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025026.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522497185    BRA IM 25 2606  PP  CC 175160000 CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.262325",
+      "numero_cte": 22344,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025025.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522497185     BRA IM 25 2333-2404- 2398- 2603- 2415   CWI CC 870151700 CONTA CONTABIL 500210   Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.305953",
+      "numero_cte": 22343,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025024.0"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 522497185      BRA IM 25 2501-2509- 2506- 2491-2514  DS CC 120158023 CONTA CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.344315",
+      "numero_cte": 22342,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025023.0"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.387298",
+      "numero_cte": 22341,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025022.0"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.429465",
+      "numero_cte": 22340,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025021.0"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.470628",
+      "numero_cte": 22339,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        },
+        "numero_fatura": {
+          "old": null,
+          "new": "5025020.0"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.515666",
+      "numero_cte": 22338,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.561819",
+      "numero_cte": 22337,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.602463",
+      "numero_cte": 22336,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.643322",
+      "numero_cte": 22335,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.685009",
+      "numero_cte": 22334,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.727640",
+      "numero_cte": 22333,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.768729",
+      "numero_cte": 22332,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.810746",
+      "numero_cte": 22331,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.858080",
+      "numero_cte": 22330,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.900605",
+      "numero_cte": 22329,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.942145",
+      "numero_cte": 22328,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:52.983625",
+      "numero_cte": 22327,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-22"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.022956",
+      "numero_cte": 22326,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 521891555      BRA EX 25 0339-   DS 120158023  CONTA CONTABIL 500210   F OUTROS 2 = AD QUIMICO  Veiculo Placa: LSB2007  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.065184",
+      "numero_cte": 22325,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.107162",
+      "numero_cte": 22324,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.149079",
+      "numero_cte": 22323,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.192551",
+      "numero_cte": 22322,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.234402",
+      "numero_cte": 22321,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.276217",
+      "numero_cte": 22320,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 521795038    BRA EX 25 0329-  WS 110141008  CONTA CONTABIL 500210   Veiculo Placa: KQO5E26  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.319778",
+      "numero_cte": 22319,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-21"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.362107",
+      "numero_cte": 22318,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-21"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.405236",
+      "numero_cte": 22317,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-21"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.445230",
+      "numero_cte": 22316,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.485931",
+      "numero_cte": 22315,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.526687",
+      "numero_cte": 22314,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.619507",
+      "numero_cte": 22313,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.661240",
+      "numero_cte": 22312,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.708393",
+      "numero_cte": 22311,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.752374",
+      "numero_cte": 22310,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.792383",
+      "numero_cte": 22308,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.835036",
+      "numero_cte": 22307,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.874769",
+      "numero_cte": 22306,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.914822",
+      "numero_cte": 22305,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:53.953743",
+      "numero_cte": 22304,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.035390",
+      "numero_cte": 22303,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.075334",
+      "numero_cte": 22302,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.116522",
+      "numero_cte": 22301,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.157629",
+      "numero_cte": 22300,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.200329",
+      "numero_cte": 22299,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.244953",
+      "numero_cte": 22298,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.289220",
+      "numero_cte": 22297,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.331375",
+      "numero_cte": 22295,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.374401",
+      "numero_cte": 22294,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.415083",
+      "numero_cte": 22293,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.453719",
+      "numero_cte": 22292,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.500027",
+      "numero_cte": 22291,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.541647",
+      "numero_cte": 22290,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.585389",
+      "numero_cte": 22289,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.627365",
+      "numero_cte": 22288,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.670153",
+      "numero_cte": 22287,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.710699",
+      "numero_cte": 22286,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.751331",
+      "numero_cte": 22284,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.792779",
+      "numero_cte": 22283,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.833429",
+      "numero_cte": 22282,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.876428",
+      "numero_cte": 22281,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.916995",
+      "numero_cte": 22280,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:54.958142",
+      "numero_cte": 22279,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.000677",
+      "numero_cte": 22278,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.042171",
+      "numero_cte": 22277,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.086996",
+      "numero_cte": 22276,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.127947",
+      "numero_cte": 22275,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-08-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.167568",
+      "numero_cte": 22230,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-26"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.209491",
+      "numero_cte": 22228,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-26"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.250569",
+      "numero_cte": 22223,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.293372",
+      "numero_cte": 22222,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-25"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.335048",
+      "numero_cte": 22217,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-07-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.376138",
+      "numero_cte": 955,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.418511",
+      "numero_cte": 954,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.468387",
+      "numero_cte": 952,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.512575",
+      "numero_cte": 22184,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 518185329     BRAIM 25 1966 1977   PP  CC 175160000  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.554855",
+      "numero_cte": 951,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.594196",
+      "numero_cte": 950,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.636600",
+      "numero_cte": 949,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.678704",
+      "numero_cte": 948,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.719978",
+      "numero_cte": 947,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.759018",
+      "numero_cte": 945,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.800027",
+      "numero_cte": 943,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.840644",
+      "numero_cte": 942,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.882701",
+      "numero_cte": 941,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.922133",
+      "numero_cte": 940,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-09"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:55.961679",
+      "numero_cte": 934,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.000962",
+      "numero_cte": 933,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.041425",
+      "numero_cte": 22026,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": " Carga agendada #: 514238996     BRA EX 25 0216    -0203   WS CC 110141008   CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.086543",
+      "numero_cte": 22016,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 514048431      BRA IM 25 0277   -1529-  1245- 1443- 1436- 1257- 1447- 1462- 1261- 0406- 1444- 1434   DS  CC 120158023 CONTA CONTABIL 500210    Veiculo Placa: KQO5E26  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.127743",
+      "numero_cte": 22015,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-09"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 514321438    BRA IM 25 1202  - 1370- 1211- 1066  ALS CC 140010000  CONTA CONTABIL 500210 CAMINHÃO TRUCK   Veiculo Placa: KYE1I22  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.168228",
+      "numero_cte": 22014,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-09"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 514321438   BRA IM 25 1459  - 1450- 0821- 1266  DS CC 120158023 CONTA CONTABIL 500210  CAMINHÃO TRUCK Veiculo Placa: KYE1I22  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.208254",
+      "numero_cte": 22013,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-09"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 514321438   BRA IM 25 1080 - 1198- 1601- 1086- 1471- 0556- 0768  WS CC 110141008 CONTA CONTABIL 500210  CAMINHÃO TRUCK   Veiculo Placa: KYE1I22  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.250013",
+      "numero_cte": 22012,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-09"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 514321438    BRA IM 25 0991- 1420- 1411- 1412   CWI  CC 870151700 CONTA CONTABIL 500210   CAMINHÃO TRUCK Veiculo Placa: KYE1I22  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.312233",
+      "numero_cte": 22011,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-09"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 514321438   BRA IM 25 1280  -1318-  1410    PP  CC 175160000  CONTA CONTABIL 500210   CAMINHÃO TRUCK Veiculo Placa: KYE1I22  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.357593",
+      "numero_cte": 927,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.397544",
+      "numero_cte": 926,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.438254",
+      "numero_cte": 925,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.478188",
+      "numero_cte": 924,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-05-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.519340",
+      "numero_cte": 21927,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-24"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.562247",
+      "numero_cte": 21925,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-24"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.602789",
+      "numero_cte": 21922,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.642495",
+      "numero_cte": 21920,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.683140",
+      "numero_cte": 21918,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.724608",
+      "numero_cte": 21917,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.764925",
+      "numero_cte": 21915,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.806523",
+      "numero_cte": 921,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.847522",
+      "numero_cte": 21913,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.892379",
+      "numero_cte": 21911,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.933009",
+      "numero_cte": 21906,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:56.973619",
+      "numero_cte": 922,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.016493",
+      "numero_cte": 920,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.058828",
+      "numero_cte": 923,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-29"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.101699",
+      "numero_cte": 21888,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 510870989   BRA IM 25 0857   PP  CC 175160000 CONTA CONTABIL 500210    Veiculo Placa: KYE1I22  -  Motorista: MARCOS PAULO  BARRETO LUIZ;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.144372",
+      "numero_cte": 21882,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 510673202       BRA IM 25 1005  -   1011  PP   CC 175160000    CONTA CONTABIL 500210   CAMINHÃO  TRUCK     Veiculo Placa: KYE1I22  -  Motorista: MARCOS PAULO  BARRETO LUIZ;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.188973",
+      "numero_cte": 21861,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.231135",
+      "numero_cte": 915,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-04-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.274170",
+      "numero_cte": 914,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.315877",
+      "numero_cte": 913,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.359329",
+      "numero_cte": 912,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.400611",
+      "numero_cte": 907,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-04-09"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-24"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.441128",
+      "numero_cte": 906,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-24"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.482901",
+      "numero_cte": 21805,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-25"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508673943    BRA IM 25 0534  OIC 350090753  CONTA CONTABIL 500210   CAMINHÃO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.526565",
+      "numero_cte": 21802,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-18"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508673943    BRA IM 25 0376 -0375-     BRA IM 24 4014  WS CC 110141008  CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.569533",
+      "numero_cte": 21801,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-24"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508395344    BRA EX 25 0089   WS 110141008  CONTA CONTABIL 500210   Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.612335",
+      "numero_cte": 21800,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.652050",
+      "numero_cte": 904,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.695584",
+      "numero_cte": 21796,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-14"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508003755      BRA EX 25 0099-      DS120158023   CONTA CONTABIL 500210  Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.737605",
+      "numero_cte": 21791,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-17"
+        },
+        "observacao": {
+          "old": null,
+          "new": "BRA IM 25 0375  -  0536  WS CC 110141008  CONTA CONTABIL 500210   CAMINHÃO TOCO  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.781593",
+      "numero_cte": 21789,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508186383   BRA IM 25 0791  PP  175160000  CONTA CONTABIL 500210   CAMINHÃO TOCOVeiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.821943",
+      "numero_cte": 21788,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "  Carga agendada #: 508186383  BRA IM 25 0465- 0474  -0466-0470 - 0037  CWI  CC 870151700 CONTA CONTABIL 500210    CAMINHÃO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.918763",
+      "numero_cte": 21786,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508186383  BRA IM 25 0381  - 0405- 0263- 0393-  0113- 0578  -0580 -0581  DS CC 120158023 CONTA CONTABIL 500210   CAMINHÃO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:57.961239",
+      "numero_cte": 21785,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-28"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 508186383   BRA IM 25 0509  -0206  AL CC 140010000  CONTA CONTABIL 500210  CAMINHÃO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.010130",
+      "numero_cte": 21781,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-12"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #:508098839   -  BRA IM 25 0681-0587 -0583 ~0680 -0683 -0677 -0571 -0401  DS  - CC 120158023 -  CONTA CONTABIL 500210;\nCAMINHAO TOCO - Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.059826",
+      "numero_cte": 21780,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-12"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #:508098839  -  BRA IM 25 0349   AL  -  CC 140010000  -  CONTA CONTABIL 500210;\nCAMINHAO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.103829",
+      "numero_cte": 21778,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-12"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 507883063    BRA IM 25 0234- 0377   WS CC 110141008  CONTA CONTABIL 500210   CAMINHÃO TOCO  Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.144010",
+      "numero_cte": 21777,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-12"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 507883063    BRA IM 25 0687 -0407  DS  CC 120158023   CONTA CONTABIL 500210   CAMINHAO TOCO   Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.184943",
+      "numero_cte": 21775,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-11"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.226206",
+      "numero_cte": 21774,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-11"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #:507763481 -  BRA IM 25 0136   AL  - CC 140010000  - CONTA CONTABIL 500210 -  CAMINHAO TOCO;\nVeiculo Placa: KQO5E26  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.268099",
+      "numero_cte": 21773,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-11"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #:507763481 -  BRA IM 25 0565 - 0570   DS -  CC 120158023 - CONTA CONTABIL 500210   -   CAMINHÃO TOCO;\nVeiculo Placa: KQO5E26  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.311699",
+      "numero_cte": 21770,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-07"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 507139518      BRA IM 25 0269   -0569      BRA IM 24 4400-4282   DS CC 120158023 CONTA CONTABIL 500210      CAMINHÃO TOCO     Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.356362",
+      "numero_cte": 21766,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.397751",
+      "numero_cte": 21764,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.441422",
+      "numero_cte": 21761,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.483927",
+      "numero_cte": 21759,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-03-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.524736",
+      "numero_cte": 21757,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.566600",
+      "numero_cte": 21755,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.639580",
+      "numero_cte": 21749,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.681706",
+      "numero_cte": 21748,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.724337",
+      "numero_cte": 21737,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-24"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 506143797   BRA IM 24 4258  PP 175160000  CONTA CONTABIL 500210  CAMINHÃO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.766161",
+      "numero_cte": 21728,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-24"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 505884990   BRA IM 25 0431  - 0187  PP  CC175160000   CONTA CONTABIL 500210  CAMINHÃO TOCO  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.807883",
+      "numero_cte": 881,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-12"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-24"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.857399",
+      "numero_cte": 880,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.898856",
+      "numero_cte": 21706,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-14"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 505252872 BRA IM 25 0232- 0363  WS CC 110141008  CONTA CONTABIL 500210    CAMINHÃO TOCO Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.941518",
+      "numero_cte": 878,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:58.985960",
+      "numero_cte": 877,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-03-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-14"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.033493",
+      "numero_cte": 874,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.074594",
+      "numero_cte": 21668,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "observacao": {
+          "old": null,
+          "new": "              BRA IM 25 0144   AL CC 140010000 CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.114506",
+      "numero_cte": 21667,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503924938       BRA IM 25 0018-0028- 0003-0010    PP 17516000    CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.163177",
+      "numero_cte": 21666,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503924938    BRA IM 24 4398-4388 -      BRA IM 25 0128-0106   DS  CC 120158023 CONTA CONTABIL 500210 Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.202856",
+      "numero_cte": 21665,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503924938    BRA IM 24 4368-4172-  4462- 4171   BRA IM 25 0075   WS CC 110141008  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.243018",
+      "numero_cte": 21664,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503924938    BRA IM 24 4191  ALS CC 140010000 CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.283874",
+      "numero_cte": 21663,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503924938      BRA IM 24 0013 - 4324  -0036     BRA IM 25 0165-0048-0162-0167- 0060   CWI    CC 870151700 CONTA CONTABIL 500210                           Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.324308",
+      "numero_cte": 21662,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada :  503832200      BRA IM 24 3966- 4271 -4384 DS 120158023 CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.364284",
+      "numero_cte": 21661,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503832200    BRA IM 24 4297  ALS CC 140010000 CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.406660",
+      "numero_cte": 21660,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "observacao": {
+          "old": null,
+          "new": "CARGA AGENDADA : 503832200    BRA IM 25 0020-0017-0046         CWI  CC 870151700  CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.447877",
+      "numero_cte": 873,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.488977",
+      "numero_cte": 872,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.528546",
+      "numero_cte": 21658,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503684878 BRA IM 24 4169   DCF  CC  120161004 CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.568139",
+      "numero_cte": 21657,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503684878   BRA IM 24 4342    BRA IM 25 0032    PP   CC 175160000    CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.613669",
+      "numero_cte": 21656,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503684878   BRA IM 25 0099     BRA IM 24 4177-4366    WS   CC 110141008  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.658903",
+      "numero_cte": 21655,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "BRA IM 24 4451  - 4453-  4316   AL   CC 140010000   CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.700925",
+      "numero_cte": 21654,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503684878   BRA IM 24 4372 -4373   DS   CC 120158023   CONTA CONTABIL 500210     Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.746515",
+      "numero_cte": 21653,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503684878   BRA IM 25 0014   CWI   CC 870151700   CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.792722",
+      "numero_cte": 21652,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503684878  BRA IM 24 4329   DB CC 160053200   CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.834324",
+      "numero_cte": 21651,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503514712   BRA EX 25 0031-  0018    DS 120158023  CONTA CONTABIL 500210  Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.878105",
+      "numero_cte": 21650,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503220901    BRA EX 25 0010   DS 120158023 CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.922476",
+      "numero_cte": 870,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:02:59.965325",
+      "numero_cte": 869,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-02-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.010225",
+      "numero_cte": 21649,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022   BRA IM 25 0022    BRA IM 24 4240  DB CC 160053200    CONTA CONTABIL 500210     Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.058633",
+      "numero_cte": 21648,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022  BRA IM 24 4409- 4439      BRA IM 25 0135   ALS CC 140010000  CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.100886",
+      "numero_cte": 21647,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022    BRA IM 24 4079  CWI  CC 870151700   CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.146482",
+      "numero_cte": 21646,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022 -  BRA IM 24 0089  -  4180   WS CC 110141008 CONTA CONTABIL 500210 Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.199399",
+      "numero_cte": 21645,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022   BRA IM 24 4387 -4287  DS CC 120158023   CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.244258",
+      "numero_cte": 21644,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022 -    BRA IM 24 4361  DCF120161004  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.285271",
+      "numero_cte": 21643,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503471022 -   BRA IM 24 4325 -4260   PP175160000  CONTA CONTABIL 500210 Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.326496",
+      "numero_cte": 21642,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503353931    BRA IM 25 0027   BRA IM 24 0011  CWI  CC 870151700  CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.368667",
+      "numero_cte": 21641,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503353931    BRA IM 24 4269-   4380-  4374  DS  CC 120158023 CONTA CONTABIL 500210        Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.409855",
+      "numero_cte": 21640,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503353931    BRA IM 24 4352  WS 110141008   CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.451729",
+      "numero_cte": 21639,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503353931   BRA IM 24 4229 -4228   DB  CC 160053200  CONTA CONTABIL 500210    Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.492370",
+      "numero_cte": 21638,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503353931    BRA IM 24 4308  -  4448  -  4459 ALS CC 140010000 CONTA CONTABIL 500210  Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.533687",
+      "numero_cte": 21637,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503353931    BRA IM 24 0071  DCF 120161004;    CONTA CONTABIL 500210     Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.574444",
+      "numero_cte": 868,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.614975",
+      "numero_cte": 867,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.654446",
+      "numero_cte": 866,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.693760",
+      "numero_cte": 21636,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503057789   BRA EX 25 0019-  0007   DS 120158023  CONTA CONTABIL 500210 Veiculo Placa: KXO7J95  -  Motorista: LEANDRO DOS SANTOS SOUSA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.733718",
+      "numero_cte": 21635,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503170927   BRA IM 24 4340  BRA IM 25 0002 PP 175160000 CONTA CONTABIL 500210  Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.773645",
+      "numero_cte": 21634,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503170927 BRA IM 24 4461 - 4354-4357  WS CC 110141008 CONTA  CONTABIL 500210 Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.815131",
+      "numero_cte": 21633,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503170927   BRA IM 25 0024  CWI   CC 870151700  CONTA CONTABIL 500210 Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.858458",
+      "numero_cte": 21632,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503170927  BRA IM 24 4047  ALS CC 140010000  CONTA CONTABIL 500210   Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.938993",
+      "numero_cte": 21631,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503170927 BRA IM 24 3697 - 4379   DS CC 120158023 CONTA CONTABIL 500210   Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:00.978535",
+      "numero_cte": 865,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-30"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.018450",
+      "numero_cte": 21630,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503023469   BRA IM 25 0004  CWI CC 870151700  CONTA CONTABIL 500210 Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.062466",
+      "numero_cte": 21629,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503023469   BRA IM 24 3950- 4391- 4280  DS CC 120158023 CONTA CONTABIL 500210  Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.107168",
+      "numero_cte": 21628,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-31"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 503023469   BRA IM 24 4183   WS CC 110141008 CONTA CONTABIL 500210 Veiculo Placa: EMR3D89  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.151591",
+      "numero_cte": 21627,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-19"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-30"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 502490826  BRA EX 25 0014 DB160160010 CONTA CONTABIL 500210   Veiculo Placa: KYE1I22  -  Motorista: MATHEUS DOS SANTOS ROSA ;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.194825",
+      "numero_cte": 21626,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-30"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 502490826    BRA EX 25 0036 -0027  DS 120158023  CONTA CONTABIL 500210 Veiculo Placa: KYE1I22  -  Motorista: MATHEUS DOS SANTOS ROSA ;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.239127",
+      "numero_cte": 21625,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502758157 BRA EX 25 0039   CWI 870151700  CONTA CONTABIL 500210 Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.281890",
+      "numero_cte": 21624,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502758157  BRA EX 25 0017    DS 120158023 CONTA CONTABIL 500210 Veiculo Placa: KXO7J95  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.327059",
+      "numero_cte": 21623,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-30"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502756826    BRA EX 24 1868  ALS 140120010  CONTA CONTABIL 500210  Veiculo Placa: KYK8231  -  Motorista: JULIANO CORREIA NETTO;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.375162",
+      "numero_cte": 21622,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502871206   BRA IM 25 0009- -0016 PP  CC175160000   CONTA CONTABIL 500210  Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.422039",
+      "numero_cte": 21621,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502871206   BRA IM 24 4397  DS CC 120158023 CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.463557",
+      "numero_cte": 21620,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502871206    BRA IM 24 4334  -4344    BRAIM  25 0012   CWI CC 870151700  CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.502925",
+      "numero_cte": 21619,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502871206   BRA IM 24 4068 DB C 160053200  CONTA CONTABIL 500210   Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.543147",
+      "numero_cte": 21618,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-29"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502871206   BRA IM 24 4441  ALS CC 140010000 CONTA CONTABIL 500210 Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.585349",
+      "numero_cte": 862,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.627588",
+      "numero_cte": 21616,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502584045  BRA IM 24 4154-4262- 4265- 4389-4392-4396-4157-4278-4286-4290   DS  CC 120158023  CONTA CONTABIL 500210   Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.669119",
+      "numero_cte": 861,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.709174",
+      "numero_cte": 860,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.750244",
+      "numero_cte": 859,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-13"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.791256",
+      "numero_cte": 858,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.833647",
+      "numero_cte": 21613,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 501459994    BRA EX 24 1860-  OTHER BHI - 350090753  CONTA CONTABIL 500210 Veiculo Placa: KYK8231  -  Motorista: LUCAS FERREIRA  GOMES SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.873136",
+      "numero_cte": 21609,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-28"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 502501901  BRA IM 24 4070  DB CC 160053200   CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.912216",
+      "numero_cte": 857,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.953162",
+      "numero_cte": 21584,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 501530736  DCF - 120161004  isaac.porfirio@bakerhughes.com\n  CONTA CONTABIL 500210    POR CAUSA DE  PROBLEMAS NO  SEFAZ NENHUM  PROCESSO FOI LIBERADO NO DIA  08/01/2025 NO TECA.  Veiculo Placa: KQO5E26  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:01.992006",
+      "numero_cte": 21575,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-01-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-13"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 501594489   PP 175092801 CONTA CONTABIL 500210        CARGA COLETADA  NO ESTALEIRO MACLAREN EM NITEROI   Veiculo Placa: KOR7G99  -  Motorista: OSVALDO PORTO BASTOS;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;\n\n"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.032949",
+      "numero_cte": 852,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-10"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 501346317"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.075296",
+      "numero_cte": 847,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.117929",
+      "numero_cte": 846,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-01-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.158479",
+      "numero_cte": 839,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.212029",
+      "numero_cte": 838,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.308004",
+      "numero_cte": 21509,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.349505",
+      "numero_cte": 21507,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.391298",
+      "numero_cte": 21494,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.432869",
+      "numero_cte": 21493,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.474323",
+      "numero_cte": 21492,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.514939",
+      "numero_cte": 21491,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.556207",
+      "numero_cte": 837,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.595210",
+      "numero_cte": 836,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-18"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.634321",
+      "numero_cte": 21486,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.674269",
+      "numero_cte": 835,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-04"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.716675",
+      "numero_cte": 21482,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-17"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.757818",
+      "numero_cte": 834,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.800191",
+      "numero_cte": 21481,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.841434",
+      "numero_cte": 21480,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.883597",
+      "numero_cte": 21479,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-30"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.924799",
+      "numero_cte": 21475,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:02.966448",
+      "numero_cte": 21474,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.007265",
+      "numero_cte": 21472,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-12-16"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.046564",
+      "numero_cte": 826,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-12-04"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.086250",
+      "numero_cte": 824,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-02-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-28"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.126790",
+      "numero_cte": 21396,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-15"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.166836",
+      "numero_cte": 21392,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.209315",
+      "numero_cte": 21391,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.249839",
+      "numero_cte": 21390,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.290824",
+      "numero_cte": 21388,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.332466",
+      "numero_cte": 21387,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.373879",
+      "numero_cte": 21386,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.421594",
+      "numero_cte": 21383,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-12"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.462062",
+      "numero_cte": 21379,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.503373",
+      "numero_cte": 21378,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.542372",
+      "numero_cte": 21377,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.589516",
+      "numero_cte": 21376,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.630115",
+      "numero_cte": 21375,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.669272",
+      "numero_cte": 21374,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-08"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.710879",
+      "numero_cte": 21373,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.751727",
+      "numero_cte": 21372,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.792867",
+      "numero_cte": 21371,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.834514",
+      "numero_cte": 21369,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.875191",
+      "numero_cte": 21367,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.915837",
+      "numero_cte": 21366,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-06"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.956947",
+      "numero_cte": 21364,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:03.999380",
+      "numero_cte": 21363,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.042208",
+      "numero_cte": 21362,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.082157",
+      "numero_cte": 21361,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.124137",
+      "numero_cte": 21359,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.166005",
+      "numero_cte": 21358,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.209145",
+      "numero_cte": 21357,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.254529",
+      "numero_cte": 21356,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.296212",
+      "numero_cte": 21353,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.334889",
+      "numero_cte": 21352,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.376060",
+      "numero_cte": 21351,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.418138",
+      "numero_cte": 21350,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.458290",
+      "numero_cte": 21349,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.501223",
+      "numero_cte": 21347,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.577218",
+      "numero_cte": 21346,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.616749",
+      "numero_cte": 21345,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.657031",
+      "numero_cte": 21344,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-11-01"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-11-01"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.698612",
+      "numero_cte": 21260,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.750321",
+      "numero_cte": 21259,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.790476",
+      "numero_cte": 21258,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.829728",
+      "numero_cte": 21257,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-10-29"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-10-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.869438",
+      "numero_cte": 762,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-06-07"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-05-31"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.909762",
+      "numero_cte": 745,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-07-16"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-05-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.949544",
+      "numero_cte": 744,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-07-16"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-05-07"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:04.994079",
+      "numero_cte": 727,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-05-15"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-05-01"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 472201762 "
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:05.033736",
+      "numero_cte": 711,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-05-03"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-04-02"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 469827701"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:05.073802",
+      "numero_cte": 652,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-03-05"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-02-16"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga Ofertada #: 463431490     BRA IM 24 1051  ALS CC 140010000  CONTA CONTABIL 500210   Veiculo Placa: KOR7G99  -  Motorista: JULIANO CORREIA NETTO;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;\n\n"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T08:03:05.125731",
+      "numero_cte": 636,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-01-23"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2024-01-12"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "timestamp": "2025-08-19T07:57:00.649303",
+  "total_ctes": 3,
+  "ctes": [
+    {
+      "id": 390,
+      "numero_cte": 22428,
+      "destinatario_nome": "EMPRESA BRASILEIRA DE INFRA-ESTRUTURA AEROPORTUARIA",
+      "veiculo_placa": "KYN6481",
+      "valor_total": 934.55,
+      "data_emissao": "2025-08-06",
+      "data_baixa": null,
+      "numero_fatura": "",
+      "data_inclusao_fatura": null,
+      "data_envio_processo": null,
+      "primeiro_envio": "2025-08-08",
+      "data_rq_tmc": null,
+      "data_atesto": null,
+      "envio_final": null,
+      "observacao": "",
+      "has_baixa": false,
+      "processo_completo": false,
+      "status_processo": "Enviado",
+      "created_at": "2025-08-16T00:47:48.596518+00:00",
+      "debug_datas": {
+        "data_emissao": true,
+        "primeiro_envio": true,
+        "data_atesto": false,
+        "envio_final": false
+      }
+    },
+    {
+      "id": 389,
+      "numero_cte": 22429,
+      "destinatario_nome": "EMPRESA BRASILEIRA DE INFRA-ESTRUTURA AEROPORTUARIA",
+      "veiculo_placa": "KYN6481",
+      "valor_total": 1024.63,
+      "data_emissao": "2025-08-06",
+      "data_baixa": null,
+      "numero_fatura": "",
+      "data_inclusao_fatura": null,
+      "data_envio_processo": null,
+      "primeiro_envio": "2025-08-08",
+      "data_rq_tmc": null,
+      "data_atesto": null,
+      "envio_final": null,
+      "observacao": "",
+      "has_baixa": false,
+      "processo_completo": false,
+      "status_processo": "Enviado",
+      "created_at": "2025-08-16T00:47:48.596518+00:00",
+      "debug_datas": {
+        "data_emissao": true,
+        "primeiro_envio": true,
+        "data_atesto": false,
+        "envio_final": false
+      }
+    },
+    {
+      "id": 388,
+      "numero_cte": 22430,
+      "destinatario_nome": "EMPRESA BRASILEIRA DE INFRA-ESTRUTURA AEROPORTUARIA",
+      "veiculo_placa": "KYN6481",
+      "valor_total": 9854.63,
+      "data_emissao": "2025-08-06",
+      "data_baixa": null,
+      "numero_fatura": "",
+      "data_inclusao_fatura": null,
+      "data_envio_processo": null,
+      "primeiro_envio": "2025-08-08",
+      "data_rq_tmc": null,
+      "data_atesto": null,
+      "envio_final": null,
+      "observacao": "",
+      "has_baixa": false,
+      "processo_completo": false,
+      "status_processo": "Enviado",
+      "created_at": "2025-08-16T00:47:48.596518+00:00",
+      "debug_datas": {
+        "data_emissao": true,
+        "primeiro_envio": true,
+        "data_atesto": false,
+        "envio_final": false
+      }
+    }
+  ]
+}

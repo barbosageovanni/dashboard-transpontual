@@ -1,0 +1,3701 @@
+{
+  "timestamp": "2025-08-19T15:23:53.726228",
+  "statistics": {
+    "total_processados": 161,
+    "atualizados": 161,
+    "sem_alteracao": 0,
+    "nao_encontrados": 0,
+    "erros": 0,
+    "campos_atualizados": {
+      "data_inclusao_fatura": 158,
+      "primeiro_envio": 160,
+      "data_atesto": 161,
+      "envio_final": 161,
+      "data_rq_tmc": 39
+    }
+  },
+  "update_log": [
+    {
+      "timestamp": "2025-08-19T15:23:46.697364",
+      "numero_cte": 22258,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:46.784118",
+      "numero_cte": 22257,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:46.854699",
+      "numero_cte": 22256,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-09"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:46.900833",
+      "numero_cte": 22254,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:46.944000",
+      "numero_cte": 22253,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:46.988834",
+      "numero_cte": 22252,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.033402",
+      "numero_cte": 22251,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.075105",
+      "numero_cte": 22250,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.116094",
+      "numero_cte": 22249,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.157102",
+      "numero_cte": 22248,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.200577",
+      "numero_cte": 22247,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.242398",
+      "numero_cte": 22246,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.286285",
+      "numero_cte": 22245,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.329083",
+      "numero_cte": 22243,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.371734",
+      "numero_cte": 22242,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-04"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.412655",
+      "numero_cte": 22241,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-04"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.452740",
+      "numero_cte": 22240,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-04"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.496654",
+      "numero_cte": 22239,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-29"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-04"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.542843",
+      "numero_cte": 22238,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-11"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-01"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.588277",
+      "numero_cte": 22237,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-01"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.635827",
+      "numero_cte": 22236,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-01"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.679841",
+      "numero_cte": 22235,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-01"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.725393",
+      "numero_cte": 22234,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-01"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.801674",
+      "numero_cte": 22233,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-01"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.845190",
+      "numero_cte": 22232,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-26"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.887429",
+      "numero_cte": 22231,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-26"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.929856",
+      "numero_cte": 22229,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-26"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-10"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:47.975585",
+      "numero_cte": 22227,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.020579",
+      "numero_cte": 22226,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.064478",
+      "numero_cte": 22225,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.113998",
+      "numero_cte": 22224,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.157479",
+      "numero_cte": 22221,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.201799",
+      "numero_cte": 22220,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.242654",
+      "numero_cte": 22219,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.281735",
+      "numero_cte": 22218,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.321099",
+      "numero_cte": 22216,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-04"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.361860",
+      "numero_cte": 22215,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.402223",
+      "numero_cte": 22214,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.443788",
+      "numero_cte": 22213,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.484490",
+      "numero_cte": 22212,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.524177",
+      "numero_cte": 22211,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-25"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.563596",
+      "numero_cte": 22210,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.604527",
+      "numero_cte": 22209,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.645820",
+      "numero_cte": 22208,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.685895",
+      "numero_cte": 22207,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.726016",
+      "numero_cte": 22206,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.768730",
+      "numero_cte": 22205,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.819184",
+      "numero_cte": 22204,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.861187",
+      "numero_cte": 22203,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.903000",
+      "numero_cte": 22202,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-24"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.944483",
+      "numero_cte": 22201,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:48.985408",
+      "numero_cte": 22200,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.026191",
+      "numero_cte": 22199,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.067065",
+      "numero_cte": 22198,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.109508",
+      "numero_cte": 22197,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.153328",
+      "numero_cte": 22196,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.195777",
+      "numero_cte": 22195,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.235020",
+      "numero_cte": 22194,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.279558",
+      "numero_cte": 22193,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.321106",
+      "numero_cte": 22191,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.359799",
+      "numero_cte": 22190,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-17"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.401563",
+      "numero_cte": 22189,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.443152",
+      "numero_cte": 22187,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-16"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.485230",
+      "numero_cte": 22186,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-16"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.527376",
+      "numero_cte": 22185,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-16"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.569665",
+      "numero_cte": 22184,
+      "changes": {
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.611083",
+      "numero_cte": 22183,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.652802",
+      "numero_cte": 22182,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.694936",
+      "numero_cte": 22181,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-10"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.737905",
+      "numero_cte": 22180,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.779041",
+      "numero_cte": 22179,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.822348",
+      "numero_cte": 22178,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.904053",
+      "numero_cte": 22177,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.946211",
+      "numero_cte": 22176,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:49.987321",
+      "numero_cte": 22175,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.028354",
+      "numero_cte": 22174,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.069374",
+      "numero_cte": 22173,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.110340",
+      "numero_cte": 22172,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.151343",
+      "numero_cte": 22171,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.193724",
+      "numero_cte": 22170,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.234867",
+      "numero_cte": 22169,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.279636",
+      "numero_cte": 22168,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.319858",
+      "numero_cte": 22167,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.359732",
+      "numero_cte": 22166,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.398135",
+      "numero_cte": 22165,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.445411",
+      "numero_cte": 22164,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.486760",
+      "numero_cte": 22163,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.530019",
+      "numero_cte": 22162,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.570745",
+      "numero_cte": 22161,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-07-03"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.614340",
+      "numero_cte": 22160,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.656265",
+      "numero_cte": 22159,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.697704",
+      "numero_cte": 22157,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.740381",
+      "numero_cte": 22156,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.781105",
+      "numero_cte": 22155,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.821809",
+      "numero_cte": 22154,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.862676",
+      "numero_cte": 22153,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.904839",
+      "numero_cte": 22152,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.944948",
+      "numero_cte": 22151,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:50.984752",
+      "numero_cte": 22149,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-10"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.028279",
+      "numero_cte": 22148,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-09"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.127516",
+      "numero_cte": 22147,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-09"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.170997",
+      "numero_cte": 22146,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-09"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.220789",
+      "numero_cte": 22144,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.263026",
+      "numero_cte": 22143,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.303228",
+      "numero_cte": 22142,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.343262",
+      "numero_cte": 22141,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.382770",
+      "numero_cte": 22140,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.420965",
+      "numero_cte": 22139,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.461449",
+      "numero_cte": 22138,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.514631",
+      "numero_cte": 22137,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.559216",
+      "numero_cte": 22136,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.598852",
+      "numero_cte": 22135,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-12"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-02"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-02"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.641468",
+      "numero_cte": 22134,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.681483",
+      "numero_cte": 22133,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.723311",
+      "numero_cte": 22132,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.764594",
+      "numero_cte": 22131,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-20"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.803862",
+      "numero_cte": 22130,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.843488",
+      "numero_cte": 22129,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.885171",
+      "numero_cte": 22128,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.925508",
+      "numero_cte": 22127,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:51.968356",
+      "numero_cte": 22126,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.011309",
+      "numero_cte": 22125,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-06-06"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-19"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.054335",
+      "numero_cte": 22124,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.095769",
+      "numero_cte": 22123,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.136474",
+      "numero_cte": 22122,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.176648",
+      "numero_cte": 22121,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.218413",
+      "numero_cte": 22120,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.259563",
+      "numero_cte": 22119,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.301820",
+      "numero_cte": 22118,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.344292",
+      "numero_cte": 22117,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.386336",
+      "numero_cte": 22116,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.426519",
+      "numero_cte": 22115,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.467362",
+      "numero_cte": 22114,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.508129",
+      "numero_cte": 22113,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-30"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.550912",
+      "numero_cte": 22112,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.590944",
+      "numero_cte": 22111,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.630476",
+      "numero_cte": 22110,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.673947",
+      "numero_cte": 22109,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.712376",
+      "numero_cte": 22108,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.755676",
+      "numero_cte": 22107,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.801995",
+      "numero_cte": 22106,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.843584",
+      "numero_cte": 22105,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-24"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.884912",
+      "numero_cte": 22104,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-24"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.929714",
+      "numero_cte": 22103,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-24"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:52.974951",
+      "numero_cte": 22102,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-24"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.018210",
+      "numero_cte": 22101,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-24"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.061304",
+      "numero_cte": 22100,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-05-28"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-23"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.104411",
+      "numero_cte": 22098,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.148458",
+      "numero_cte": 22097,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.194037",
+      "numero_cte": 22096,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.237184",
+      "numero_cte": 22095,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.279197",
+      "numero_cte": 22094,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-03"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.324269",
+      "numero_cte": 22093,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.366008",
+      "numero_cte": 22092,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.407205",
+      "numero_cte": 22091,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.445648",
+      "numero_cte": 22090,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-22"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-29"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.485682",
+      "numero_cte": 22089,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-23"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.527844",
+      "numero_cte": 22088,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.568697",
+      "numero_cte": 22087,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.609603",
+      "numero_cte": 22086,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-05"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T15:23:53.674619",
+      "numero_cte": 22085,
+      "changes": {
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2025-06-18"
+        },
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-05-21"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-05-27"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-06-04"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-06-05"
+        }
+      }
+    }
+  ]
+}

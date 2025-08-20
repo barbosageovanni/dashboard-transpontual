@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-19T12:32:52.516940",
+  "statistics": {
+    "total_processados": 1,
+    "atualizados": 1,
+    "sem_alteracao": 0,
+    "nao_encontrados": 0,
+    "erros": 0,
+    "campos_atualizados": {
+      "data_envio_processo": 1,
+      "primeiro_envio": 1,
+      "data_atesto": 1,
+      "envio_final": 1
+    }
+  },
+  "update_log": [
+    {
+      "timestamp": "2025-08-19T12:32:52.471450",
+      "numero_cte": 22244,
+      "changes": {
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-06-30"
+        },
+        "primeiro_envio": {
+          "old": null,
+          "new": "2025-07-08"
+        },
+        "data_atesto": {
+          "old": null,
+          "new": "2025-07-16"
+        },
+        "envio_final": {
+          "old": null,
+          "new": "2025-07-16"
+        }
+      }
+    }
+  ]
+}

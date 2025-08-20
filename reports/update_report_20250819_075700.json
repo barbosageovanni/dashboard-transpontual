@@ -1,0 +1,71 @@
+{
+  "timestamp": "2025-08-19T07:57:00.869549",
+  "statistics": {
+    "total_processados": 3,
+    "atualizados": 3,
+    "sem_alteracao": 0,
+    "nao_encontrados": 0,
+    "erros": 0,
+    "campos_atualizados": {
+      "data_rq_tmc": 3,
+      "data_envio_processo": 3,
+      "observacao": 3
+    }
+  },
+  "update_log": [
+    {
+      "timestamp": "2025-08-19T07:57:00.732722",
+      "numero_cte": 22430,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524340836    BRA IM 25 2870- 2625-2620- 2646 -2713  PP  CC 175160000   CONTA CONTABIL 500210    Veiculo Placa: KYN6481  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T07:57:00.785450",
+      "numero_cte": 22429,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524340836     BRA IM 25 2778- 2559 -2522- 2774- 2787-   WS CC 110141008  CONTA CONTABIL 500210     Veiculo Placa: KYN6481  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T07:57:00.826428",
+      "numero_cte": 22428,
+      "changes": {
+        "data_rq_tmc": {
+          "old": null,
+          "new": "2025-08-06"
+        },
+        "data_envio_processo": {
+          "old": null,
+          "new": "2025-08-08"
+        },
+        "observacao": {
+          "old": null,
+          "new": "Carga agendada #: 524340836    BRA IM 25 2699  - 2700   CWI   CC 870151700   CONTA CONTABIL 500210   Veiculo Placa: KYN6481  -  Motorista: RIVELINO DOS SANTOS SILVA;\nEZZE SEGUROS S/A - Numero da apolice:1065406002313;"
+        }
+      }
+    }
+  ]
+}

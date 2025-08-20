@@ -1,0 +1,87 @@
+{
+  "timestamp": "2025-08-19T07:22:21.552099",
+  "total_ctes": 3,
+  "ctes": [
+    {
+      "id": 58,
+      "numero_cte": 915,
+      "destinatario_nome": "BAKER HUGHES DO BRASIL LTDA",
+      "veiculo_placa": "KXO7J95",
+      "valor_total": 632.47,
+      "data_emissao": "2025-03-28",
+      "data_baixa": "2025-07-07",
+      "numero_fatura": "",
+      "data_inclusao_fatura": null,
+      "data_envio_processo": null,
+      "primeiro_envio": "2025-04-03",
+      "data_rq_tmc": "2025-03-28",
+      "data_atesto": "2025-05-21",
+      "envio_final": "2025-05-21",
+      "observacao": "",
+      "has_baixa": true,
+      "processo_completo": true,
+      "status_processo": "Finalizado",
+      "created_at": "2025-08-16T00:47:48.596518+00:00",
+      "debug_datas": {
+        "data_emissao": true,
+        "primeiro_envio": true,
+        "data_atesto": true,
+        "envio_final": true
+      }
+    },
+    {
+      "id": 2297,
+      "numero_cte": 22123,
+      "destinatario_nome": "BAKER HUGHES DO BRASIL LTDA",
+      "veiculo_placa": "KXO7J95",
+      "valor_total": 1190.37,
+      "data_emissao": "2025-05-28",
+      "data_baixa": "2025-06-20",
+      "numero_fatura": "5024809.0",
+      "data_inclusao_fatura": null,
+      "data_envio_processo": null,
+      "primeiro_envio": null,
+      "data_rq_tmc": null,
+      "data_atesto": null,
+      "envio_final": null,
+      "observacao": "",
+      "has_baixa": true,
+      "processo_completo": false,
+      "status_processo": "Emitido",
+      "created_at": "2025-08-17T00:11:24.966924+00:00",
+      "debug_datas": {
+        "data_emissao": true,
+        "primeiro_envio": false,
+        "data_atesto": false,
+        "envio_final": false
+      }
+    },
+    {
+      "id": 2296,
+      "numero_cte": 22124,
+      "destinatario_nome": "BAKER HUGHES DO BRASIL LTDA",
+      "veiculo_placa": "KXO7J95",
+      "valor_total": 579.51,
+      "data_emissao": "2025-05-28",
+      "data_baixa": "2025-06-20",
+      "numero_fatura": "5024810.0",
+      "data_inclusao_fatura": null,
+      "data_envio_processo": null,
+      "primeiro_envio": null,
+      "data_rq_tmc": null,
+      "data_atesto": null,
+      "envio_final": null,
+      "observacao": "",
+      "has_baixa": true,
+      "processo_completo": false,
+      "status_processo": "Emitido",
+      "created_at": "2025-08-17T00:11:24.878932+00:00",
+      "debug_datas": {
+        "data_emissao": true,
+        "primeiro_envio": false,
+        "data_atesto": false,
+        "envio_final": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-08-19T07:22:21.869076",
+  "statistics": {
+    "total_processados": 3,
+    "atualizados": 3,
+    "sem_alteracao": 0,
+    "nao_encontrados": 0,
+    "erros": 0,
+    "campos_atualizados": {
+      "observacao": 3,
+      "data_inclusao_fatura": 3
+    }
+  },
+  "update_log": [
+    {
+      "timestamp": "2025-08-19T07:22:21.645704",
+      "numero_cte": 915,
+      "changes": {
+        "observacao": {
+          "old": null,
+          "new": "TESTE ATUALIZAÇÃO 1 - 07:21:57"
+        },
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-08-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T07:22:21.702324",
+      "numero_cte": 22124,
+      "changes": {
+        "observacao": {
+          "old": null,
+          "new": "TESTE ATUALIZAÇÃO 2 - 07:21:57"
+        },
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-08-19"
+        }
+      }
+    },
+    {
+      "timestamp": "2025-08-19T07:22:21.744131",
+      "numero_cte": 22123,
+      "changes": {
+        "observacao": {
+          "old": null,
+          "new": "TESTE ATUALIZAÇÃO 3 - 07:21:57"
+        },
+        "data_inclusao_fatura": {
+          "old": null,
+          "new": "2024-08-19"
+        }
+      }
+    }
+  ]
+}
