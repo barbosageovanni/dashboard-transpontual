@@ -115,6 +115,9 @@ def registrar_blueprints(app):
     # API Blueprint
     from app.routes import api
     app.register_blueprint(api.bp)
+
+    from app.routes import health_check
+    app.register_blueprint(health_check.bp)
     
     # Rota raiz
     @app.route('/')
