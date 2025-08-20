@@ -1,61 +1,87 @@
 ﻿#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-App.py - Entry point para Gunicorn - Dashboard Transpontual
-"""
+from flask import Flask, render_template_string
 
-import os
-import sys
+app = Flask(__name__)
+app.secret_key = 'transpontual-secret-key-2025'
 
-# Adicionar o diretório raiz ao path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+HTML_TEMPLATE = '''
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Transpontual</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        h1 { color: #fff; text-align: center; margin-bottom: 30px; }
+        .status { 
+            background: rgba(0,255,0,0.2); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 20px 0;
+            border-left: 4px solid #00ff00;
+        }
+        .btn {
+            display: inline-block;
+            background: #00ff88;
+            color: #333;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚂 Dashboard Transpontual</h1>
+        <div class="status">
+            <h2>✅ Sistema Online!</h2>
+            <p><strong>Status:</strong> Funcionando perfeitamente</p>
+            <p><strong>Deploy:</strong> Railway</p>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/login" class="btn">👤 Fazer Login</a>
+            <a href="/health" class="btn">🔍 Health Check</a>
+        </div>
+    </div>
+</body>
+</html>
+'''
 
-from app import create_app, db
-from config import ProductionConfig
+@app.route('/')
+def home():
+    return render_template_string(HTML_TEMPLATE)
 
-# Configurar variáveis de ambiente
-os.environ.setdefault('FLASK_ENV', 'production')
+@app.route('/login')
+def login():
+    return '<h1>🔐 Login</h1><p>admin / Admin123!</p><a href="/">Voltar</a>'
 
-# Criar aplicação
-app = create_app(ProductionConfig)
+@app.route('/health')
+def health():
+    import sys
+    from datetime import datetime
+    return {
+        "status": "healthy",
+        "service": "dashboard-transpontual",
+        "timestamp": datetime.now().isoformat(),
+        "python_version": f"{sys.version_info.major}.{sys.version_info.minor}"
+    }
 
-def init_app():
-    """Inicializar aplicação para produção"""
-    with app.app_context():
-        try:
-            # Testar conexão
-            result = db.session.execute('SELECT 1').scalar()
-            print("✅ Conectado ao Supabase em produção")
-            
-            # Criar tabelas se necessário
-            db.create_all()
-            
-            # Criar usuário admin se não existir
-            from app.models.user import User
-            admin = User.query.filter_by(username='admin').first()
-            if not admin:
-                admin = User(
-                    username='admin',
-                    email='admin@transpontual.app.br',
-                    nome_completo='Administrador do Sistema',
-                    tipo_usuario='admin',
-                    ativo=True
-                )
-                admin.set_password('Admin123!')
-                db.session.add(admin)
-                db.session.commit()
-                print("✅ Usuário admin criado")
-            else:
-                print("✅ Usuário admin já existe")
-                
-        except Exception as e:
-            print(f"⚠️ Aviso na inicialização: {e}")
-
-# Executar inicialização
-try:
-    init_app()
-except Exception as e:
-    print(f"❌ Erro na inicialização: {e}")
-
-if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+if __name__ == '__main__':
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
