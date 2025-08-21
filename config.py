@@ -1,76 +1,58 @@
-import os
+﻿import os
 from datetime import timedelta
 import urllib.parse
 
 class Config:
-    """Configuração base"""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-baker-2025'
+    '''Configuração base - Transpontual'''
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'transpontual-secret-key-2025'
     
     # Database PostgreSQL Supabase
     @staticmethod
-    def get_database_uri():
-        # Tentar DATABASE_URL primeiro (produção)
-        database_url = os.environ.get('DATABASE_URL')
-        if database_url:
-            return database_url
-            
-        # Fallback para componentes individuais
-        host = os.environ.get('DB_HOST', 'db.lijtncazuwnbydeqtoyz.supabase.co')
-        database = os.environ.get('DB_NAME', 'postgres')
-        user = os.environ.get('DB_USER', 'postgres')
-        password = os.environ.get('DB_PASSWORD', 'Mariaana953@7334')
-        port = os.environ.get('DB_PORT', '5432')
-        
-        # Escapar senha para URL
-        password_escaped = urllib.parse.quote_plus(password)
-        
-        # Montar URI
-        uri = f'postgresql://{user}:{password_escaped}@{host}:{port}/{database}'
-        return uri
+    def get_database_url():
+        '''Obter URL do banco Supabase'''
+        return os.environ.get('DATABASE_URL') or 'postgresql://postgres:Mariaana953%407334@db.lijtncazuwnbydeqtoyz.supabase.co:5432/postgres'
     
-    # Usar método estático para obter URI
-    SQLALCHEMY_DATABASE_URI = get_database_uri.__func__()
-    
+    SQLALCHEMY_DATABASE_URI = get_database_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_size': 10,
+        'pool_recycle': 120,
         'pool_pre_ping': True,
-        'pool_recycle': 300,
-        'connect_args': {'sslmode': 'require'},
-        'echo': False
+        'max_overflow': 20,
+        'echo': False  # SEM LOGS SQL
     }
     
-    # Upload
-    UPLOAD_FOLDER = 'app/static/uploads'
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    # Flask-Login
+    REMEMBER_COOKIE_DURATION = timedelta(days=7)
     
-    # Session
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
+    # Upload files
+    UPLOAD_FOLDER = 'uploads'
+    MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100MB
     
-    # Criar pasta de upload
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    # App settings
+    APP_NAME = 'Dashboard Transpontual'
+    APP_VERSION = '3.1.0'
+    COMPANY_NAME = 'Transpontual'
 
 class DevelopmentConfig(Config):
-    """Configuração de desenvolvimento"""
+    '''Configuração desenvolvimento'''
     DEBUG = True
+    
+class ProductionConfig(Config):
+    '''Configuração produção'''
+    DEBUG = False
+    # Logs mínimos em produção
     SQLALCHEMY_ENGINE_OPTIONS = {
-        **Config.SQLALCHEMY_ENGINE_OPTIONS,
-        'echo': True
+        'pool_size': 20,
+        'pool_recycle': 300,
+        'pool_pre_ping': True,
+        'max_overflow': 30,
+        'echo': False  # NUNCA logs SQL em produção
     }
 
-class ProductionConfig(Config):
-    """Configuração de produção"""
-    DEBUG = False
-    
-    # Configurações específicas de produção
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        **Config.SQLALCHEMY_ENGINE_OPTIONS,
-        'echo': False,
-        'pool_size': 10,
-        'max_overflow': 20,
-        'pool_timeout': 30
-    }
-    
-    # Security headers
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Lax'
+# Configuração padrão
+config = {
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
+}

@@ -922,3 +922,130 @@ def download_template_atualizacao():
     except Exception as e:
         flash(f'Erro ao gerar template: {str(e)}', 'error')
         return redirect(url_for('ctes.atualizar_lote'))
+
+# ============================================================================
+# SISTEMA DE ATUALIZAÇÃO EM LOTE - TRANSPONTUAL
+# ============================================================================
+
+@bp.route('/atualizar-lote')
+@login_required
+def atualizar_lote():
+    '''Página de atualização em lote de CTEs'''
+    try:
+        stats = {
+            'total_ctes': CTE.query.count(),
+            'atualizacoes_hoje': 0,
+            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
+        }
+        
+        return render_template('ctes/atualizar_lote.html', stats=stats)
+        
+    except Exception as e:
+        flash(f'Erro ao carregar página: {str(e)}', 'error')
+        return redirect(url_for('ctes.listar'))
+
+@bp.route('/api/atualizar-lote', methods=['POST'])
+@login_required
+def api_atualizar_lote():
+    '''API para processar atualização em lote'''
+    try:
+        arquivo = request.files.get('arquivo')
+        modo = request.form.get('modo', 'empty_only')
+        
+        if not arquivo:
+            return jsonify({
+                'sucesso': False,
+                'erro': 'Nenhum arquivo enviado'
+            }), 400
+        
+        # Processamento básico de CSV/Excel
+        import pandas as pd
+        import io
+        
+        # Ler arquivo
+        if arquivo.filename.endswith('.csv'):
+            df = pd.read_csv(io.BytesIO(arquivo.read()), encoding='utf-8')
+        elif arquivo.filename.endswith(('.xlsx', '.xls')):
+            df = pd.read_excel(io.BytesIO(arquivo.read()))
+        else:
+            return jsonify({'sucesso': False, 'erro': 'Formato não suportado'}), 400
+        
+        # Validar coluna CTE
+        if 'numero_cte' not in df.columns and 'CTE' not in df.columns:
+            return jsonify({'sucesso': False, 'erro': 'Coluna numero_cte ou CTE não encontrada'}), 400
+        
+        # Mapear coluna CTE
+        if 'CTE' in df.columns:
+            df['numero_cte'] = df['CTE']
+        
+        # Processar atualizações
+        sucessos = 0
+        erros = 0
+        
+        for _, row in df.iterrows():
+            try:
+                numero_cte = int(row['numero_cte'])
+                cte = CTE.query.filter_by(numero_cte=numero_cte).first()
+                
+                if not cte:
+                    erros += 1
+                    continue
+                
+                # Atualizar campos disponíveis
+                updated = False
+                
+                for col in df.columns:
+                    if col == 'numero_cte':
+                        continue
+                    
+                    if hasattr(cte, col) and pd.notna(row[col]):
+                        current_value = getattr(cte, col)
+                        new_value = row[col]
+                        
+                        # Só atualizar se vazio (modo empty_only) ou sempre (modo all)
+                        should_update = (
+                            modo == 'all' or 
+                            (modo == 'empty_only' and current_value in [None, '', 'nan'])
+                        )
+                        
+                        if should_update:
+                            setattr(cte, col, new_value)
+                            updated = True
+                
+                if updated:
+                    cte.updated_at = datetime.utcnow()
+                    sucessos += 1
+                
+            except Exception as e:
+                erros += 1
+        
+        db.session.commit()
+        
+        return jsonify({
+            'sucesso': True,
+            'stats': {
+                'total_processados': len(df),
+                'sucessos': sucessos,
+                'erros': erros
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({'sucesso': False, 'erro': str(e)}), 500
+
+@bp.route('/template-atualizacao')
+@login_required
+def download_template_atualizacao():
+    '''Download template para atualização'''
+    from flask import make_response
+    
+    template = '''numero_cte,destinatario_nome,valor_total,veiculo_placa,data_emissao,data_baixa,observacao
+1001,Cliente A,5500.00,ABC1234,01/01/2025,15/01/2025,Exemplo
+1002,Cliente B,3200.50,XYZ5678,02/01/2025,,Pendente
+'''
+    
+    response = make_response(template)
+    response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_transpontual.csv'
+    
+    return response
