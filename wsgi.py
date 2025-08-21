@@ -4,48 +4,87 @@ import sys
 
 # Configurar ambiente
 os.environ.setdefault('FLASK_ENV', 'production')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:Mariaana953%407334@db.lijtncazuwnbydeqtoyz.supabase.co:5432/postgres')
 
-# Desabilitar logs
+# DESABILITAR LOGS EXCESSIVOS
 import logging
-logging.getLogger().setLevel(logging.ERROR)
+logging.getLogger().setLevel(logging.WARNING)
+logging.getLogger('sqlalchemy').setLevel(logging.WARNING)
 
 # Adicionar path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-def create_simple_app():
-    from flask import Flask, request, redirect, session, render_template_string
-    import json
-    from datetime import datetime
+try:
+    # USAR SEU SISTEMA ORIGINAL
+    from app import create_app, db
+    from config import ProductionConfig
     
-    app = Flask(__name__)
-    app.secret_key = 'transpontual-key-2025'
+    # Criar aplicação original
+    application = create_app(ProductionConfig)
     
-    # Dados simulados
-    USERS = {'admin': 'Admin123!'}
-    
-    CTES_DATA = [
-        {'numero': 22421, 'cliente': 'Baker Hotéis', 'valor': 3200.50, 'status': 'Pago'},
-        {'numero': 22422, 'cliente': 'Empresa ABC', 'valor': 4100.25, 'status': 'Processando'},
-        {'numero': 22423, 'cliente': 'Cliente Premium', 'valor': 2900.75, 'status': 'Pendente'},
-        {'numero': 22424, 'cliente': 'Transporte SP', 'valor': 5500.00, 'status': 'Pago'},
-        {'numero': 22425, 'cliente': 'Logística RJ', 'valor': 7800.00, 'status': 'Processando'},
-    ]
-    
-    TEMPLATE_BASE = '''
+    # Inicializar banco
+    with application.app_context():
+        try:
+            from sqlalchemy import text
+            db.session.execute(text("SELECT 1"))
+            print("✅ Supabase conectado")
+            
+            db.create_all()
+            
+            # Verificar/criar admin
+            from app.models.user import User
+            admin = User.query.filter_by(username='admin').first()
+            if not admin:
+                admin = User(
+                    username='admin',
+                    email='admin@transpontual.app.br',
+                    nome_completo='Administrador Transpontual',
+                    tipo_usuario='admin',
+                    ativo=True
+                )
+                admin.set_password('Admin123!')
+                db.session.add(admin)
+                db.session.commit()
+                print("✅ Admin criado")
+            
+            # ADICIONAR SISTEMA DE ATUALIZAÇÃO EM LOTE
+            from flask import Blueprint, request, jsonify, render_template, flash, redirect, url_for
+            from flask_login import login_required
+            import pandas as pd
+            import io
+            from datetime import datetime
+            
+            # Registrar blueprint de atualização
+            bulk_bp = Blueprint('bulk_update', __name__, url_prefix='/ctes')
+            
+            @bulk_bp.route('/atualizar-lote')
+            @login_required
+            def atualizar_lote():
+                """Página de atualização em lote"""
+                from app.models.cte import CTE
+                
+                stats = {
+                    'total_ctes': CTE.query.count(),
+                    'atualizacoes_hoje': 0,
+                    'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
+                }
+                
+                template_html = '''
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Transpontual</title>
+    <title>Atualização em Lote - Transpontual</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             min-height: 100vh; 
-            font-family: Arial, sans-serif;
         }
+        .navbar { background: rgba(0,0,0,0.2) !important; }
+        .navbar-brand { font-weight: bold; color: white !important; }
         .card { 
             border: none; 
             border-radius: 15px; 
@@ -53,32 +92,17 @@ def create_simple_app():
             background: rgba(255,255,255,0.95); 
             margin-bottom: 20px; 
         }
-        .metric-card { 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            color: white; 
-        }
-        .metric-value { 
-            font-size: 1.8rem; 
-            font-weight: bold; 
-        }
         .btn-primary { 
             background: linear-gradient(135deg, #667eea, #764ba2); 
             border: none; 
             border-radius: 10px; 
         }
-        .navbar { 
-            background: rgba(0,0,0,0.2) !important; 
-        }
-        .navbar-brand { 
-            font-weight: bold; 
-            color: white !important; 
-        }
-        .status-active {
-            background: #28a745;
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        .status-real { 
+            background: #28a745; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
             text-align: center;
         }
     </style>
@@ -88,257 +112,25 @@ def create_simple_app():
         <div class="container">
             <a class="navbar-brand" href="/"><i class="fas fa-truck"></i> Dashboard Transpontual</a>
             <div class="navbar-nav ms-auto">
-                {% if session.user %}
-                <span class="navbar-text me-3">👤 Administrador</span>
+                <a class="nav-link" href="/dashboard">Dashboard</a>
+                <a class="nav-link" href="/ctes">CTEs</a>
                 <a class="nav-link" href="/logout">Sair</a>
-                {% endif %}
             </div>
         </div>
     </nav>
+    
     <div class="container mt-4">
-        {% block content %}{% endblock %}
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</body>
-</html>
-    '''
-    
-    @app.route('/')
-    def home():
-        if 'user' in session:
-            return redirect('/dashboard')
-        return redirect('/login')
-    
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        if request.method == 'POST':
-            username = request.form.get('username', '').strip()
-            password = request.form.get('password', '')
-            
-            if username in USERS and USERS[username] == password:
-                session['user'] = username
-                return redirect('/dashboard')
-            else:
-                error_msg = '<div class="alert alert-danger">Credenciais inválidas</div>'
-        else:
-            error_msg = ''
-        
-        login_content = f'''
-        {{% extends "base.html" %}}
-        {{% block content %}}
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h3><i class="fas fa-truck"></i> Dashboard Transpontual</h3>
-                        <p class="mb-0">Sistema de Gestão Financeira</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="status-active">
-                            <i class="fas fa-check-circle"></i> <strong>SISTEMA ONLINE</strong><br>
-                            Plataforma operacional e funcionando
-                        </div>
-                        {error_msg}
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label class="form-label">Usuário</label>
-                                <input type="text" class="form-control" name="username" value="admin" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Senha</label>
-                                <input type="password" class="form-control" name="password" value="Admin123!" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-sign-in-alt"></i> Entrar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{% endblock %}}
-        '''
-        
-        return render_template_string(TEMPLATE_BASE.replace('{% block content %}{% endblock %}', login_content.replace('{%', '').replace('%}', '')))
-    
-    @app.route('/dashboard')
-    def dashboard():
-        if 'user' not in session:
-            return redirect('/login')
-        
-        total_ctes = len(CTES_DATA)
-        valor_total = sum(cte['valor'] for cte in CTES_DATA)
-        ctes_pagos = len([cte for cte in CTES_DATA if cte['status'] == 'Pago'])
-        
-        dashboard_content = f'''
-        <div class="status-active">
-            <i class="fas fa-server"></i> <strong>DASHBOARD TRANSPONTUAL ATIVO</strong> - 
-            Sistema funcionando perfeitamente com dados simulados
-        </div>
-        
-        <div class="row mb-4">
-            <div class="col">
-                <h1><i class="fas fa-tachometer-alt"></i> Dashboard Financeiro Transpontual</h1>
-                <p class="text-white opacity-75">Sistema de gestão financeira em tempo real</p>
-            </div>
-        </div>
-        
-        <!-- Métricas principais -->
-        <div class="row mb-4">
-            <div class="col-md-2">
-                <div class="card metric-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-file-invoice fa-2x mb-2"></i>
-                        <div class="metric-value">{total_ctes:,}</div>
-                        <div>Total CTEs</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card metric-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-dollar-sign fa-2x mb-2"></i>
-                        <div class="metric-value">R$ {valor_total:,.0f}</div>
-                        <div>Receita Total</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card metric-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-check-circle fa-2x mb-2"></i>
-                        <div class="metric-value">{ctes_pagos}</div>
-                        <div>CTEs Pagos</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card metric-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-users fa-2x mb-2"></i>
-                        <div class="metric-value">5</div>
-                        <div>Clientes</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card metric-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-truck fa-2x mb-2"></i>
-                        <div class="metric-value">8</div>
-                        <div>Veículos</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card metric-card">
-                    <div class="card-body text-center">
-                        <i class="fas fa-chart-line fa-2x mb-2"></i>
-                        <div class="metric-value">95%</div>
-                        <div>Performance</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- CTEs recentes e funcionalidades -->
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h5><i class="fas fa-list"></i> CTEs Recentes</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>CTE</th>
-                                        <th>Cliente</th>
-                                        <th>Valor</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-        '''
-        
-        for cte in CTES_DATA:
-            status_class = 'success' if cte['status'] == 'Pago' else ('warning' if cte['status'] == 'Pendente' else 'info')
-            dashboard_content += f'''
-                                    <tr>
-                                        <td><strong>{cte['numero']}</strong></td>
-                                        <td>{cte['cliente']}</td>
-                                        <td>R$ {cte['valor']:,.2f}</td>
-                                        <td><span class="badge bg-{status_class}">{cte['status']}</span></td>
-                                    </tr>
-            '''
-        
-        dashboard_content += '''
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5><i class="fas fa-tools"></i> Funcionalidades</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="/ctes/atualizar-lote" class="btn btn-warning">
-                                <i class="fas fa-sync-alt"></i> Atualizar em Lote
-                            </a>
-                            <a href="/relatorios" class="btn btn-info">
-                                <i class="fas fa-chart-bar"></i> Relatórios
-                            </a>
-                            <a href="/status" class="btn btn-secondary">
-                                <i class="fas fa-server"></i> Status Sistema
-                            </a>
-                            <button class="btn btn-success" onclick="alert('✅ Sistema funcionando!\\n\\nTodas as funcionalidades estão ativas!')">
-                                <i class="fas fa-check"></i> Testar Sistema
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h5><i class="fas fa-info-circle"></i> Status do Sistema</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-2"><strong>Aplicação:</strong> <span class="badge bg-success">Online</span></div>
-                        <div class="mb-2"><strong>Deploy:</strong> <span class="badge bg-primary">Railway</span></div>
-                        <div class="mb-2"><strong>Dados:</strong> <span class="badge bg-info">Simulados</span></div>
-                        <div class="mb-2"><strong>Performance:</strong> <span class="badge bg-success">Ótima</span></div>
-                        <div class="mb-2"><strong>Uptime:</strong> <span class="badge bg-success">100%</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        '''
-        
-        return render_template_string(TEMPLATE_BASE.replace('{% block content %}{% endblock %}', dashboard_content))
-    
-    @app.route('/ctes/atualizar-lote')
-    def atualizar_lote():
-        if 'user' not in session:
-            return redirect('/login')
-        
-        update_content = '''
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-warning text-dark">
-                        <h4><i class="fas fa-sync-alt"></i> Sistema de Atualização em Lote</h4>
-                        <p class="mb-0">Atualização em massa de CTEs - Transpontual</p>
+                        <h4><i class="fas fa-sync-alt"></i> Atualização em Lote - SISTEMA REAL</h4>
+                        <p class="mb-0">Atualização em massa conectada ao Supabase - Transpontual</p>
                     </div>
                     <div class="card-body">
-                        <div class="status-active">
-                            <i class="fas fa-sync-alt"></i> <strong>SISTEMA DE ATUALIZAÇÃO ATIVO</strong> - 
-                            Funcionalidade implementada e operacional
+                        <div class="status-real">
+                            <i class="fas fa-database"></i> <strong>CONECTADO AO SUPABASE REAL</strong><br>
+                            Atualizações serão feitas no banco de dados de produção
                         </div>
                         
                         <div class="row">
@@ -349,7 +141,7 @@ def create_simple_app():
                                     </div>
                                     <div class="card-body">
                                         <div class="alert alert-info">
-                                            <h6><i class="fas fa-info-circle"></i> Campos atualizáveis:</h6>
+                                            <h6><i class="fas fa-info-circle"></i> Todos os campos atualizáveis:</h6>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <ul class="small">
@@ -376,27 +168,33 @@ def create_simple_app():
                                             </div>
                                         </div>
                                         
-                                        <div class="mb-3">
-                                            <label class="form-label">Modo de Atualização:</label>
-                                            <select class="form-control" id="modo">
-                                                <option value="empty_only">Apenas campos vazios</option>
-                                                <option value="all">Todos os campos</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label">Arquivo CSV/Excel:</label>
-                                            <input type="file" class="form-control" id="arquivo" accept=".csv,.xlsx,.xls">
-                                        </div>
-                                        
-                                        <div class="d-flex gap-2">
-                                            <button class="btn btn-warning" onclick="simularProcessamento()">
-                                                <i class="fas fa-sync-alt"></i> Processar Arquivo
-                                            </button>
-                                            <a href="/ctes/template" class="btn btn-outline-secondary">
-                                                <i class="fas fa-download"></i> Template CSV
-                                            </a>
-                                        </div>
+                                        <form id="formAtualizacao" enctype="multipart/form-data">
+                                            <div class="mb-3">
+                                                <label class="form-label">Modo de Atualização:</label>
+                                                <select class="form-control" id="modo" name="modo">
+                                                    <option value="empty_only">Apenas campos vazios (Recomendado)</option>
+                                                    <option value="all">Todos os campos (Sobrescrever existentes)</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Arquivo CSV/Excel:</label>
+                                                <input type="file" class="form-control" id="arquivo" name="arquivo" 
+                                                       accept=".csv,.xlsx,.xls" required>
+                                            </div>
+                                            
+                                            <div class="d-flex gap-2">
+                                                <button type="button" class="btn btn-warning" onclick="processarArquivoReal()">
+                                                    <i class="fas fa-sync-alt"></i> Processar Arquivo (REAL)
+                                                </button>
+                                                <a href="/ctes/template-real" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-download"></i> Template CSV
+                                                </a>
+                                                <a href="/ctes" class="btn btn-outline-primary">
+                                                    <i class="fas fa-arrow-left"></i> Voltar CTEs
+                                                </a>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -404,18 +202,23 @@ def create_simple_app():
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+                                        <h5><i class="fas fa-chart-bar"></i> Estatísticas REAIS</h5>
                                     </div>
                                     <div class="card-body">
-                                        <p><strong>Total CTEs:</strong> 2.331</p>
-                                        <p><strong>Campos:</strong> 14 atualizáveis</p>
-                                        <p><strong>Status:</strong> <span class="badge bg-success">Ativo</span></p>
+                                        <p><strong>Total CTEs:</strong> ''' + f'{stats["total_ctes"]:,}' + '''</p>
+                                        <p><strong>Banco:</strong> <span class="badge bg-success">Supabase</span></p>
+                                        <p><strong>Modo:</strong> <span class="badge bg-danger">PRODUÇÃO</span></p>
                                         <hr>
                                         <h6>Formatos suportados:</h6>
                                         <ul>
                                             <li>CSV (.csv)</li>
                                             <li>Excel (.xlsx, .xls)</li>
                                         </ul>
+                                        <hr>
+                                        <div class="alert alert-warning">
+                                            <small><i class="fas fa-exclamation-triangle"></i> 
+                                            <strong>ATENÇÃO:</strong> Atualizações serão feitas no banco real!</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -424,7 +227,7 @@ def create_simple_app():
                         <div id="resultados" class="mt-4" style="display: none;">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5><i class="fas fa-chart-line"></i> Resultados</h5>
+                                    <h5><i class="fas fa-chart-line"></i> Resultados da Atualização REAL</h5>
                                 </div>
                                 <div class="card-body" id="resultadosContent">
                                     <!-- Resultados -->
@@ -435,88 +238,261 @@ def create_simple_app():
                 </div>
             </div>
         </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    function processarArquivoReal() {
+        const form = document.getElementById('formAtualizacao');
+        const formData = new FormData(form);
+        const arquivo = document.getElementById('arquivo').files[0];
         
-        <script>
-        function simularProcessamento() {
-            const arquivo = document.getElementById('arquivo').files[0];
-            if (!arquivo) {
-                alert('Selecione um arquivo primeiro');
-                return;
-            }
-            
-            document.getElementById('resultados').style.display = 'block';
-            document.getElementById('resultadosContent').innerHTML = `
-                <div class="text-center">
-                    <i class="fas fa-spinner fa-spin fa-2x text-warning"></i>
-                    <h5 class="mt-3">Processando ` + arquivo.name + `...</h5>
+        if (!arquivo) {
+            alert('Selecione um arquivo primeiro!');
+            return;
+        }
+        
+        if (!confirm('⚠️ ATENÇÃO!\\n\\nEsta operação irá atualizar dados REAIS no banco Supabase.\\n\\nDeseja continuar?')) {
+            return;
+        }
+        
+        // Mostrar loading
+        document.getElementById('resultados').style.display = 'block';
+        document.getElementById('resultadosContent').innerHTML = `
+            <div class="text-center">
+                <i class="fas fa-spinner fa-spin fa-2x text-warning"></i>
+                <h5 class="mt-3">Processando ` + arquivo.name + ` no banco REAL...</h5>
+                <div class="alert alert-warning">
+                    <i class="fas fa-database"></i> Conectando ao Supabase PostgreSQL...
                 </div>
-            `;
-            
-            setTimeout(() => {
-                const processados = Math.floor(Math.random() * 100) + 50;
-                const sucessos = Math.floor(processados * 0.85);
-                
+            </div>
+        `;
+        
+        // Enviar para API real
+        fetch('/ctes/api/atualizar-lote-real', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.sucesso) {
                 document.getElementById('resultadosContent').innerHTML = `
                     <div class="alert alert-success">
-                        <h6><i class="fas fa-check-circle"></i> Processamento Concluído!</h6>
-                        <p><strong>Processados:</strong> ` + processados + ` | <strong>Sucessos:</strong> ` + sucessos + `</p>
+                        <h6><i class="fas fa-check-circle"></i> ✅ ATUALIZAÇÃO REAL CONCLUÍDA!</h6>
+                        <div class="row">
+                            <div class="col-md-3"><strong>Processados:</strong> ` + data.stats.total_processados + `</div>
+                            <div class="col-md-3"><strong>Atualizados:</strong> ` + data.stats.atualizados + `</div>
+                            <div class="col-md-3"><strong>Erros:</strong> ` + data.stats.erros + `</div>
+                            <div class="col-md-3"><strong>Não encontrados:</strong> ` + data.stats.nao_encontrados + `</div>
+                        </div>
                     </div>
                     <div class="alert alert-info">
-                        <h6>Sistema Transpontual funcionando perfeitamente!</h6>
-                        <p>✅ Todas as funcionalidades operacionais</p>
+                        <h6><i class="fas fa-database"></i> Campos atualizados no Supabase:</h6>
+                        <ul>` + 
+                        Object.entries(data.stats.campos_atualizados || {}).map(([campo, count]) => 
+                            `<li><strong>` + campo + `:</strong> ` + count + ` atualizações</li>`
+                        ).join('') + `
+                        </ul>
+                        <p class="mb-0"><strong>🎉 Dados salvos com sucesso no banco de produção!</strong></p>
                     </div>
                 `;
-            }, 2000);
-        }
-        </script>
-        '''
-        
-        return render_template_string(TEMPLATE_BASE.replace('{% block content %}{% endblock %}', update_content))
-    
-    @app.route('/ctes/template')
-    def template():
-        from flask import make_response
-        template_csv = '''numero_cte,destinatario_nome,veiculo_placa,valor_total,data_emissao,data_baixa,numero_fatura,observacao
-22421,Baker Hotéis Ltda,ABC1234,3200.50,05/08/2025,15/08/2025,NF001,Exemplo
-22422,Empresa ABC,XYZ5678,4100.25,06/08/2025,,NF002,Pendente
+            } else {
+                document.getElementById('resultadosContent').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-times-circle"></i> Erro na Atualização</h6>
+                        <p>` + data.erro + `</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            document.getElementById('resultadosContent').innerHTML = `
+                <div class="alert alert-danger">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Erro de Conexão</h6>
+                    <p>Erro: ` + error.message + `</p>
+                </div>
+            `;
+        });
+    }
+    </script>
+</body>
+</html>
+                '''
+                
+                return template_html
+            
+            @bulk_bp.route('/api/atualizar-lote-real', methods=['POST'])
+            @login_required
+            def api_atualizar_lote_real():
+                """API que FAZ ATUALIZAÇÃO REAL no Supabase"""
+                try:
+                    arquivo = request.files.get('arquivo')
+                    modo = request.form.get('modo', 'empty_only')
+                    
+                    if not arquivo:
+                        return jsonify({'sucesso': False, 'erro': 'Nenhum arquivo enviado'}), 400
+                    
+                    # Processar arquivo
+                    try:
+                        if arquivo.filename.endswith('.csv'):
+                            df = pd.read_csv(io.BytesIO(arquivo.read()), encoding='utf-8')
+                        elif arquivo.filename.endswith(('.xlsx', '.xls')):
+                            df = pd.read_excel(io.BytesIO(arquivo.read()))
+                        else:
+                            return jsonify({'sucesso': False, 'erro': 'Formato não suportado'}), 400
+                    except Exception as e:
+                        return jsonify({'sucesso': False, 'erro': f'Erro ao ler arquivo: {str(e)}'}), 400
+                    
+                    # Validar coluna CTE
+                    cte_col = None
+                    for col in ['numero_cte', 'CTE', 'Numero_CTE', 'CTRC']:
+                        if col in df.columns:
+                            cte_col = col
+                            break
+                    
+                    if not cte_col:
+                        return jsonify({'sucesso': False, 'erro': 'Coluna de CTE não encontrada'}), 400
+                    
+                    # Mapear coluna CTE
+                    if cte_col != 'numero_cte':
+                        df['numero_cte'] = df[cte_col]
+                    
+                    # FAZER ATUALIZAÇÕES REAIS NO SUPABASE
+                    from app.models.cte import CTE
+                    
+                    stats = {
+                        'total_processados': 0,
+                        'atualizados': 0,
+                        'erros': 0,
+                        'nao_encontrados': 0,
+                        'campos_atualizados': {}
+                    }
+                    
+                    # Mapeamento de campos
+                    field_mapping = {
+                        'destinatario_nome': ['Cliente', 'Destinatario', 'destinatario_nome'],
+                        'veiculo_placa': ['Veiculo', 'Placa', 'veiculo_placa'],
+                        'valor_total': ['Valor', 'Valor_Frete', 'valor_total'],
+                        'data_emissao': ['Data_Emissao', 'data_emissao'],
+                        'data_baixa': ['Data_Baixa', 'data_baixa'],
+                        'numero_fatura': ['Numero_Fatura', 'numero_fatura'],
+                        'observacao': ['Observacao', 'Observacoes', 'observacao'],
+                        'data_inclusao_fatura': ['Data_Inclusao_Fatura', 'data_inclusao_fatura'],
+                        'data_envio_processo': ['Data_Envio_Processo', 'data_envio_processo'],
+                        'primeiro_envio': ['Primeiro_Envio', 'primeiro_envio'],
+                        'data_rq_tmc': ['Data_RQ_TMC', 'data_rq_tmc'],
+                        'data_atesto': ['Data_Atesto', 'data_atesto'],
+                        'envio_final': ['Envio_Final', 'envio_final'],
+                        'origem_dados': ['Origem_Dados', 'origem_dados']
+                    }
+                    
+                    # Processar cada linha
+                    for _, row in df.iterrows():
+                        try:
+                            numero_cte = int(row['numero_cte'])
+                            stats['total_processados'] += 1
+                            
+                            # BUSCAR CTE REAL NO SUPABASE
+                            cte = CTE.query.filter_by(numero_cte=numero_cte).first()
+                            
+                            if not cte:
+                                stats['nao_encontrados'] += 1
+                                continue
+                            
+                            # ATUALIZAR CAMPOS REAIS
+                            updated = False
+                            
+                            for db_field, possible_cols in field_mapping.items():
+                                for col in possible_cols:
+                                    if col in df.columns and pd.notna(row[col]):
+                                        current_value = getattr(cte, db_field, None)
+                                        new_value = row[col]
+                                        
+                                        # Decidir se atualizar
+                                        should_update = False
+                                        
+                                        if modo == 'all':
+                                            should_update = (str(new_value) != str(current_value))
+                                        elif modo == 'empty_only':
+                                            should_update = (current_value in [None, '', 'nan'] and 
+                                                           str(new_value) not in ['', 'nan', 'NaN'])
+                                        
+                                        if should_update:
+                                            # FAZER ATUALIZAÇÃO REAL NO BANCO
+                                            setattr(cte, db_field, new_value)
+                                            updated = True
+                                            
+                                            # Contabilizar campo atualizado
+                                            if db_field not in stats['campos_atualizados']:
+                                                stats['campos_atualizados'][db_field] = 0
+                                            stats['campos_atualizados'][db_field] += 1
+                                        break
+                            
+                            if updated:
+                                cte.updated_at = datetime.utcnow()
+                                stats['atualizados'] += 1
+                                
+                        except Exception as e:
+                            stats['erros'] += 1
+                            print(f"Erro ao processar CTE {row.get('numero_cte', '?')}: {str(e)}")
+                    
+                    # SALVAR MUDANÇAS NO SUPABASE
+                    try:
+                        db.session.commit()
+                        print(f"✅ SUPABASE ATUALIZADO: {stats['atualizados']} CTEs")
+                    except Exception as e:
+                        db.session.rollback()
+                        return jsonify({'sucesso': False, 'erro': f'Erro ao salvar no Supabase: {str(e)}'}), 500
+                    
+                    return jsonify({
+                        'sucesso': True,
+                        'stats': stats,
+                        'mensagem': f'Atualização real concluída: {stats["atualizados"]} CTEs atualizados no Supabase'
+                    })
+                    
+                except Exception as e:
+                    db.session.rollback()
+                    return jsonify({'sucesso': False, 'erro': f'Erro geral: {str(e)}'}), 500
+            
+            @bulk_bp.route('/template-real')
+            @login_required
+            def template_real():
+                """Download template CSV real"""
+                from flask import make_response
+                
+                template = '''numero_cte,destinatario_nome,veiculo_placa,valor_total,data_emissao,data_baixa,numero_fatura,data_inclusao_fatura,data_envio_processo,primeiro_envio,data_rq_tmc,data_atesto,envio_final,observacao,origem_dados
+22421,Baker Hotéis Ltda,ABC1234,3200.50,05/08/2025,15/08/2025,NF001,10/08/2025,12/08/2025,07/08/2025,05/08/2025,14/08/2025,16/08/2025,Exemplo completo,Sistema
+22422,Empresa ABC,XYZ5678,4100.25,06/08/2025,,NF002,11/08/2025,13/08/2025,08/08/2025,06/08/2025,15/08/2025,,Pendente de baixa,Importação
 '''
-        response = make_response(template_csv)
-        response.headers['Content-Type'] = 'text/csv'
-        response.headers['Content-Disposition'] = 'attachment; filename=template_transpontual.csv'
-        return response
+                
+                response = make_response(template)
+                response.headers['Content-Type'] = 'text/csv; charset=utf-8'
+                response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_real_transpontual.csv'
+                
+                return response
+            
+            # REGISTRAR BLUEPRINT DE ATUALIZAÇÃO
+            application.register_blueprint(bulk_bp)
+            print("✅ Sistema de atualização em lote registrado")
+            
+        except Exception as e:
+            print(f"⚠️ Erro na inicialização: {e}")
     
-    @app.route('/logout')
-    def logout():
-        session.clear()
-        return redirect('/login')
+    print("✅ Sistema original Transpontual iniciado com atualização em lote!")
     
-    @app.route('/health')
-    def health():
-        return {'status': 'healthy', 'timestamp': datetime.now().isoformat()}
-    
-    @app.errorhandler(404)
-    def not_found(e):
-        return '<h1>🔧 Dashboard Transpontual</h1><p>Página não encontrada</p><a href="/">Ir para Dashboard</a>', 404
-    
-    return app
-
-print("🚀 INICIANDO SISTEMA SIMPLES TRANSPONTUAL...")
-
-try:
-    application = create_simple_app()
-    print("✅ Sistema simples criado com sucesso!")
 except Exception as e:
-    print(f"❌ Erro ao criar app: {e}")
-    # Fallback extremo
+    print(f"❌ Erro ao criar app original: {e}")
+    # Fallback para app simples
     from flask import Flask
     application = Flask(__name__)
     
     @application.route('/')
-    def emergency():
-        return '''
-        <h1>🚀 Sistema Transpontual</h1>
-        <p>Sistema está sendo inicializado...</p>
-        <p>Aguarde alguns instantes e recarregue a página.</p>
+    def fallback():
+        return f'''
+        <h1>🔧 Sistema Transpontual - Configurando</h1>
+        <p>Erro: {e}</p>
+        <p>Sistema sendo configurado...</p>
         '''
 
 # Exportar app
