@@ -767,3 +767,158 @@ def importar_lote():
     # Buscar estatísticas atuais
     stats = ImportacaoService.obter_estatisticas_importacao()
     return render_template('ctes/importar_lote.html', stats=stats)
+# ============================================================================
+# SISTEMA DE ATUALIZAÇÃO EM LOTE - WEB INTERFACE
+# ============================================================================
+
+@bp.route('/atualizar-lote')
+@login_required
+def atualizar_lote():
+    '''Página de atualização em lote de CTEs'''
+    try:
+        # Estatísticas atuais
+        stats = {
+            'total_ctes': CTE.query.count(),
+            'atualizacoes_hoje': CTE.query.filter(
+                func.date(CTE.updated_at) == datetime.now().date()
+            ).count() if CTE.updated_at else 0,
+            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
+        }
+        
+        return render_template('ctes/atualizar_lote.html', stats=stats)
+        
+    except Exception as e:
+        flash(f'Erro ao carregar página: {str(e)}', 'error')
+        return redirect(url_for('ctes.listar'))
+
+@bp.route('/api/atualizar-lote', methods=['POST'])
+@login_required
+def api_atualizar_lote():
+    '''API para processar atualização em lote'''
+    try:
+        arquivo = request.files.get('arquivo')
+        modo = request.form.get('modo', 'empty_only')
+        
+        if not arquivo:
+            return jsonify({
+                'sucesso': False,
+                'erro': 'Nenhum arquivo enviado'
+            }), 400
+        
+        # Usar serviço de atualização
+        from app.services.bulk_update_service import BulkUpdateService
+        
+        service = BulkUpdateService()
+        resultado = service.processar_arquivo_web(arquivo, modo)
+        
+        if resultado['sucesso']:
+            flash(f'''Atualização concluída!
+            • Processados: {resultado['stats']['total_processados']}
+            • Atualizados: {resultado['stats']['atualizados']}
+            • Sem alteração: {resultado['stats']['sem_alteracao']}
+            • Erros: {resultado['stats']['erros']}''', 'success')
+        else:
+            flash(f'Erro na atualização: {resultado["erro"]}', 'error')
+        
+        return jsonify(resultado)
+        
+    except Exception as e:
+        return jsonify({
+            'sucesso': False,
+            'erro': str(e)
+        }), 500
+
+@bp.route('/api/preview-atualizacao', methods=['POST'])
+@login_required
+def api_preview_atualizacao():
+    '''API para preview da atualização sem executar'''
+    try:
+        arquivo = request.files.get('arquivo')
+        modo = request.form.get('modo', 'empty_only')
+        
+        if not arquivo:
+            return jsonify({'erro': 'Nenhum arquivo enviado'}), 400
+        
+        from app.services.bulk_update_service import BulkUpdateService
+        import io
+        import pandas as pd
+        
+        service = BulkUpdateService()
+        
+        # Processar arquivo para preview
+        if arquivo.filename.endswith('.csv'):
+            df = pd.read_csv(io.BytesIO(arquivo.read()), encoding='utf-8')
+        elif arquivo.filename.endswith(('.xlsx', '.xls')):
+            df = pd.read_excel(io.BytesIO(arquivo.read()))
+        else:
+            return jsonify({'erro': 'Formato não suportado'}), 400
+        
+        df_normalized = service.normalize_data(df)
+        is_valid, errors = service.validate_data(df_normalized)
+        
+        if not is_valid:
+            return jsonify({'erro': f'Dados inválidos: {errors}'}), 400
+        
+        update_plan = service.generate_update_plan(df_normalized, modo)
+        
+        # Preparar preview limitado
+        preview_data = []
+        for i, plan in enumerate(update_plan[:10]):  # Máximo 10 para preview
+            preview_data.append({
+                'numero_cte': plan['numero_cte'],
+                'changes': {
+                    field: f"{change['old_value']} → {change['new_value']}"
+                    for field, change in plan['changes'].items()
+                }
+            })
+        
+        return jsonify({
+            'sucesso': True,
+            'total_para_atualizar': len(update_plan),
+            'preview': preview_data,
+            'total_linhas_arquivo': len(df_normalized),
+            'modo': modo
+        })
+        
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
+
+@bp.route('/template-atualizacao')
+@login_required
+def download_template_atualizacao():
+    '''Download template Excel para atualização'''
+    from flask import make_response
+    import io
+    import pandas as pd
+    
+    try:
+        # Criar template com exemplos
+        template_data = {
+            'numero_cte': [1001, 1002, 1003],
+            'destinatario_nome': ['Cliente A', 'Cliente B', 'Cliente C'],
+            'valor_total': [5500.00, 3200.50, 7800.00],
+            'veiculo_placa': ['ABC1234', 'XYZ5678', 'DEF9012'],
+            'data_emissao': ['01/01/2025', '02/01/2025', '03/01/2025'],
+            'data_baixa': ['15/01/2025', '', '20/01/2025'],
+            'numero_fatura': ['NF001', 'NF002', 'NF003'],
+            'observacao': ['Observação exemplo', '', 'Outra observação']
+        }
+        
+        df = pd.DataFrame(template_data)
+        
+        # Criar arquivo Excel em memória
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, sheet_name='CTEs_Atualizacao', index=False)
+        
+        output.seek(0)
+        
+        response = make_response(output.read())
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_ctes.xlsx'
+        
+        return response
+        
+    except Exception as e:
+        flash(f'Erro ao gerar template: {str(e)}', 'error')
+        return redirect(url_for('ctes.atualizar_lote'))

@@ -1,0 +1,296 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Atualização em Lote - CTEs{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h4><i class="fas fa-sync-alt"></i> Atualização em Lote de CTEs</h4>
+                    <p class="mb-0">Sistema de atualização em massa com validação automática</p>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- Alertas informativos -->
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Como funciona:</h6>
+                        <ol>
+                            <li>Baixe o template Excel/CSV</li>
+                            <li>Preencha com os dados atualizados</li>
+                            <li>Escolha o modo de atualização</li>
+                            <li>Faça preview antes de executar</li>
+                            <li>Execute a atualização</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Configuração -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-cog"></i> Configuração da Atualização</h5>
+                                </div>
+                                <div class="card-body">
+                                    
+                                    <!-- Modo de atualização -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Modo de Atualização:</label>
+                                        <select class="form-control" id="modoAtualizacao">
+                                            <option value="empty_only">Apenas campos vazios (Recomendado)</option>
+                                            <option value="all">Todos os campos (Sobrescrever existentes)</option>
+                                        </select>
+                                        <small class="text-muted">
+                                            <strong>Campos vazios:</strong> Atualiza apenas campos que estão vazios no banco<br>
+                                            <strong>Todos os campos:</strong> Sobrescreve dados existentes
+                                        </small>
+                                    </div>
+                                    
+                                    <!-- Upload de arquivo -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Arquivo de Atualização:</label>
+                                        <div class="upload-area border rounded p-4 text-center" 
+                                             style="border-style: dashed !important; border-color: #ffc107 !important; background: #fffbf0;">
+                                            <i class="fas fa-cloud-upload-alt fa-3x text-warning mb-3"></i>
+                                            <h6>Arraste o arquivo aqui ou clique para selecionar</h6>
+                                            <p class="text-muted mb-2">Formatos: Excel (.xlsx, .xls) ou CSV</p>
+                                            <input type="file" id="arquivoAtualizacao" class="form-control" 
+                                                   accept=".xlsx,.xls,.csv" style="display: none;">
+                                            <button type="button" class="btn btn-outline-warning" onclick="#arquivoAtualizacao.click()">
+                                                <i class="fas fa-folder-open"></i> Selecionar Arquivo
+                                            </button>
+                                        </div>
+                                        <div id="arquivoSelecionado" class="mt-2" style="display: none;">
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-file-check"></i> <span id="nomeArquivo"></span>
+                                                <button class="btn btn-sm btn-outline-danger float-end" onclick="limparArquivo()">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Botões de ação -->
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-info" onclick="fazerPreview()" id="btnPreview" disabled>
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        <button class="btn btn-warning" onclick="executarAtualizacao()" id="btnExecutar" disabled>
+                                            <i class="fas fa-sync-alt"></i> Executar Atualização
+                                        </button>
+                                        <a href="{{ url_for('ctes.download_template_atualizacao') }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-download"></i> Template Excel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Estatísticas -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Total CTEs:</strong> {{ stats.total_ctes|number_format }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Atualizações hoje:</strong> {{ stats.atualizacoes_hoje|number_format }}
+                                    </div>
+                                    {% if stats.ultimo_update %}
+                                    <div class="mb-3">
+                                        <strong>Última atualização:</strong><br>
+                                        <small>CTE {{ stats.ultimo_update.numero_cte }}<br>
+                                        {{ stats.ultimo_update.updated_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Área de resultados -->
+                    <div id="resultadosArea" style="display: none;">
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h5><i class="fas fa-chart-line"></i> Resultados</h5>
+                            </div>
+                            <div class="card-body" id="resultadosContent">
+                                <!-- Conteúdo dinâmico -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configurar upload de arquivo
+#arquivoAtualizacao.on('change', function() {
+    const file = this.files[0];
+    if (file) {
+        #nomeArquivo.text(file.name);
+        #arquivoSelecionado.show();
+        #btnPreview, #btnExecutar.prop('disabled', false);
+    }
+});
+
+// Configurar drag and drop
+.upload-area.on('click', function() {
+    #arquivoAtualizacao.click();
+});
+
+function limparArquivo() {
+    #arquivoAtualizacao.val('');
+    #arquivoSelecionado.hide();
+    #btnPreview, #btnExecutar.prop('disabled', true);
+    #resultadosArea.hide();
+}
+
+function fazerPreview() {
+    const arquivo = #arquivoAtualizacao[0].files[0];
+    const modo = #modoAtualizacao.val();
+    
+    if (!arquivo) {
+        alert('Selecione um arquivo primeiro');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('arquivo', arquivo);
+    formData.append('modo', modo);
+    
+    #btnPreview.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processando...');
+    
+    $.ajax({
+        url: '{{ url_for("ctes.api_preview_atualizacao") }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.sucesso) {
+                mostrarPreview(response);
+            } else {
+                alert('Erro: ' + response.erro);
+            }
+        },
+        error: function(xhr) {
+            alert('Erro na requisição: ' + xhr.responseText);
+        },
+        complete: function() {
+            #btnPreview.prop('disabled', false).html('<i class="fas fa-eye"></i> Preview');
+        }
+    });
+}
+
+function mostrarPreview(data) {
+    let html = 
+        <div class="alert alert-info">
+            <h6>Preview da Atualização</h6>
+            <p><strong>Total de linhas no arquivo:</strong> </p>
+            <p><strong>CTEs para atualizar:</strong> </p>
+            <p><strong>Modo:</strong> </p>
+        </div>
+    ;
+    
+    if (data.preview.length > 0) {
+        html += '<h6>Exemplos de atualizações:</h6>';
+        html += '<div class="table-responsive"><table class="table table-sm">';
+        html += '<thead><tr><th>CTE</th><th>Campos a atualizar</th></tr></thead><tbody>';
+        
+        data.preview.forEach(item => {
+            html += <tr><td></td><td>;
+            Object.entries(item.changes).forEach(([field, change]) => {
+                html += <small><strong>:</strong> <br></small>;
+            });
+            html += '</td></tr>';
+        });
+        
+        html += '</tbody></table></div>';
+        
+        if (data.total_para_atualizar > 10) {
+            html += <p class="text-muted">... e mais  atualizações</p>;
+        }
+    } else {
+        html += '<div class="alert alert-warning">Nenhuma atualização necessária com os critérios selecionados.</div>';
+    }
+    
+    #resultadosContent.html(html);
+    #resultadosArea.show();
+}
+
+function executarAtualizacao() {
+    const arquivo = #arquivoAtualizacao[0].files[0];
+    const modo = #modoAtualizacao.val();
+    
+    if (!arquivo) {
+        alert('Selecione um arquivo primeiro');
+        return;
+    }
+    
+    if (!confirm('Deseja realmente executar a atualização? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('arquivo', arquivo);
+    formData.append('modo', modo);
+    
+    #btnExecutar.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Executando...');
+    
+    $.ajax({
+        url: '{{ url_for("ctes.api_atualizar_lote") }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.sucesso) {
+                mostrarResultados(response);
+                location.reload(); // Recarregar para atualizar estatísticas
+            } else {
+                alert('Erro: ' + response.erro);
+            }
+        },
+        error: function(xhr) {
+            alert('Erro na requisição: ' + xhr.responseText);
+        },
+        complete: function() {
+            #btnExecutar.prop('disabled', false).html('<i class="fas fa-sync-alt"></i> Executar Atualização');
+        }
+    });
+}
+
+function mostrarResultados(data) {
+    const stats = data.stats;
+    let html = 
+        <div class="alert alert-success">
+            <h6><i class="fas fa-check"></i> Atualização Concluída!</h6>
+            <div class="row">
+                <div class="col-md-3"><strong>Processados:</strong> </div>
+                <div class="col-md-3"><strong>Atualizados:</strong> </div>
+                <div class="col-md-3"><strong>Sem alteração:</strong> </div>
+                <div class="col-md-3"><strong>Erros:</strong> </div>
+            </div>
+        </div>
+    ;
+    
+    if (Object.keys(stats.campos_atualizados).length > 0) {
+        html += '<h6>Campos atualizados:</h6><ul>';
+        Object.entries(stats.campos_atualizados).forEach(([field, count]) => {
+            html += <li>:  atualizações</li>;
+        });
+        html += '</ul>';
+    }
+    
+    #resultadosContent.html(html);
+    #resultadosArea.show();
+}
+</script>
+{% endblock %}
