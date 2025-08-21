@@ -983,11 +983,19 @@ def teste_update():
         <div style="background: white; padding: 20px; border-radius: 10px;">
             <h3>ðŸ“Š InformaÃ§Ãµes do Sistema:</h3>
             <p><strong>Total CTEs:</strong> {CTE.query.count()}</p>
-            <p><strong>Sistema:</strong> Dashboard Transpontual</p>
-            <p><strong>Timestamp:</strong> {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}</p>
-        </div>
-    </div>
-    '''
 
 @bp.route('/template-atualizacao')
 @login_required
+def template_atualizacao():
+    '''Download template para atualização em lote'''
+    template = '''numero_cte,cliente,valor,veiculo,data_emissao,data_baixa,observacao
+1001,Cliente A,5500.00,ABC1234,1/1/2025,15/1/2025,Exemplo
+1002,Cliente B,3200.50,XYZ5678,2/1/2025,,Pendente
+'''
+    
+    response = make_response(template)
+    response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_transpontual.csv'
+    
+    return response
+
