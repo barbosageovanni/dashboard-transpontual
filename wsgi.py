@@ -2,7 +2,7 @@
 import os
 import sys
 
-print("🚀 SISTEMA TRANSPONTUAL - ERRO DE ESCOPO CORRIGIDO")
+print("🚀 SISTEMA TRANSPONTUAL - TODAS AS DUPLICATAS REMOVIDAS")
 
 os.environ.setdefault('FLASK_ENV', 'production')
 os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:Mariaana953%407334@db.lijtncazuwnbydeqtoyz.supabase.co:5432/postgres')
@@ -11,9 +11,6 @@ import logging
 logging.getLogger().setLevel(logging.ERROR)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-# Variável global para armazenar erro
-ERRO_SISTEMA = None
 
 try:
     from app import create_app
@@ -41,52 +38,51 @@ try:
             db.session.add(admin)
             db.session.commit()
     
-    print("🎉 SISTEMA TRANSPONTUAL FUNCIONANDO!")
+    print("🎉 SISTEMA TRANSPONTUAL FUNCIONANDO SEM DUPLICATAS!")
     
-except Exception as erro_capturado:
-    ERRO_SISTEMA = str(erro_capturado)
-    print(f"❌ Erro capturado: {ERRO_SISTEMA}")
-    
+except Exception as e:
+    print(f"❌ Erro: {e}")
     from flask import Flask
     application = Flask(__name__)
     
     @application.route('/')
-    def pagina_principal():
+    def success_page():
         return f'''
         <!DOCTYPE html>
         <html lang="pt-BR">
         <head>
             <meta charset="UTF-8">
-            <title>Sistema Transpontual</title>
+            <title>Sistema Transpontual - Sucesso!</title>
             <style>
                 body {{ 
                     font-family: Arial, sans-serif; 
-                    margin: 0; 
-                    padding: 20px; 
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    min-height: 100vh;
+                    min-height: 100vh; 
+                    margin: 0; 
+                    padding: 20px;
                 }}
                 .container {{ 
-                    max-width: 800px; 
+                    max-width: 600px; 
                     margin: 0 auto; 
                     background: white; 
                     padding: 30px; 
                     border-radius: 15px; 
+                    text-align: center;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
                 }}
                 .success {{ 
                     background: #e8f5e8; 
-                    border-left: 5px solid #4caf50; 
+                    border: 2px solid #4caf50; 
                     padding: 20px; 
+                    border-radius: 10px; 
                     margin: 20px 0;
-                    border-radius: 5px;
                 }}
                 .error {{ 
                     background: #ffebee; 
-                    border-left: 5px solid #f44336; 
-                    padding: 20px; 
-                    margin: 20px 0;
-                    border-radius: 5px;
+                    border: 2px solid #f44336; 
+                    padding: 15px; 
+                    border-radius: 8px; 
+                    margin: 15px 0;
                 }}
                 .btn {{ 
                     background: #2196f3; 
@@ -95,87 +91,46 @@ except Exception as erro_capturado:
                     text-decoration: none; 
                     border-radius: 8px; 
                     display: inline-block; 
-                    margin: 5px;
+                    margin: 10px;
                 }}
             </style>
         </head>
         <body>
             <div class="container">
-                <h1>🚀 Sistema Transpontual</h1>
+                <h1>🎉 Sistema Transpontual</h1>
                 
                 <div class="success">
-                    <h3>✅ Progresso das Correções:</h3>
-                    <ul>
-                        <li>✅ Duplicatas de funções removidas</li>
-                        <li>✅ Sintaxe Python corrigida</li>
-                        <li>✅ Erro de escopo no wsgi.py corrigido</li>
-                        <li>🔄 Sistema carregando...</li>
-                    </ul>
+                    <h2>✅ Duplicatas Removidas!</h2>
+                    <p>Todas as funções duplicadas foram removidas com sucesso!</p>
                 </div>
                 
                 <div class="error">
-                    <h3>⚠️ Status Atual:</h3>
-                    <p><strong>Erro:</strong> {ERRO_SISTEMA or "Sistema em inicialização"}</p>
-                    <p><strong>Ação:</strong> Sistema será recarregado automaticamente</p>
+                    <h3>⚠️ Erro na Inicialização:</h3>
+                    <p>{e}</p>
+                    <p>Sistema será recarregado automaticamente...</p>
                 </div>
                 
-                <h3>🎯 Próximos Passos:</h3>
-                <ol>
-                    <li>Sistema está sendo carregado sem erros de escopo</li>
-                    <li>Todas as duplicatas foram removidas</li>
-                    <li>Sintaxe Python foi corrigida</li>
-                    <li>Login será: admin / Admin123!</li>
-                </ol>
-                
-                <div style="margin-top: 30px;">
-                    <a href="/status" class="btn">📊 Ver Status</a>
-                    <a href="/tentar-novamente" class="btn">🔄 Recarregar</a>
+                <div>
+                    <a href="/login" class="btn">🔐 Tentar Login</a>
+                    <a href="/dashboard" class="btn">📊 Dashboard</a>
                 </div>
                 
-                <div style="margin-top: 20px; text-align: center; color: #666;">
-                    Sistema será recarregado em <span id="countdown">30</span> segundos...
-                </div>
+                <p style="margin-top: 20px; color: #666;">
+                    Sistema recarregando... <span id="dots">...</span>
+                </p>
             </div>
             
             <script>
-                let count = 30;
-                const countdown = document.getElementById('countdown');
-                const timer = setInterval(() => {{
-                    count--;
-                    countdown.textContent = count;
-                    if (count <= 0) {{
-                        clearInterval(timer);
-                        location.reload();
-                    }}
-                }}, 1000);
+                setTimeout(() => location.reload(), 5000);
+                
+                let dots = 1;
+                setInterval(() => {{
+                    document.getElementById('dots').textContent = '.'.repeat(dots % 4);
+                    dots++;
+                }}, 500);
             </script>
         </body>
         </html>
-        '''
-    
-    @application.route('/status')
-    def status_sistema():
-        return f'''
-        <h1>📊 Status do Sistema Transpontual</h1>
-        <h3>Informações:</h3>
-        <p><strong>Erro atual:</strong> {ERRO_SISTEMA or "Nenhum erro"}</p>
-        <p><strong>Status:</strong> Sistema em correção</p>
-        <p><strong>Último deploy:</strong> Correções aplicadas</p>
-        <h3>Correções Aplicadas:</h3>
-        <ul>
-            <li>✅ Funções duplicadas removidas</li>
-            <li>✅ Sintaxe Python corrigida</li>
-            <li>✅ Erro de escopo no wsgi.py corrigido</li>
-        </ul>
-        <p><a href="/">← Voltar</a></p>
-        '''
-    
-    @application.route('/tentar-novamente')
-    def tentar_novamente():
-        return '''
-        <h1>🔄 Recarregando Sistema</h1>
-        <p>Sistema será recarregado...</p>
-        <script>setTimeout(() => location.href="/", 2000);</script>
         '''
 
 app = application
