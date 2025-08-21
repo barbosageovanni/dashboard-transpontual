@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash, send_file
+﻿from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash, send_file
 from flask_login import login_required
 from app.models.cte import CTE
 from app import db
@@ -19,15 +19,15 @@ bp = Blueprint('ctes', __name__, url_prefix='/ctes')
 @bp.route('/listar')
 @login_required
 def listar():
-    """Página principal de listagem de CTEs"""
+    """PÃ¡gina principal de listagem de CTEs"""
     return render_template('ctes/index.html')
 
 @bp.route('/api/listar')
 @login_required
 def api_listar():
-    """API para listar CTEs com filtros avançados"""
+    """API para listar CTEs com filtros avanÃ§ados"""
     try:
-        # Parâmetros de busca
+        # ParÃ¢metros de busca
         search = request.args.get('search', '').strip()
         status_baixa = request.args.get('status_baixa', '')
         status_processo = request.args.get('status_processo', '')
@@ -83,7 +83,7 @@ def api_listar():
                 )
             )
         
-        # Filtro por período
+        # Filtro por perÃ­odo
         if data_inicio:
             try:
                 data_inicio_obj = datetime.strptime(data_inicio, '%Y-%m-%d').date()
@@ -137,7 +137,7 @@ def api_listar():
             'error': str(e)
         }), 500
 
-# ✅ ADICIONADO: Rota para inserir (compatibilidade com frontend)
+# âœ… ADICIONADO: Rota para inserir (compatibilidade com frontend)
 @bp.route('/api/inserir', methods=['POST'])
 @login_required
 def api_inserir():
@@ -146,15 +146,15 @@ def api_inserir():
         dados = request.get_json()
         
         if not dados.get('numero_cte'):
-            return jsonify({'success': False, 'message': 'Número do CTE é obrigatório'}), 400
+            return jsonify({'success': False, 'message': 'NÃºmero do CTE Ã© obrigatÃ³rio'}), 400
         
         if not dados.get('valor_total'):
-            return jsonify({'success': False, 'message': 'Valor total é obrigatório'}), 400
+            return jsonify({'success': False, 'message': 'Valor total Ã© obrigatÃ³rio'}), 400
         
-        # Verificar se CTE já existe
+        # Verificar se CTE jÃ¡ existe
         cte_existente = CTE.buscar_por_numero(dados['numero_cte'])
         if cte_existente:
-            return jsonify({'success': False, 'message': 'CTE já existe'}), 400
+            return jsonify({'success': False, 'message': 'CTE jÃ¡ existe'}), 400
         
         # Criar CTE
         sucesso, resultado = CTE.criar_cte(dados)
@@ -171,15 +171,15 @@ def api_inserir():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-# ✅ ADICIONADO: Rota para buscar (compatibilidade com frontend)
+# âœ… ADICIONADO: Rota para buscar (compatibilidade com frontend)
 @bp.route('/api/buscar/<int:numero_cte>')
 @login_required
 def api_buscar(numero_cte):
-    """API para buscar CTE específico - COMPATIBILIDADE COM FRONTEND"""
+    """API para buscar CTE especÃ­fico - COMPATIBILIDADE COM FRONTEND"""
     try:
         cte = CTE.buscar_por_numero(numero_cte)
         if not cte:
-            return jsonify({'success': False, 'message': 'CTE não encontrado'}), 404
+            return jsonify({'success': False, 'message': 'CTE nÃ£o encontrado'}), 404
         
         return jsonify({
             'success': True,
@@ -195,7 +195,7 @@ def api_atualizar(numero_cte):
     try:
         cte = CTE.buscar_por_numero(numero_cte)
         if not cte:
-            return jsonify({'success': False, 'message': 'CTE não encontrado'}), 404
+            return jsonify({'success': False, 'message': 'CTE nÃ£o encontrado'}), 404
         
         dados = request.get_json()
         sucesso, mensagem = cte.atualizar(dados)
@@ -219,21 +219,82 @@ def api_excluir(numero_cte):
     try:
         cte = CTE.buscar_por_numero(numero_cte)
         if not cte:
-            return jsonify({'success': False, 'message': 'CTE não encontrado'}), 404
+            return jsonify({'success': False, 'message': 'CTE nÃ£o encontrado'}), 404
         
         db.session.delete(cte)
         db.session.commit()
         
         return jsonify({
             'success': True,
-            'message': f'CTE {numero_cte} excluído com sucesso'
+            'message': f'CTE {numero_cte} excluÃ­do com sucesso'
         })
         
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 500
 
-# ✅ ADICIONADO: Rotas de download que estavam faltando
+# âœ… ADICIONADO: Rotas de download que estavam faltando
+
+# SISTEMA DE ATUALIZAÇÃO EM LOTE - ÚNICA VERSÃO
+# ============================================================================
+@bp.route('/atualizar-lote')
+@login_required
+def atualizar_lote():
+    '''PÃ¡gina de atualizaÃ§Ã£o em lote de CTEs'''
+    try:
+        # EstatÃ­sticas atuais
+        stats = {
+            'total_ctes': CTE.query.count(),
+            'atualizacoes_hoje': CTE.query.filter(
+                func.date(CTE.updated_at) == datetime.now().date()
+            ).count() if CTE.updated_at else 0,
+            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
+        }
+        
+        return render_template('ctes/atualizar_lote.html', stats=stats)
+        
+    except Exception as e:
+        flash(f'Erro ao carregar pÃ¡gina: {str(e)}', 'error')
+        return redirect(url_for('ctes.listar'))
+
+@bp.route('/api/atualizar-lote', methods=['POST'])
+@login_required
+def api_atualizar_lote():
+    '''API para processar atualizaÃ§Ã£o em lote'''
+    try:
+        arquivo = request.files.get('arquivo')
+        modo = request.form.get('modo', 'empty_only')
+        
+        if not arquivo:
+            return jsonify({
+                'sucesso': False,
+                'erro': 'Nenhum arquivo enviado'
+            }), 400
+        
+        # Usar serviÃ§o de atualizaÃ§Ã£o
+        from app.services.bulk_update_service import BulkUpdateService
+        
+        service = BulkUpdateService()
+        resultado = service.processar_arquivo_web(arquivo, modo)
+        
+        if resultado['sucesso']:
+            flash(f'''AtualizaÃ§Ã£o concluÃ­da!
+            â€¢ Processados: {resultado['stats']['total_processados']}
+            â€¢ Atualizados: {resultado['stats']['atualizados']}
+            â€¢ Sem alteraÃ§Ã£o: {resultado['stats']['sem_alteracao']}
+            â€¢ Erros: {resultado['stats']['erros']}''', 'success')
+        else:
+            flash(f'Erro na atualizaÃ§Ã£o: {resultado["erro"]}', 'error')
+        
+        return jsonify(resultado)
+        
+    except Exception as e:
+        return jsonify({
+            'sucesso': False,
+            'erro': str(e)
+        }), 500
+
+
 @bp.route('/api/download/excel')
 @login_required
 def download_excel():
@@ -270,20 +331,20 @@ def download_excel():
         dados = []
         for cte in ctes:
             dados.append({
-                'Número CTE': cte.numero_cte,
+                'NÃºmero CTE': cte.numero_cte,
                 'Cliente': cte.destinatario_nome or '',
                 'Valor Total': float(cte.valor_total or 0),
-                'Data Emissão': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
-                'Placa Veículo': cte.veiculo_placa or '',
-                'data Inclusão Fatura': cte.data_inclusao_fatura.strftime('%d/%m/%Y') if cte.data_inclusao_fatura else '',
-                'Número Fatura': cte.numero_fatura or '',
+                'Data EmissÃ£o': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'Placa VeÃ­culo': cte.veiculo_placa or '',
+                'data InclusÃ£o Fatura': cte.data_inclusao_fatura.strftime('%d/%m/%Y') if cte.data_inclusao_fatura else '',
+                'NÃºmero Fatura': cte.numero_fatura or '',
                 'Primeiro Envio': cte.primeiro_envio.strftime('%d/%m/%Y') if cte.primeiro_envio else '',
                 'Envio Final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
                 'Data Atesto': cte.data_atesto.strftime('%d/%m/%Y') if cte.data_atesto else '',
                 'Data Baixa': cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
                 'Status Baixa': 'Pago' if cte.data_baixa else 'Pendente',
                 'Status Processo': cte.status_processo,
-                'Observação': cte.observacao or ''
+                'ObservaÃ§Ã£o': cte.observacao or ''
             })
         
         df = pd.DataFrame(dados)
@@ -314,7 +375,7 @@ def download_excel():
 def download_csv():
     """Download dos CTEs em CSV"""
     try:
-        # Mesma lógica do Excel, mas para CSV
+        # Mesma lÃ³gica do Excel, mas para CSV
         query = CTE.query
         ctes = query.order_by(CTE.numero_cte.desc()).all()
         
@@ -358,11 +419,11 @@ def download_pdf():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-# ✅ FUNÇÕES DE AUDITORIA E CORREÇÃO PARA RESOLVER O BUG
+# âœ… FUNÃ‡Ã•ES DE AUDITORIA E CORREÃ‡ÃƒO PARA RESOLVER O BUG
 @bp.route('/api/auditoria')
 @login_required
 def api_auditoria():
-    """API para auditar inconsistências nos CTEs"""
+    """API para auditar inconsistÃªncias nos CTEs"""
     try:
         problemas = []
         ctes_verificados = 0
@@ -373,7 +434,7 @@ def api_auditoria():
         for cte in ctes:
             ctes_verificados += 1
             
-            # Verificar inconsistências
+            # Verificar inconsistÃªncias
             datas_preenchidas = [
                 ('data_emissao', cte.data_emissao),
                 ('primeiro_envio', cte.primeiro_envio),
@@ -387,9 +448,9 @@ def api_auditoria():
             
             # Identificar problemas
             problema = None
-            if cte.processo_completo and len(datas_vazias) > 1:  # Se está marcado completo mas tem muitas datas vazias
+            if cte.processo_completo and len(datas_vazias) > 1:  # Se estÃ¡ marcado completo mas tem muitas datas vazias
                 problema = f"Marcado como completo mas faltam: {', '.join(datas_vazias)}"
-            elif not cte.processo_completo and len(datas_vazias) <= 1:  # Se não está completo mas tem quase tudo
+            elif not cte.processo_completo and len(datas_vazias) <= 1:  # Se nÃ£o estÃ¡ completo mas tem quase tudo
                 problema = f"Pode estar completo - apenas falta: {', '.join(datas_vazias) if datas_vazias else 'nenhuma'}"
             
             if problema:
@@ -414,7 +475,7 @@ def api_auditoria():
             'success': True,
             'ctes_verificados': ctes_verificados,
             'problemas_encontrados': len(problemas),
-            'problemas': problemas[:50]  # Limitar a 50 para não sobrecarregar
+            'problemas': problemas[:50]  # Limitar a 50 para nÃ£o sobrecarregar
         })
         
     except Exception as e:
@@ -426,15 +487,15 @@ def api_auditoria():
 @bp.route('/api/corrigir-status')
 @login_required  
 def api_corrigir_status():
-    """API para forçar recálculo de todos os status"""
+    """API para forÃ§ar recÃ¡lculo de todos os status"""
     try:
         ctes_corrigidos = 0
         
-        # Buscar todos os CTEs e forçar recálculo
+        # Buscar todos os CTEs e forÃ§ar recÃ¡lculo
         ctes = CTE.query.all()
         
         for cte in ctes:
-            # Forçar recálculo atualizando o timestamp
+            # ForÃ§ar recÃ¡lculo atualizando o timestamp
             cte.updated_at = datetime.utcnow()
             ctes_corrigidos += 1
         
@@ -460,11 +521,11 @@ def api_corrigir_status():
 @login_required
 def importar_ctes():
     """
-    Página de importação incremental de CTEs
-    Baseada no padrão do sistema de baixas
+    PÃ¡gina de importaÃ§Ã£o incremental de CTEs
+    Baseada no padrÃ£o do sistema de baixas
     """
     if request.method == 'GET':
-        # Obter estatísticas atuais para exibir no dashboard
+        # Obter estatÃ­sticas atuais para exibir no dashboard
         stats = ImportacaoService.obter_estatisticas_importacao()
         return render_template('ctes/importar.html', stats=stats)
     
@@ -481,12 +542,12 @@ def importar_ctes():
             flash('Nenhum arquivo selecionado', 'error')
             return redirect(url_for('ctes.importar_ctes'))
         
-        # Verificar extensão
+        # Verificar extensÃ£o
         if not arquivo.filename.lower().endswith('.csv'):
-            flash('Apenas arquivos CSV são permitidos', 'error')
+            flash('Apenas arquivos CSV sÃ£o permitidos', 'error')
             return redirect(url_for('ctes.importar_ctes'))
         
-        # Processar importação
+        # Processar importaÃ§Ã£o
         resultado = ImportacaoService.processar_importacao_completa(arquivo)
         
         if resultado['sucesso']:
@@ -494,25 +555,25 @@ def importar_ctes():
             insercao = stats['insercao']
             
             # Mensagem de sucesso detalhada
-            flash(f'''Importação concluída com sucesso!
-                     • CTEs processados: {insercao['processados']}
-                     • CTEs inseridos: {insercao['sucessos']} 
-                     • CTEs com erro: {insercao['erros']}
-                     • CTEs já existentes: {stats['processamento']['ctes_existentes']}''', 'success')
+            flash(f'''ImportaÃ§Ã£o concluÃ­da com sucesso!
+                     â€¢ CTEs processados: {insercao['processados']}
+                     â€¢ CTEs inseridos: {insercao['sucessos']} 
+                     â€¢ CTEs com erro: {insercao['erros']}
+                     â€¢ CTEs jÃ¡ existentes: {stats['processamento']['ctes_existentes']}''', 'success')
             
-            # Log da operação
-            current_app.logger.info(f"Importação incremental realizada por {current_user.username}: "
+            # Log da operaÃ§Ã£o
+            current_app.logger.info(f"ImportaÃ§Ã£o incremental realizada por {current_user.username}: "
                                    f"{insercao['sucessos']} CTEs inseridos")
             
             return render_template('ctes/importar_resultado.html', 
                                  resultado=resultado, 
                                  detalhes=resultado['detalhes'])
         else:
-            flash(f'Erro na importação: {resultado["erro"]}', 'error')
+            flash(f'Erro na importaÃ§Ã£o: {resultado["erro"]}', 'error')
             return redirect(url_for('ctes.importar_ctes'))
             
     except Exception as e:
-        current_app.logger.error(f"Erro na importação de CTEs: {str(e)}")
+        current_app.logger.error(f"Erro na importaÃ§Ã£o de CTEs: {str(e)}")
         flash(f'Erro interno: {str(e)}', 'error')
         return redirect(url_for('ctes.importar_ctes'))
 
@@ -520,8 +581,8 @@ def importar_ctes():
 @login_required 
 def download_template():
     """
-    Download do template CSV para importação
-    Similar ao padrão de baixas
+    Download do template CSV para importaÃ§Ã£o
+    Similar ao padrÃ£o de baixas
     """
     try:
         csv_content = ImportacaoService.gerar_template_csv()
@@ -542,8 +603,8 @@ def download_template():
 @login_required
 def validar_csv():
     """
-    Endpoint AJAX para validação prévia do CSV
-    Retorna JSON com estatísticas antes da importação
+    Endpoint AJAX para validaÃ§Ã£o prÃ©via do CSV
+    Retorna JSON com estatÃ­sticas antes da importaÃ§Ã£o
     """
     try:
         if 'arquivo_csv' not in request.files:
@@ -557,11 +618,11 @@ def validar_csv():
         if not valido:
             return jsonify({'sucesso': False, 'erro': mensagem})
         
-        # Processar dados para estatísticas
+        # Processar dados para estatÃ­sticas
         df_limpo, stats_proc = ImportacaoService.processar_dados_csv(df)
         
         if df_limpo.empty:
-            return jsonify({'sucesso': False, 'erro': 'Nenhum registro válido no arquivo'})
+            return jsonify({'sucesso': False, 'erro': 'Nenhum registro vÃ¡lido no arquivo'})
         
         # Identificar CTEs novos vs existentes
         df_novos, df_existentes, stats_novos = ImportacaoService.identificar_ctes_novos(df_limpo)
@@ -585,10 +646,10 @@ def validar_csv():
 @login_required
 def historico_importacoes():
     """
-    Página com histórico de importações realizadas
+    PÃ¡gina com histÃ³rico de importaÃ§Ãµes realizadas
     """
     try:
-        # Buscar CTEs importados via CSV (últimos 30 dias)
+        # Buscar CTEs importados via CSV (Ãºltimos 30 dias)
         data_limite = datetime.now().date() - timedelta(days=30)
         
         importacoes = db.session.query(
@@ -609,8 +670,8 @@ def historico_importacoes():
         return render_template('ctes/historico_importacoes.html', importacoes=importacoes)
         
     except Exception as e:
-        current_app.logger.error(f"Erro ao buscar histórico: {str(e)}")
-        flash('Erro ao carregar histórico de importações', 'error')
+        current_app.logger.error(f"Erro ao buscar histÃ³rico: {str(e)}")
+        flash('Erro ao carregar histÃ³rico de importaÃ§Ãµes', 'error')
         return redirect(url_for('ctes.index'))
     
     # Adicionar em app/routes/ctes.py
@@ -620,7 +681,7 @@ def historico_importacoes():
 @login_required
 def api_importar_lote():
     """
-    API para importação de CTEs em lote - Similar ao sistema de baixas
+    API para importaÃ§Ã£o de CTEs em lote - Similar ao sistema de baixas
     Processa arquivo CSV e insere CTEs sem duplicar dados existentes
     """
     try:
@@ -635,10 +696,10 @@ def api_importar_lote():
         if not arquivo.filename.lower().endswith('.csv'):
             return jsonify({
                 'sucesso': False,
-                'erro': 'Apenas arquivos CSV são permitidos'
+                'erro': 'Apenas arquivos CSV sÃ£o permitidos'
             }), 400
         
-        # Processar importação usando o serviço existente
+        # Processar importaÃ§Ã£o usando o serviÃ§o existente
         resultado = ImportacaoService.processar_importacao_completa(arquivo)
         
         if resultado['sucesso']:
@@ -667,7 +728,7 @@ def api_importar_lote():
             }), 500
             
     except Exception as e:
-        current_app.logger.error(f"Erro na importação em lote: {str(e)}")
+        current_app.logger.error(f"Erro na importaÃ§Ã£o em lote: {str(e)}")
         return jsonify({
             'sucesso': False,
             'erro': f'Erro interno: {str(e)}'
@@ -677,25 +738,25 @@ def api_importar_lote():
 @login_required
 def api_validar_csv():
     """
-    API para validação prévia do CSV antes da importação
-    Retorna estatísticas do arquivo sem processar
+    API para validaÃ§Ã£o prÃ©via do CSV antes da importaÃ§Ã£o
+    Retorna estatÃ­sticas do arquivo sem processar
     """
     try:
         arquivo = request.files.get('arquivo_csv')
         if not arquivo:
             return jsonify({'sucesso': False, 'erro': 'Nenhum arquivo enviado'})
         
-        # Validar arquivo básico
+        # Validar arquivo bÃ¡sico
         valido, mensagem, df = ImportacaoService.validar_csv_upload(arquivo)
         
         if not valido:
             return jsonify({'sucesso': False, 'erro': mensagem})
         
-        # Processar dados para estatísticas
+        # Processar dados para estatÃ­sticas
         df_limpo, stats_proc = ImportacaoService.processar_dados_csv(df)
         
         if df_limpo.empty:
-            return jsonify({'sucesso': False, 'erro': 'Nenhum registro válido no arquivo'})
+            return jsonify({'sucesso': False, 'erro': 'Nenhum registro vÃ¡lido no arquivo'})
         
         # Identificar CTEs novos vs existentes
         df_novos, df_existentes, stats_novos = ImportacaoService.identificar_ctes_novos(df_limpo)
@@ -729,7 +790,7 @@ def api_validar_csv():
 @bp.route('/api/template-csv')
 @login_required
 def api_template_csv():
-    """Download do template CSV para importação"""
+    """Download do template CSV para importaÃ§Ã£o"""
     try:
         csv_content = ImportacaoService.gerar_template_csv()
         
@@ -746,7 +807,7 @@ def api_template_csv():
 @bp.route('/api/estatisticas-importacao')
 @login_required
 def api_estatisticas_importacao():
-    """Estatísticas para dashboard de importação"""
+    """EstatÃ­sticas para dashboard de importaÃ§Ã£o"""
     try:
         stats = ImportacaoService.obter_estatisticas_importacao()
         
@@ -763,75 +824,18 @@ def api_estatisticas_importacao():
 @bp.route('/importar-lote')
 @login_required
 def importar_lote():
-    """Página de importação em lote de CTEs"""
-    # Buscar estatísticas atuais
+    """PÃ¡gina de importaÃ§Ã£o em lote de CTEs"""
+    # Buscar estatÃ­sticas atuais
     stats = ImportacaoService.obter_estatisticas_importacao()
     return render_template('ctes/importar_lote.html', stats=stats)
 # ============================================================================
-# SISTEMA DE ATUALIZAÇÃO EM LOTE - WEB INTERFACE
+# SISTEMA DE ATUALIZAÃ‡ÃƒO EM LOTE - WEB INTERFACE
 # ============================================================================
-
-@bp.route('/atualizar-lote')
-@login_required
-def atualizar_lote():
-    '''Página de atualização em lote de CTEs'''
-    try:
-        # Estatísticas atuais
-        stats = {
-            'total_ctes': CTE.query.count(),
-            'atualizacoes_hoje': CTE.query.filter(
-                func.date(CTE.updated_at) == datetime.now().date()
-            ).count() if CTE.updated_at else 0,
-            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
-        }
-        
-        return render_template('ctes/atualizar_lote.html', stats=stats)
-        
-    except Exception as e:
-        flash(f'Erro ao carregar página: {str(e)}', 'error')
-        return redirect(url_for('ctes.listar'))
-
-@bp.route('/api/atualizar-lote', methods=['POST'])
-@login_required
-def api_atualizar_lote():
-    '''API para processar atualização em lote'''
-    try:
-        arquivo = request.files.get('arquivo')
-        modo = request.form.get('modo', 'empty_only')
-        
-        if not arquivo:
-            return jsonify({
-                'sucesso': False,
-                'erro': 'Nenhum arquivo enviado'
-            }), 400
-        
-        # Usar serviço de atualização
-        from app.services.bulk_update_service import BulkUpdateService
-        
-        service = BulkUpdateService()
-        resultado = service.processar_arquivo_web(arquivo, modo)
-        
-        if resultado['sucesso']:
-            flash(f'''Atualização concluída!
-            • Processados: {resultado['stats']['total_processados']}
-            • Atualizados: {resultado['stats']['atualizados']}
-            • Sem alteração: {resultado['stats']['sem_alteracao']}
-            • Erros: {resultado['stats']['erros']}''', 'success')
-        else:
-            flash(f'Erro na atualização: {resultado["erro"]}', 'error')
-        
-        return jsonify(resultado)
-        
-    except Exception as e:
-        return jsonify({
-            'sucesso': False,
-            'erro': str(e)
-        }), 500
 
 @bp.route('/api/preview-atualizacao', methods=['POST'])
 @login_required
 def api_preview_atualizacao():
-    '''API para preview da atualização sem executar'''
+    '''API para preview da atualizaÃ§Ã£o sem executar'''
     try:
         arquivo = request.files.get('arquivo')
         modo = request.form.get('modo', 'empty_only')
@@ -851,23 +855,23 @@ def api_preview_atualizacao():
         elif arquivo.filename.endswith(('.xlsx', '.xls')):
             df = pd.read_excel(io.BytesIO(arquivo.read()))
         else:
-            return jsonify({'erro': 'Formato não suportado'}), 400
+            return jsonify({'erro': 'Formato nÃ£o suportado'}), 400
         
         df_normalized = service.normalize_data(df)
         is_valid, errors = service.validate_data(df_normalized)
         
         if not is_valid:
-            return jsonify({'erro': f'Dados inválidos: {errors}'}), 400
+            return jsonify({'erro': f'Dados invÃ¡lidos: {errors}'}), 400
         
         update_plan = service.generate_update_plan(df_normalized, modo)
         
         # Preparar preview limitado
         preview_data = []
-        for i, plan in enumerate(update_plan[:10]):  # Máximo 10 para preview
+        for i, plan in enumerate(update_plan[:10]):  # MÃ¡ximo 10 para preview
             preview_data.append({
                 'numero_cte': plan['numero_cte'],
                 'changes': {
-                    field: f"{change['old_value']} → {change['new_value']}"
+                    field: f"{change['old_value']} â†’ {change['new_value']}"
                     for field, change in plan['changes'].items()
                 }
             })
@@ -886,7 +890,7 @@ def api_preview_atualizacao():
 @bp.route('/template-atualizacao')
 @login_required
 def download_template_atualizacao():
-    '''Download template Excel para atualização'''
+    '''Download template Excel para atualizaÃ§Ã£o'''
     from flask import make_response
     import io
     import pandas as pd
@@ -901,12 +905,12 @@ def download_template_atualizacao():
             'data_emissao': ['01/01/2025', '02/01/2025', '03/01/2025'],
             'data_baixa': ['15/01/2025', '', '20/01/2025'],
             'numero_fatura': ['NF001', 'NF002', 'NF003'],
-            'observacao': ['Observação exemplo', '', 'Outra observação']
+            'observacao': ['ObservaÃ§Ã£o exemplo', '', 'Outra observaÃ§Ã£o']
         }
         
         df = pd.DataFrame(template_data)
         
-        # Criar arquivo Excel em memória
+        # Criar arquivo Excel em memÃ³ria
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name='CTEs_Atualizacao', index=False)
@@ -924,119 +928,13 @@ def download_template_atualizacao():
         return redirect(url_for('ctes.atualizar_lote'))
 
 # ============================================================================
-# SISTEMA DE ATUALIZAÇÃO EM LOTE - TRANSPONTUAL
+# SISTEMA DE ATUALIZAÃ‡ÃƒO EM LOTE - TRANSPONTUAL
 # ============================================================================
-
-@bp.route('/atualizar-lote')
-@login_required
-def atualizar_lote():
-    '''Página de atualização em lote de CTEs'''
-    try:
-        stats = {
-            'total_ctes': CTE.query.count(),
-            'atualizacoes_hoje': 0,
-            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
-        }
-        
-        return render_template('ctes/atualizar_lote.html', stats=stats)
-        
-    except Exception as e:
-        flash(f'Erro ao carregar página: {str(e)}', 'error')
-        return redirect(url_for('ctes.listar'))
-
-@bp.route('/api/atualizar-lote', methods=['POST'])
-@login_required
-def api_atualizar_lote():
-    '''API para processar atualização em lote'''
-    try:
-        arquivo = request.files.get('arquivo')
-        modo = request.form.get('modo', 'empty_only')
-        
-        if not arquivo:
-            return jsonify({
-                'sucesso': False,
-                'erro': 'Nenhum arquivo enviado'
-            }), 400
-        
-        # Processamento básico de CSV/Excel
-        import pandas as pd
-        import io
-        
-        # Ler arquivo
-        if arquivo.filename.endswith('.csv'):
-            df = pd.read_csv(io.BytesIO(arquivo.read()), encoding='utf-8')
-        elif arquivo.filename.endswith(('.xlsx', '.xls')):
-            df = pd.read_excel(io.BytesIO(arquivo.read()))
-        else:
-            return jsonify({'sucesso': False, 'erro': 'Formato não suportado'}), 400
-        
-        # Validar coluna CTE
-        if 'numero_cte' not in df.columns and 'CTE' not in df.columns:
-            return jsonify({'sucesso': False, 'erro': 'Coluna numero_cte ou CTE não encontrada'}), 400
-        
-        # Mapear coluna CTE
-        if 'CTE' in df.columns:
-            df['numero_cte'] = df['CTE']
-        
-        # Processar atualizações
-        sucessos = 0
-        erros = 0
-        
-        for _, row in df.iterrows():
-            try:
-                numero_cte = int(row['numero_cte'])
-                cte = CTE.query.filter_by(numero_cte=numero_cte).first()
-                
-                if not cte:
-                    erros += 1
-                    continue
-                
-                # Atualizar campos disponíveis
-                updated = False
-                
-                for col in df.columns:
-                    if col == 'numero_cte':
-                        continue
-                    
-                    if hasattr(cte, col) and pd.notna(row[col]):
-                        current_value = getattr(cte, col)
-                        new_value = row[col]
-                        
-                        # Só atualizar se vazio (modo empty_only) ou sempre (modo all)
-                        should_update = (
-                            modo == 'all' or 
-                            (modo == 'empty_only' and current_value in [None, '', 'nan'])
-                        )
-                        
-                        if should_update:
-                            setattr(cte, col, new_value)
-                            updated = True
-                
-                if updated:
-                    cte.updated_at = datetime.utcnow()
-                    sucessos += 1
-                
-            except Exception as e:
-                erros += 1
-        
-        db.session.commit()
-        
-        return jsonify({
-            'sucesso': True,
-            'stats': {
-                'total_processados': len(df),
-                'sucessos': sucessos,
-                'erros': erros
-            }
-        })
-        
-    except Exception as e:
-        return jsonify({'sucesso': False, 'erro': str(e)}), 500
 
 @bp.route('/template-atualizacao')
 @login_required
 def download_template_atualizacao():
-    '''Download template para atualização'''
+    '''Download template para atualizaÃ§Ã£o'''
     from flask import make_response
     
     template = '''numero_cte,destinatario_nome,valor_total,veiculo_placa,data_emissao,data_baixa,observacao
@@ -1052,176 +950,19 @@ def download_template_atualizacao():
 # Adicionar no FINAL do arquivo app/routes/ctes.py (substitua as rotas duplicadas)
 
 # ============================================================================
-# SISTEMA DE ATUALIZAÇÃO EM LOTE - VERSÃO CORRIGIDA
+# SISTEMA DE ATUALIZAÃ‡ÃƒO EM LOTE - VERSÃƒO CORRIGIDA
 # ============================================================================
-
-@bp.route('/atualizar-lote')
-@login_required
-def atualizar_lote():
-    '''Página de atualização em lote de CTEs - CORRIGIDA'''
-    try:
-        stats = {
-            'total_ctes': CTE.query.count(),
-            'atualizacoes_hoje': 0,
-            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
-        }
-        
-        # RENDERIZAR TEMPLATE (não redirecionar!)
-        return render_template('ctes/atualizar_lote.html', stats=stats)
-        
-    except Exception as e:
-        flash(f'Erro ao carregar página: {str(e)}', 'error')
-        return redirect(url_for('ctes.listar'))
-
-@bp.route('/api/atualizar-lote', methods=['POST'])
-@login_required
-def api_atualizar_lote():
-    '''API para processar atualização em lote - CORRIGIDA'''
-    try:
-        arquivo = request.files.get('arquivo')
-        modo = request.form.get('modo', 'empty_only')
-        
-        if not arquivo:
-            return jsonify({
-                'sucesso': False,
-                'erro': 'Nenhum arquivo enviado'
-            }), 400
-        
-        # Validar formato
-        if not arquivo.filename.lower().endswith(('.csv', '.xlsx', '.xls')):
-            return jsonify({
-                'sucesso': False,
-                'erro': 'Formato não suportado. Use CSV ou Excel.'
-            }), 400
-        
-        # Processamento básico de CSV/Excel
-        import pandas as pd
-        import io
-        
-        # Ler arquivo
-        try:
-            if arquivo.filename.endswith('.csv'):
-                df = pd.read_csv(io.BytesIO(arquivo.read()), encoding='utf-8')
-            else:
-                df = pd.read_excel(io.BytesIO(arquivo.read()))
-        except Exception as e:
-            return jsonify({
-                'sucesso': False,
-                'erro': f'Erro ao ler arquivo: {str(e)}'
-            }), 400
-        
-        # Validar coluna CTE
-        cte_col = None
-        for col in ['numero_cte', 'CTE', 'Numero_CTE', 'CTRC']:
-            if col in df.columns:
-                cte_col = col
-                break
-        
-        if not cte_col:
-            return jsonify({
-                'sucesso': False,
-                'erro': 'Coluna de CTE não encontrada. Use: numero_cte, CTE, Numero_CTE ou CTRC'
-            }), 400
-        
-        # Mapear coluna CTE
-        if cte_col != 'numero_cte':
-            df['numero_cte'] = df[cte_col]
-        
-        # Processar atualizações
-        sucessos = 0
-        erros = 0
-        detalhes = []
-        
-        for _, row in df.iterrows():
-            try:
-                numero_cte = int(row['numero_cte'])
-                cte = CTE.query.filter_by(numero_cte=numero_cte).first()
-                
-                if not cte:
-                    erros += 1
-                    detalhes.append(f'CTE {numero_cte} não encontrado')
-                    continue
-                
-                # Atualizar campos disponíveis
-                updated = False
-                
-                # Mapeamento de campos
-                field_mapping = {
-                    'destinatario_nome': ['Cliente', 'Destinatario', 'destinatario_nome'],
-                    'veiculo_placa': ['Veiculo', 'Placa', 'veiculo_placa'],
-                    'valor_total': ['Valor', 'Valor_Frete', 'valor_total'],
-                    'data_emissao': ['Data_Emissao', 'data_emissao'],
-                    'data_baixa': ['Data_Baixa', 'data_baixa'],
-                    'numero_fatura': ['Numero_Fatura', 'numero_fatura'],
-                    'observacao': ['Observacao', 'Observacoes', 'observacao']
-                }
-                
-                for db_field, possible_cols in field_mapping.items():
-                    for col in possible_cols:
-                        if col in df.columns and pd.notna(row[col]):
-                            current_value = getattr(cte, db_field, None)
-                            new_value = row[col]
-                            
-                            # Decidir se atualizar
-                            should_update = False
-                            
-                            if modo == 'all':
-                                should_update = (str(new_value) != str(current_value))
-                            elif modo == 'empty_only':
-                                should_update = (current_value in [None, '', 'nan'] and 
-                                               str(new_value) not in ['', 'nan', 'NaN'])
-                            
-                            if should_update:
-                                setattr(cte, db_field, new_value)
-                                updated = True
-                                detalhes.append(f'CTE {numero_cte}: {db_field} atualizado')
-                            break
-                
-                if updated:
-                    cte.updated_at = datetime.utcnow()
-                    sucessos += 1
-                
-            except Exception as e:
-                erros += 1
-                detalhes.append(f'Erro CTE {row.get("numero_cte", "?")}: {str(e)}')
-        
-        # Salvar mudanças
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({
-                'sucesso': False,
-                'erro': f'Erro ao salvar: {str(e)}'
-            }), 500
-        
-        return jsonify({
-            'sucesso': True,
-            'stats': {
-                'total_processados': len(df),
-                'sucessos': sucessos,
-                'erros': erros,
-                'detalhes': detalhes[:10]  # Primeiros 10 detalhes
-            },
-            'mensagem': f'Processamento concluído: {sucessos} sucessos, {erros} erros'
-        })
-        
-    except Exception as e:
-        return jsonify({
-            'sucesso': False,
-            'erro': f'Erro geral: {str(e)}'
-        }), 500
 
 @bp.route('/template-atualizacao')
 @login_required
 def template_atualizacao():
-    '''Download template CSV para atualização'''
+    '''Download template CSV para atualizaÃ§Ã£o'''
     from flask import make_response
     
     template = '''numero_cte,destinatario_nome,valor_total,veiculo_placa,data_emissao,data_baixa,numero_fatura,observacao
-1001,Cliente A,5500.00,ABC1234,01/01/2025,15/01/2025,NF001,Exemplo de atualização
+1001,Cliente A,5500.00,ABC1234,01/01/2025,15/01/2025,NF001,Exemplo de atualizaÃ§Ã£o
 1002,Cliente B,3200.50,XYZ5678,02/01/2025,,NF002,Pendente de baixa
-1003,Cliente C,7800.00,DEF9012,03/01/2025,20/01/2025,NF003,Concluído
+1003,Cliente C,7800.00,DEF9012,03/01/2025,20/01/2025,NF003,ConcluÃ­do
 '''
     
     response = make_response(template)
@@ -1231,38 +972,38 @@ def template_atualizacao():
     return response
 
 # ============================================================================
-# ROTA DE TESTE PARA DIAGNÓSTICO
+# ROTA DE TESTE PARA DIAGNÃ“STICO
 # ============================================================================
 
 @bp.route('/teste-update')
 @login_required  
 def teste_update():
-    '''Rota de teste para diagnóstico'''
+    '''Rota de teste para diagnÃ³stico'''
     return f'''
     <div style="font-family: Arial; padding: 20px; background: #f8f9fa; min-height: 100vh;">
-        <h1>🔧 Sistema de Atualização - DIAGNÓSTICO</h1>
+        <h1>ðŸ”§ Sistema de AtualizaÃ§Ã£o - DIAGNÃ“STICO</h1>
         <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
-            <h3>✅ Status das Rotas:</h3>
+            <h3>âœ… Status das Rotas:</h3>
             <ul>
-                <li>✅ Rota de teste funcionando</li>
-                <li>✅ Sistema Flask operacional</li>
-                <li>✅ Login autenticado</li>
-                <li>✅ Usuário: {current_user.username}</li>
+                <li>âœ… Rota de teste funcionando</li>
+                <li>âœ… Sistema Flask operacional</li>
+                <li>âœ… Login autenticado</li>
+                <li>âœ… UsuÃ¡rio: {current_user.username}</li>
             </ul>
         </div>
         
         <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
-            <h3>🔗 Links de Teste:</h3>
+            <h3>ðŸ”— Links de Teste:</h3>
             <ul>
-                <li><a href="/ctes/atualizar-lote" style="color: #0066cc;">📋 Atualização em Lote</a></li>
-                <li><a href="/ctes/template-atualizacao" style="color: #0066cc;">📄 Download Template</a></li>
-                <li><a href="/ctes" style="color: #0066cc;">📊 Voltar para CTEs</a></li>
-                <li><a href="/dashboard" style="color: #0066cc;">🏠 Dashboard</a></li>
+                <li><a href="/ctes/atualizar-lote" style="color: #0066cc;">ðŸ“‹ AtualizaÃ§Ã£o em Lote</a></li>
+                <li><a href="/ctes/template-atualizacao" style="color: #0066cc;">ðŸ“„ Download Template</a></li>
+                <li><a href="/ctes" style="color: #0066cc;">ðŸ“Š Voltar para CTEs</a></li>
+                <li><a href="/dashboard" style="color: #0066cc;">ðŸ  Dashboard</a></li>
             </ul>
         </div>
         
         <div style="background: white; padding: 20px; border-radius: 10px;">
-            <h3>📊 Informações do Sistema:</h3>
+            <h3>ðŸ“Š InformaÃ§Ãµes do Sistema:</h3>
             <p><strong>Total CTEs:</strong> {CTE.query.count()}</p>
             <p><strong>Sistema:</strong> Dashboard Transpontual</p>
             <p><strong>Timestamp:</strong> {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}</p>
