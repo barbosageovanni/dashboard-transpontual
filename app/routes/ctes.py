@@ -933,6 +933,11 @@ def download_template_atualizacao():
 
 @bp.route('/template-atualizacao')
 @login_required
+def download_template_atualizacao():
+    '''Download template para atualizaÃ§Ã£o'''
+    from flask import make_response
+    
+    template = '''numero_cte,destinatario_nome,valor_total,veiculo_placa,data_emissao,data_baixa,observacao
 1001,Cliente A,5500.00,ABC1234,01/01/2025,15/01/2025,Exemplo
 1002,Cliente B,3200.50,XYZ5678,02/01/2025,,Pendente
 '''
@@ -1005,3 +1010,18 @@ def teste_update():
         </div>
     </div>
     '''
+
+@bp.route('/template-atualizacao')
+@login_required
+def template_atualizacao():
+    '''Download template para atualização em lote'''
+    template = '''numero_cte,cliente,valor,veiculo,data_emissao,data_baixa,observacao
+1001,Cliente A,5500.00,ABC1234,1/1/2025,15/1/2025,Exemplo
+1002,Cliente B,3200.50,XYZ5678,2/1/2025,,Pendente
+'''
+    
+    response = make_response(template)
+    response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_transpontual.csv'
+    
+    return response
