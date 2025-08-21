@@ -1049,3 +1049,223 @@ def download_template_atualizacao():
     response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_transpontual.csv'
     
     return response
+# Adicionar no FINAL do arquivo app/routes/ctes.py (substitua as rotas duplicadas)
+
+# ============================================================================
+# SISTEMA DE ATUALIZAÇÃO EM LOTE - VERSÃO CORRIGIDA
+# ============================================================================
+
+@bp.route('/atualizar-lote')
+@login_required
+def atualizar_lote():
+    '''Página de atualização em lote de CTEs - CORRIGIDA'''
+    try:
+        stats = {
+            'total_ctes': CTE.query.count(),
+            'atualizacoes_hoje': 0,
+            'ultimo_update': CTE.query.order_by(CTE.updated_at.desc()).first()
+        }
+        
+        # RENDERIZAR TEMPLATE (não redirecionar!)
+        return render_template('ctes/atualizar_lote.html', stats=stats)
+        
+    except Exception as e:
+        flash(f'Erro ao carregar página: {str(e)}', 'error')
+        return redirect(url_for('ctes.listar'))
+
+@bp.route('/api/atualizar-lote', methods=['POST'])
+@login_required
+def api_atualizar_lote():
+    '''API para processar atualização em lote - CORRIGIDA'''
+    try:
+        arquivo = request.files.get('arquivo')
+        modo = request.form.get('modo', 'empty_only')
+        
+        if not arquivo:
+            return jsonify({
+                'sucesso': False,
+                'erro': 'Nenhum arquivo enviado'
+            }), 400
+        
+        # Validar formato
+        if not arquivo.filename.lower().endswith(('.csv', '.xlsx', '.xls')):
+            return jsonify({
+                'sucesso': False,
+                'erro': 'Formato não suportado. Use CSV ou Excel.'
+            }), 400
+        
+        # Processamento básico de CSV/Excel
+        import pandas as pd
+        import io
+        
+        # Ler arquivo
+        try:
+            if arquivo.filename.endswith('.csv'):
+                df = pd.read_csv(io.BytesIO(arquivo.read()), encoding='utf-8')
+            else:
+                df = pd.read_excel(io.BytesIO(arquivo.read()))
+        except Exception as e:
+            return jsonify({
+                'sucesso': False,
+                'erro': f'Erro ao ler arquivo: {str(e)}'
+            }), 400
+        
+        # Validar coluna CTE
+        cte_col = None
+        for col in ['numero_cte', 'CTE', 'Numero_CTE', 'CTRC']:
+            if col in df.columns:
+                cte_col = col
+                break
+        
+        if not cte_col:
+            return jsonify({
+                'sucesso': False,
+                'erro': 'Coluna de CTE não encontrada. Use: numero_cte, CTE, Numero_CTE ou CTRC'
+            }), 400
+        
+        # Mapear coluna CTE
+        if cte_col != 'numero_cte':
+            df['numero_cte'] = df[cte_col]
+        
+        # Processar atualizações
+        sucessos = 0
+        erros = 0
+        detalhes = []
+        
+        for _, row in df.iterrows():
+            try:
+                numero_cte = int(row['numero_cte'])
+                cte = CTE.query.filter_by(numero_cte=numero_cte).first()
+                
+                if not cte:
+                    erros += 1
+                    detalhes.append(f'CTE {numero_cte} não encontrado')
+                    continue
+                
+                # Atualizar campos disponíveis
+                updated = False
+                
+                # Mapeamento de campos
+                field_mapping = {
+                    'destinatario_nome': ['Cliente', 'Destinatario', 'destinatario_nome'],
+                    'veiculo_placa': ['Veiculo', 'Placa', 'veiculo_placa'],
+                    'valor_total': ['Valor', 'Valor_Frete', 'valor_total'],
+                    'data_emissao': ['Data_Emissao', 'data_emissao'],
+                    'data_baixa': ['Data_Baixa', 'data_baixa'],
+                    'numero_fatura': ['Numero_Fatura', 'numero_fatura'],
+                    'observacao': ['Observacao', 'Observacoes', 'observacao']
+                }
+                
+                for db_field, possible_cols in field_mapping.items():
+                    for col in possible_cols:
+                        if col in df.columns and pd.notna(row[col]):
+                            current_value = getattr(cte, db_field, None)
+                            new_value = row[col]
+                            
+                            # Decidir se atualizar
+                            should_update = False
+                            
+                            if modo == 'all':
+                                should_update = (str(new_value) != str(current_value))
+                            elif modo == 'empty_only':
+                                should_update = (current_value in [None, '', 'nan'] and 
+                                               str(new_value) not in ['', 'nan', 'NaN'])
+                            
+                            if should_update:
+                                setattr(cte, db_field, new_value)
+                                updated = True
+                                detalhes.append(f'CTE {numero_cte}: {db_field} atualizado')
+                            break
+                
+                if updated:
+                    cte.updated_at = datetime.utcnow()
+                    sucessos += 1
+                
+            except Exception as e:
+                erros += 1
+                detalhes.append(f'Erro CTE {row.get("numero_cte", "?")}: {str(e)}')
+        
+        # Salvar mudanças
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({
+                'sucesso': False,
+                'erro': f'Erro ao salvar: {str(e)}'
+            }), 500
+        
+        return jsonify({
+            'sucesso': True,
+            'stats': {
+                'total_processados': len(df),
+                'sucessos': sucessos,
+                'erros': erros,
+                'detalhes': detalhes[:10]  # Primeiros 10 detalhes
+            },
+            'mensagem': f'Processamento concluído: {sucessos} sucessos, {erros} erros'
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'sucesso': False,
+            'erro': f'Erro geral: {str(e)}'
+        }), 500
+
+@bp.route('/template-atualizacao')
+@login_required
+def template_atualizacao():
+    '''Download template CSV para atualização'''
+    from flask import make_response
+    
+    template = '''numero_cte,destinatario_nome,valor_total,veiculo_placa,data_emissao,data_baixa,numero_fatura,observacao
+1001,Cliente A,5500.00,ABC1234,01/01/2025,15/01/2025,NF001,Exemplo de atualização
+1002,Cliente B,3200.50,XYZ5678,02/01/2025,,NF002,Pendente de baixa
+1003,Cliente C,7800.00,DEF9012,03/01/2025,20/01/2025,NF003,Concluído
+'''
+    
+    response = make_response(template)
+    response.headers['Content-Type'] = 'text/csv; charset=utf-8'
+    response.headers['Content-Disposition'] = 'attachment; filename=template_atualizacao_transpontual.csv'
+    
+    return response
+
+# ============================================================================
+# ROTA DE TESTE PARA DIAGNÓSTICO
+# ============================================================================
+
+@bp.route('/teste-update')
+@login_required  
+def teste_update():
+    '''Rota de teste para diagnóstico'''
+    return f'''
+    <div style="font-family: Arial; padding: 20px; background: #f8f9fa; min-height: 100vh;">
+        <h1>🔧 Sistema de Atualização - DIAGNÓSTICO</h1>
+        <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>✅ Status das Rotas:</h3>
+            <ul>
+                <li>✅ Rota de teste funcionando</li>
+                <li>✅ Sistema Flask operacional</li>
+                <li>✅ Login autenticado</li>
+                <li>✅ Usuário: {current_user.username}</li>
+            </ul>
+        </div>
+        
+        <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>🔗 Links de Teste:</h3>
+            <ul>
+                <li><a href="/ctes/atualizar-lote" style="color: #0066cc;">📋 Atualização em Lote</a></li>
+                <li><a href="/ctes/template-atualizacao" style="color: #0066cc;">📄 Download Template</a></li>
+                <li><a href="/ctes" style="color: #0066cc;">📊 Voltar para CTEs</a></li>
+                <li><a href="/dashboard" style="color: #0066cc;">🏠 Dashboard</a></li>
+            </ul>
+        </div>
+        
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h3>📊 Informações do Sistema:</h3>
+            <p><strong>Total CTEs:</strong> {CTE.query.count()}</p>
+            <p><strong>Sistema:</strong> Dashboard Transpontual</p>
+            <p><strong>Timestamp:</strong> {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}</p>
+        </div>
+    </div>
+    '''
