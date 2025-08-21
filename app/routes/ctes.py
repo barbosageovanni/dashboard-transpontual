@@ -933,11 +933,6 @@ def download_template_atualizacao():
 
 @bp.route('/template-atualizacao')
 @login_required
-def download_template_atualizacao():
-    '''Download template para atualizaÃ§Ã£o'''
-    from flask import make_response
-    
-    template = '''numero_cte,destinatario_nome,valor_total,veiculo_placa,data_emissao,data_baixa,observacao
 1001,Cliente A,5500.00,ABC1234,01/01/2025,15/01/2025,Exemplo
 1002,Cliente B,3200.50,XYZ5678,02/01/2025,,Pendente
 '''
