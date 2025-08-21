@@ -9,6 +9,9 @@ os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:Mariaana953%407334@
 # Adicionar path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+# Variável global para armazenar erros
+app_error = None
+
 try:
     from app import create_app, db
     from config import ProductionConfig
@@ -46,26 +49,33 @@ try:
         except Exception as init_error:
             print(f"⚠️ Init: {init_error}")
             
-except ImportError as import_error:
-    print(f"❌ Import error: {import_error}")
-    # Fallback básico SEM referência a 'e' indefinido
+except Exception as error:
+    print(f"❌ Erro crítico: {error}")
+    app_error = str(error)
+    
+    # Fallback básico
     from flask import Flask
     application = Flask(__name__)
     
     @application.route('/')
-    def erro():
-        return f"<h1>⚠️ Sistema em configuração</h1><p>Dependências faltantes. Aguarde instalação completa.</p><p>Erro: {import_error}</p>"
-        
-except Exception as general_error:
-    print(f"❌ Erro geral: {general_error}")
-    from flask import Flask
-    application = Flask(__name__)
-    
-    @application.route('/')
-    def erro():
-        return f"<h1>⚠️ Sistema em configuração</h1><p>Erro: {general_error}</p>"
+    def home():
+        return f'''
+        <html>
+        <head><title>Sistema Transpontual</title></head>
+        <body style="font-family: Arial; padding: 40px; background: #f8f9fa;">
+            <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
+                <h1>⚠️ Sistema em Configuração</h1>
+                <p><strong>Status:</strong> Dependências sendo instaladas</p>
+                <p><strong>Erro:</strong> {app_error}</p>
+                <p><strong>Ação:</strong> Aguarde conclusão do deploy</p>
+                <hr>
+                <p><small>Dashboard Transpontual - Railway Deploy</small></p>
+            </div>
+        </body>
+        </html>
+        '''
 
-# Exportar app para Gunicorn
+# Exportar app para Gunicorn  
 app = application
 
 if __name__ == "__main__":
