@@ -43,18 +43,27 @@ try:
             else:
                 print("✅ Admin existe")
                 
-        except Exception as e:
-            print(f"⚠️ Init: {e}")
+        except Exception as init_error:
+            print(f"⚠️ Init: {init_error}")
             
-except Exception as e:
-    print(f"❌ Erro crítico: {e}")
-    # Fallback básico
+except ImportError as import_error:
+    print(f"❌ Import error: {import_error}")
+    # Fallback básico SEM referência a 'e' indefinido
     from flask import Flask
     application = Flask(__name__)
     
     @application.route('/')
     def erro():
-        return f"<h1>⚠️ Sistema em configuração</h1><p>Erro: {e}</p>"
+        return f"<h1>⚠️ Sistema em configuração</h1><p>Dependências faltantes. Aguarde instalação completa.</p><p>Erro: {import_error}</p>"
+        
+except Exception as general_error:
+    print(f"❌ Erro geral: {general_error}")
+    from flask import Flask
+    application = Flask(__name__)
+    
+    @application.route('/')
+    def erro():
+        return f"<h1>⚠️ Sistema em configuração</h1><p>Erro: {general_error}</p>"
 
 # Exportar app para Gunicorn
 app = application
