@@ -626,3 +626,22 @@ def api_relatorio_executivo():
             'success': False,
             'error': str(e)
         }), 500
+# ADICIONAR ao final de app/routes/dashboard.py
+
+@bp.route('/api/metricas-clean')
+@login_required
+def api_metricas_clean():
+    '''API de métricas SEM debug excessivo'''
+    try:
+        from app.services.metricas_service_clean import MetricasService
+        resultado = MetricasService.calcular_metricas_resumidas()
+        return jsonify(resultado)
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': 'Erro ao calcular métricas',
+            'metricas': {},
+            'alertas': {},
+            'variacoes': {}
+        })

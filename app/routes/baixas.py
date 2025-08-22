@@ -9,6 +9,11 @@ from sqlalchemy import func
 import logging
 from typing import Dict, List, Tuple, Optional
 from werkzeug.utils import secure_filename
+from datetime import datetime, timedelta
+from sqlalchemy import func
+from flask import send_file
+import pandas as pd
+from io import BytesIO
 
 bp = Blueprint('baixas', __name__, url_prefix='/baixas')
 
@@ -526,3 +531,187 @@ def log_operacao_baixa(usuario_id: int, tipo: str, detalhes: Dict):
         logging.info(f"Baixa {tipo} - Usuário {usuario_id}: {detalhes}")
     except Exception as e:
         logging.error(f"Erro no log de auditoria: {str(e)}")
+
+# ARQUIVO: app/routes/baixas.py
+# ADICIONAR ESTAS ROTAS FALTANTES AO FINAL DO ARQUIVO
+
+# ============================================================================
+# ROTAS FALTANTES - ADICIONAR AO BLUEPRINT BAIXAS
+# ============================================================================
+
+@bp.route('/conciliacao')
+@login_required
+def conciliacao():
+    """Página de conciliação de baixas"""
+    try:
+        # Estatísticas para a página de conciliação
+        stats = {
+            'pendentes': CTE.query.filter(CTE.data_baixa.is_(None)).count(),
+            'processadas': CTE.query.filter(CTE.data_baixa.isnot(None)).count(),
+            'valor_pendente': float(db.session.query(func.sum(CTE.valor_total)).filter(CTE.data_baixa.is_(None)).scalar() or 0),
+            'valor_processado': float(db.session.query(func.sum(CTE.valor_total)).filter(CTE.data_baixa.isnot(None)).scalar() or 0)
+        }
+        
+        return render_template('baixas/conciliacao.html', stats=stats)
+    except Exception as e:
+        flash(f'Erro ao carregar página de conciliação: {str(e)}', 'error')
+        return redirect(url_for('baixas.index'))
+
+@bp.route('/historico')
+@login_required
+def historico():
+    """Página de histórico de baixas"""
+    try:
+        # Buscar histórico dos últimos 30 dias
+        data_limite = datetime.now().date() - timedelta(days=30)
+        
+        historico_baixas = db.session.query(
+            func.date(CTE.data_baixa).label('data'),
+            func.count(CTE.id).label('quantidade'),
+            func.sum(CTE.valor_total).label('valor_total')
+        ).filter(
+            CTE.data_baixa >= data_limite
+        ).group_by(
+            func.date(CTE.data_baixa)
+        ).order_by(
+            func.date(CTE.data_baixa).desc()
+        ).all()
+        
+        return render_template('baixas/historico.html', historico=historico_baixas)
+    except Exception as e:
+        flash(f'Erro ao carregar histórico: {str(e)}', 'error')
+        return redirect(url_for('baixas.index'))
+
+@bp.route('/relatorios')
+@login_required
+def relatorios():
+    """Página de relatórios de baixas"""
+    try:
+        # Estatísticas para relatórios
+        stats = {
+            'total_ctes': CTE.query.count(),
+            'com_baixa': CTE.query.filter(CTE.data_baixa.isnot(None)).count(),
+            'sem_baixa': CTE.query.filter(CTE.data_baixa.is_(None)).count(),
+            'valor_total': float(db.session.query(func.sum(CTE.valor_total)).scalar() or 0),
+            'valor_baixado': float(db.session.query(func.sum(CTE.valor_total)).filter(CTE.data_baixa.isnot(None)).scalar() or 0)
+        }
+        
+        return render_template('baixas/relatorios.html', stats=stats)
+    except Exception as e:
+        flash(f'Erro ao carregar relatórios: {str(e)}', 'error')
+        return redirect(url_for('baixas.index'))
+
+@bp.route('/importar')
+@login_required 
+def importar():
+    """Página de importação de baixas"""
+    try:
+        # Estatísticas de importação
+        stats = {
+            'ultima_importacao': datetime.now().strftime('%d/%m/%Y %H:%M'),
+            'total_importacoes': 0,  # Placeholder
+            'arquivos_processados': 0  # Placeholder
+        }
+        
+        return render_template('baixas/importar.html', stats=stats)
+    except Exception as e:
+        flash(f'Erro ao carregar página de importação: {str(e)}', 'error')
+        return redirect(url_for('baixas.index'))
+
+# ============================================================================
+# APIs AUXILIARES
+# ============================================================================
+
+@bp.route('/api/exportar')
+@login_required
+def api_exportar():
+    """API para exportar dados de baixas"""
+    try:
+        formato = request.args.get('formato', 'excel')
+        
+        # Buscar dados
+        query = CTE.query
+        
+        # Filtros opcionais
+        if request.args.get('apenas_baixadas') == 'true':
+            query = query.filter(CTE.data_baixa.isnot(None))
+        
+        ctes = query.order_by(CTE.numero_cte.desc()).all()
+        
+        # Preparar dados
+        dados = []
+        for cte in ctes:
+            dados.append({
+                'Número CTE': cte.numero_cte,
+                'Cliente': cte.destinatario_nome or '',
+                'Valor Total': float(cte.valor_total or 0),
+                'Data Emissão': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'Data Baixa': cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
+                'Status': 'Pago' if cte.data_baixa else 'Pendente',
+                'Observação': cte.observacao or ''
+            })
+        
+        df = pd.DataFrame(dados)
+        
+        if formato == 'csv':
+            output = BytesIO()
+            df.to_csv(output, index=False, encoding='utf-8-sig', sep=';')
+            output.seek(0)
+            
+            filename = f'baixas_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+            return send_file(output, 
+                           mimetype='text/csv',
+                           as_attachment=True, 
+                           download_name=filename)
+        else:
+            # Excel por padrão
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                df.to_excel(writer, sheet_name='Baixas', index=False)
+            output.seek(0)
+            
+            filename = f'baixas_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+            return send_file(output,
+                           mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                           as_attachment=True,
+                           download_name=filename)
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/api/dashboard-stats')
+@login_required
+def api_dashboard_stats():
+    """API para estatísticas do dashboard de baixas"""
+    try:
+        # Estatísticas principais
+        total_ctes = CTE.query.count()
+        com_baixa = CTE.query.filter(CTE.data_baixa.isnot(None)).count()
+        sem_baixa = CTE.query.filter(CTE.data_baixa.is_(None)).count()
+        
+        valor_total = db.session.query(func.sum(CTE.valor_total)).scalar() or 0
+        valor_baixado = db.session.query(func.sum(CTE.valor_total)).filter(CTE.data_baixa.isnot(None)).scalar() or 0
+        valor_pendente = db.session.query(func.sum(CTE.valor_total)).filter(CTE.data_baixa.is_(None)).scalar() or 0
+        
+        # Taxa de baixa
+        taxa_baixa = (com_baixa / total_ctes * 100) if total_ctes > 0 else 0
+        
+        # Baixas dos últimos 7 dias
+        data_limite = datetime.now().date() - timedelta(days=7)
+        baixas_recentes = CTE.query.filter(CTE.data_baixa >= data_limite).count()
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'total_ctes': total_ctes,
+                'com_baixa': com_baixa,
+                'sem_baixa': sem_baixa,
+                'valor_total': float(valor_total),
+                'valor_baixado': float(valor_baixado),
+                'valor_pendente': float(valor_pendente),
+                'taxa_baixa': round(taxa_baixa, 2),
+                'baixas_recentes': baixas_recentes
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500

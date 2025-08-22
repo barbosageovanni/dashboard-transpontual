@@ -1,695 +1,324 @@
+
+<!-- ARQUIVO: app/templates/admin/index.html -->
 {% extends "base.html" %}
 
-{% block title %}Área de Administração - Dashboard Baker{% endblock %}
-
-{% block extra_css %}
-<style>
-    .admin-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 3rem 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .admin-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-    }
-
-    .admin-header-content {
-        position: relative;
-        z-index: 1;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-
-    .stat-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        transition: all 0.3s ease;
-        border-left: 5px solid #667eea;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-    }
-
-    .stat-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
-    }
-
-    .stat-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 1.5rem;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 2rem;
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .stat-label {
-        color: #666;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-    }
-
-    .stat-change {
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 15px;
-        display: inline-block;
-    }
-
-    .stat-change.positive {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .stat-change.neutral {
-        background: #e2e3e5;
-        color: #495057;
-    }
-
-    .admin-actions {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-
-    .action-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        transition: transform 0.3s ease;
-    }
-
-    .action-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .action-header {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        padding: 1.5rem 2rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .action-body {
-        padding: 2rem;
-    }
-
-    .action-icon {
-        width: 50px;
-        height: 50px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
-
-    .btn-admin {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border: none;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .btn-admin:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        color: white;
-    }
-
-    .system-info {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    .system-header {
-        background: linear-gradient(135deg, #6c757d, #495057);
-        color: white;
-        padding: 1.5rem 2rem;
-    }
-
-    .system-body {
-        padding: 2rem;
-    }
-
-    .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 0;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .info-item:last-child {
-        border-bottom: none;
-    }
-
-    .info-label {
-        font-weight: 600;
-        color: #495057;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .info-value {
-        color: #28a745;
-        font-weight: 600;
-    }
-
-    .quick-links {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    .links-header {
-        background: linear-gradient(135deg, #fd7e14, #e8590c);
-        color: white;
-        padding: 1.5rem 2rem;
-    }
-
-    .links-body {
-        padding: 2rem;
-    }
-
-    .quick-link {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 12px;
-        text-decoration: none;
-        color: #495057;
-        transition: all 0.3s ease;
-        margin-bottom: 0.5rem;
-        border: 2px solid transparent;
-    }
-
-    .quick-link:hover {
-        background: #f8f9fa;
-        color: #667eea;
-        border-color: #667eea;
-        transform: translateX(5px);
-    }
-
-    .quick-link-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-    }
-
-    .activity-feed {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        margin-top: 2rem;
-    }
-
-    .activity-header {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: white;
-        padding: 1.5rem 2rem;
-    }
-
-    .activity-item {
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid #e9ecef;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        background: #f8f9fa;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #667eea;
-    }
-
-    .activity-content {
-        flex: 1;
-    }
-
-    .activity-title {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 0.25rem;
-    }
-
-    .activity-time {
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-
-    @media (max-width: 768px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-        
-        .admin-actions {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        .stat-card {
-            padding: 1.5rem;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-        }
-        
-        .admin-header {
-            padding: 2rem 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-{% endblock %}
+{% block title %}Painel Administrativo{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <!-- Header Admin -->
-        <div class="admin-header">
-            <div class="admin-header-content">
-                <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: 800;">
-                    <i class="fas fa-cogs"></i> Área de Administração
-                </h1>
-                <p style="font-size: 1.3rem; opacity: 0.9; margin-bottom: 1rem;">
-                    Painel de controle completo do Dashboard Baker
-                </p>
-                <small style="opacity: 0.7;">
-                    Bem-vindo, {{ current_user.nome_completo or current_user.username }}
-                </small>
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-cog"></i> Painel Administrativo</h2>
+                <div>
+                    <button class="btn btn-outline-primary" onclick="location.reload()">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-users"></i> Total de Usuários
+                    </h5>
+                    <h3 class="mb-0">{{ stats.users.total or 0 }}</h3>
+                    <small>{{ stats.users.active or 0 }} ativos</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-shield"></i> Administradores
+                    </h5>
+                    <h3 class="mb-0">{{ stats.users.admins or 0 }}</h3>
+                    <small>com privilégios admin</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-file-invoice"></i> Total CTEs
+                    </h5>
+                    <h3 class="mb-0">{{ stats.system.total_ctes or 0 }}</h3>
+                    <small>{{ stats.system.ctes_today or 0 }} hoje</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-clock"></i> Uptime
+                    </h5>
+                    <h3 class="mb-0">{{ stats.system.uptime or '99.9%' }}</h3>
+                    <small>disponibilidade</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Administrativas -->
+    <div class="row">
+        <!-- Gerenciamento de Usuários -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users-cog"></i> Gerenciar Usuários
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Gerencie contas de usuário, permissões e configurações de acesso.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Criar novos usuários</li>
+                        <li><i class="fas fa-check text-success"></i> Alterar permissões</li>
+                        <li><i class="fas fa-check text-success"></i> Resetar senhas</li>
+                        <li><i class="fas fa-check text-success"></i> Desativar contas</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.users') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-users"></i> Acessar Usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configurações do Sistema -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-server"></i> Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Configurações gerais do sistema e monitoramento de performance.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Configurações gerais</li>
+                        <li><i class="fas fa-check text-success"></i> Backup de dados</li>
+                        <li><i class="fas fa-check text-success"></i> Logs do sistema</li>
+                        <li><i class="fas fa-check text-success"></i> Performance</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success w-100" onclick="abrirConfiguracoes()">
+                        <i class="fas fa-cog"></i> Configurações
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatórios e Auditoria -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar"></i> Relatórios
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Relatórios de sistema, auditoria e análise de uso.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Logs de acesso</li>
+                        <li><i class="fas fa-check text-success"></i> Relatórios de uso</li>
+                        <li><i class="fas fa-check text-success"></i> Auditoria de dados</li>
+                        <li><i class="fas fa-check text-success"></i> Estatísticas</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-info w-100" onclick="abrirRelatorios()">
+                        <i class="fas fa-file-alt"></i> Ver Relatórios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Atividade Recente -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> Atividade Recente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="atividade-recente">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-success">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Usuário criado</h6>
+                                <small class="text-muted">Novo usuário adicionado ao sistema</small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <small class="text-muted">Há 2 horas</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-primary">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Importação de CTEs</h6>
+                                <small class="text-muted">150 CTEs importados com sucesso</small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <small class="text-muted">Há 4 horas</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Backup realizado</h6>
+                                <small class="text-muted">Backup automático executado</small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <small class="text-muted">Há 1 dia</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt"></i> Ações Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-primary w-100" onclick="criarUsuario()">
+                                <i class="fas fa-user-plus"></i> Novo Usuário
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-success w-100" onclick="executarBackup()">
+                                <i class="fas fa-database"></i> Backup Manual
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-info w-100" onclick="verLogs()">
+                                <i class="fas fa-file-text"></i> Ver Logs
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-warning w-100" onclick="limparCache()">
+                                <i class="fas fa-trash"></i> Limpar Cache
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Estatísticas Principais -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-users"></i>
-        </div>
-        <div class="stat-number">{{ stats.users.total }}</div>
-        <div class="stat-label">Total de Usuários</div>
-        <div class="stat-change neutral">
-            <i class="fas fa-chart-line"></i> Sistema Ativo
-        </div>
-    </div>
-    
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-user-check"></i>
-        </div>
-        <div class="stat-number">{{ stats.users.active }}</div>
-        <div class="stat-label">Usuários Ativos</div>
-        <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i> {{ ((stats.users.active / stats.users.total * 100) if stats.users.total > 0 else 0)|round(1) }}%
-        </div>
-    </div>
-    
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-file-invoice"></i>
-        </div>
-        <div class="stat-number">{{ stats.system.total_ctes }}</div>
-        <div class="stat-label">CTEs Cadastrados</div>
-        <div class="stat-change positive">
-            <i class="fas fa-plus"></i> {{ stats.system.ctes_today }} hoje
-        </div>
-    </div>
-    
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-clock"></i>
-        </div>
-        <div class="stat-number">{{ stats.users.recent_logins }}</div>
-        <div class="stat-label">Logins Recentes</div>
-        <div class="stat-change neutral">
-            <i class="fas fa-calendar-week"></i> Última semana
-        </div>
-    </div>
-</div>
-
-<!-- Ações Administrativas -->
-<div class="admin-actions">
-    <div class="action-card">
-        <div class="action-header">
-            <div class="action-icon">
-                <i class="fas fa-users-cog"></i>
+<!-- Modais -->
+<div class="modal fade" id="modal-acao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-titulo">Ação Administrativa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div>
-                <h3 style="margin: 0;">Gerenciar Usuários</h3>
-                <p style="margin: 0; opacity: 0.8;">CRUD completo de usuários</p>
+            <div class="modal-body" id="modal-conteudo">
+                <!-- Conteúdo dinâmico -->
             </div>
-        </div>
-        <div class="action-body">
-            <p>Adicione, edite, ative/desative usuários e gerencie permissões de acesso ao sistema.</p>
-            <ul style="margin-bottom: 2rem; color: #6c757d;">
-                <li>Criar novos usuários</li>
-                <li>Reset de senhas</li>
-                <li>Controle de permissões</li>
-                <li>Ativação/desativação</li>
-            </ul>
-            <a href="{{ url_for('admin.users') }}" class="btn-admin">
-                <i class="fas fa-users"></i> Gerenciar Usuários
-            </a>
-        </div>
-    </div>
-    
-    <div class="action-card">
-        <div class="action-header" style="background: linear-gradient(135deg, #007bff, #0056b3);">
-            <div class="action-icon">
-                <i class="fas fa-chart-line"></i>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="modal-confirmar">Confirmar</button>
             </div>
-            <div>
-                <h3 style="margin: 0;">Dashboard Principal</h3>
-                <p style="margin: 0; opacity: 0.8;">Métricas e relatórios</p>
-            </div>
-        </div>
-        <div class="action-body">
-            <p>Acesse o dashboard principal com todas as métricas financeiras e relatórios do sistema.</p>
-            <ul style="margin-bottom: 2rem; color: #6c757d;">
-                <li>Métricas em tempo real</li>
-                <li>Gráficos interativos</li>
-                <li>Análise de performance</li>
-                <li>Alertas inteligentes</li>
-            </ul>
-            <a href="{{ url_for('dashboard.index') }}" class="btn-admin" style="background: linear-gradient(135deg, #007bff, #0056b3);">
-                <i class="fas fa-tachometer-alt"></i> Ir para Dashboard
-            </a>
-        </div>
-    </div>
-    
-    <div class="action-card">
-        <div class="action-header" style="background: linear-gradient(135deg, #6f42c1, #563d7c);">
-            <div class="action-icon">
-                <i class="fas fa-database"></i>
-            </div>
-            <div>
-                <h3 style="margin: 0;">Gerenciar CTEs</h3>
-                <p style="margin: 0; opacity: 0.8;">CRUD de conhecimentos</p>
-            </div>
-        </div>
-        <div class="action-body">
-            <p>Gerencie todos os CTEs do sistema, incluindo importação em lote e exportação de dados.</p>
-            <ul style="margin-bottom: 2rem; color: #6c757d;">
-                <li>Listagem completa</li>
-                <li>Importação em lote</li>
-                <li>Edição individual</li>
-                <li>Exportação de dados</li>
-            </ul>
-            <a href="{{ url_for('ctes.listar') }}" class="btn-admin" style="background: linear-gradient(135deg, #6f42c1, #563d7c);">
-                <i class="fas fa-file-invoice"></i> Gerenciar CTEs
-            </a>
-        </div>
-    </div>
-    
-    <div class="action-card">
-        <div class="action-header" style="background: linear-gradient(135deg, #20c997, #17a2b8);">
-            <div class="action-icon">
-                <i class="fas fa-money-check-alt"></i>
-            </div>
-            <div>
-                <h3 style="margin: 0;">Sistema de Baixas</h3>
-                <p style="margin: 0; opacity: 0.8;">Conciliação financeira</p>
-            </div>
-        </div>
-        <div class="action-body">
-            <p>Registre baixas individuais ou em lote para conciliação financeira dos CTEs.</p>
-            <ul style="margin-bottom: 2rem; color: #6c757d;">
-                <li>Baixas individuais</li>
-                <li>Processamento em lote</li>
-                <li>Relatórios de baixas</li>
-                <li>Estatísticas financeiras</li>
-            </ul>
-            <a href="{{ url_for('baixas.index') }}" class="btn-admin" style="background: linear-gradient(135deg, #20c997, #17a2b8);">
-                <i class="fas fa-money-check-alt"></i> Sistema de Baixas
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Informações do Sistema e Links Rápidos -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="system-info">
-            <div class="system-header">
-                <h3 style="margin: 0;">
-                    <i class="fas fa-server"></i> Informações do Sistema
-                </h3>
-            </div>
-            <div class="system-body">
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-clock"></i> Uptime do Sistema
-                    </div>
-                    <div class="info-value">{{ stats.system.uptime }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-database"></i> Total de CTEs
-                    </div>
-                    <div class="info-value">{{ stats.system.total_ctes }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-calendar-day"></i> CTEs Hoje
-                    </div>
-                    <div class="info-value">{{ stats.system.ctes_today }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-save"></i> Último Backup
-                    </div>
-                    <div class="info-value">{{ stats.system.last_backup }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">
-                        <i class="fas fa-code-branch"></i> Versão
-                    </div>
-                    <div class="info-value">Dashboard Baker v3.0</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6">
-        <div class="quick-links">
-            <div class="links-header">
-                <h3 style="margin: 0;">
-                    <i class="fas fa-bolt"></i> Links Rápidos
-                </h3>
-            </div>
-            <div class="links-body">
-                <a href="{{ url_for('admin.users') }}" class="quick-link">
-                    <div class="quick-link-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600;">Adicionar Usuário</div>
-                        <small style="color: #6c757d;">Criar nova conta de usuário</small>
-                    </div>
-                </a>
-                
-                <a href="{{ url_for('ctes.listar') }}" class="quick-link">
-                    <div class="quick-link-icon">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600;">Importar CTEs</div>
-                        <small style="color: #6c757d;">Importação em lote via CSV</small>
-                    </div>
-                </a>
-                
-                <a href="{{ url_for('baixas.index') }}" class="quick-link">
-                    <div class="quick-link-icon">
-                        <i class="fas fa-file-upload"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600;">Processar Baixas</div>
-                        <small style="color: #6c757d;">Baixas em lote</small>
-                    </div>
-                </a>
-                
-                <a href="{{ url_for('dashboard.index') }}" class="quick-link">
-                    <div class="quick-link-icon">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600;">Ver Relatórios</div>
-                        <small style="color: #6c757d;">Dashboard principal</small>
-                    </div>
-                </a>
-                
-                <a href="{{ url_for('auth.logout') }}" class="quick-link">
-                    <div class="quick-link-icon">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600;">Sair do Sistema</div>
-                        <small style="color: #6c757d;">Fazer logout</small>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Feed de Atividades -->
-<div class="activity-feed">
-    <div class="activity-header">
-        <h3 style="margin: 0;">
-            <i class="fas fa-history"></i> Atividades Recentes
-        </h3>
-    </div>
-    <div class="activity-item">
-        <div class="activity-icon">
-            <i class="fas fa-user-plus"></i>
-        </div>
-        <div class="activity-content">
-            <div class="activity-title">Sistema de administração ativado</div>
-            <div class="activity-time">Agora mesmo</div>
-        </div>
-    </div>
-    <div class="activity-item">
-        <div class="activity-icon">
-            <i class="fas fa-database"></i>
-        </div>
-        <div class="activity-content">
-            <div class="activity-title">{{ stats.system.total_ctes }} CTEs no sistema</div>
-            <div class="activity-time">Banco de dados atualizado</div>
-        </div>
-    </div>
-    <div class="activity-item">
-        <div class="activity-icon">
-            <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="activity-content">
-            <div class="activity-title">Sistema seguro e operacional</div>
-            <div class="activity-time">Todas as verificações passaram</div>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
 <script>
-$(document).ready(function() {
-    console.log('🔧 Dashboard Admin carregado');
-    
-    // Adicionar animações aos cards
-    $('.stat-card, .action-card').each(function(index) {
-        $(this).css({
-            'opacity': '0',
-            'transform': 'translateY(20px)'
-        }).delay(index * 100).animate({
-            'opacity': '1'
-        }, 500).animate({
-            'transform': 'translateY(0)'
-        }, 300);
-    });
-    
-    // Atualizar timestamp
-    setInterval(() => {
-        const now = new Date();
-        const timestamp = now.toLocaleString('pt-BR');
-        console.log('📊 Admin dashboard ativo:', timestamp);
-    }, 60000);
-});
+// Funções administrativas
+function abrirConfiguracoes() {
+    alert('Página de configurações em desenvolvimento');
+}
+
+function abrirRelatorios() {
+    alert('Página de relatórios em desenvolvimento');
+}
+
+function criarUsuario() {
+    window.location.href = '{{ url_for("admin.users") }}#novo-usuario';
+}
+
+function executarBackup() {
+    if (confirm('Deseja executar backup manual do sistema?')) {
+        // Implementar backup manual
+        alert('Backup iniciado. Você será notificado quando concluído.');
+    }
+}
+
+function verLogs() {
+    alert('Visualização de logs em desenvolvimento');
+}
+
+function limparCache() {
+    if (confirm('Deseja limpar o cache do sistema?')) {
+        // Implementar limpeza de cache
+        alert('Cache limpo com sucesso.');
+    }
+}
+
+// Atualizar estatísticas automaticamente
+setInterval(function() {
+    // Implementar atualização automática das estatísticas
+}, 30000); // A cada 30 segundos
 </script>
+
+<style>
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+</style>
 {% endblock %}

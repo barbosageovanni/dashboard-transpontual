@@ -182,9 +182,12 @@
                     <div class="col-md-4">
                         <label for="filtroPeriodo" class="form-label">Período</label>
                         <select class="form-select" id="filtroPeriodo">
+                            <option value="7">Últimos 7 dias</option>
+                            <option value="15">Últimos 15 dias</option>
                             <option value="30">Últimos 30 dias</option>
                             <option value="90">Últimos 90 dias</option>
                             <option value="180" selected>Últimos 180 dias</option>
+                            <option value="360">Últimos 360 dias</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -220,9 +223,11 @@
                 <div class="filtro-inclusao">
                     <label for="filtroInclusao" class="form-label">Período de Inclusão</label>
                     <select class="form-select" id="filtroInclusao" onchange="carregarFaturamentoInclusao()">
-                        <option value="30" selected>Últimos 30 dias</option>
-                        <option value="60">Últimos 60 dias</option>
-                        <option value="90">Últimos 90 dias</option>
+                            <option value="15">Últimos 15 dias</option>
+                            <option value="30">Últimos 30 dias</option>
+                            <option value="90">Últimos 90 dias</option>
+                            <option value="180" selected>Últimos 180 dias</option>
+                            <option value="360">Últimos 360 dias</option>
                     </select>
                 </div>
                 <small class="text-white-50">Baseado em data_inclusao_fatura</small>

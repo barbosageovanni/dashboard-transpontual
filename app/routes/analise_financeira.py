@@ -27,14 +27,14 @@ def api_analise_completa():
     """API para análise financeira completa"""
     try:
         # Parâmetros de filtro
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         # Validar filtro de dias
-        if filtro_dias not in [15, 30, 90, 180]:
+        if filtro_dias not in [15, 30, 90, 180, 360]:
             return jsonify({
                 'success': False,
-                'error': 'Período inválido. Use: 15, 30, 90 ou 180 dias'
+                'error': 'Período inválido. Use: 15, 30, 90, 180 ou 360 dias'
             }), 400
         
         # Processar filtro de cliente
@@ -90,7 +90,7 @@ def api_lista_clientes():
 def api_receita_mensal():
     """API específica para receita mensal"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -122,7 +122,7 @@ def api_receita_mensal():
 def api_concentracao_clientes():
     """API específica para concentração de clientes"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         
         analise = AnaliseFinanceiraService.gerar_analise_completa(
             filtro_dias=filtro_dias,
@@ -150,7 +150,7 @@ def api_concentracao_clientes():
 def api_tempo_cobranca():
     """API específica para análise de tempo de cobrança"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -182,7 +182,7 @@ def api_tempo_cobranca():
 def api_tendencia():
     """API específica para análise de tendência"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -216,7 +216,7 @@ def api_resumo_executivo():
     """API para resumo executivo (dashboard principal)"""
     try:
         # Análise padrão (últimos 180 dias)
-        analise = AnaliseFinanceiraService.gerar_analise_completa(filtro_dias=180)
+        analise = AnaliseFinanceiraService.gerar_analise_completa(filtro_dias=360)
         
         # Montar resumo executivo
         resumo = {
@@ -249,7 +249,7 @@ def api_exportar():
     """API para exportar dados da análise"""
     try:
         formato = request.args.get('formato', 'json').lower()
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -309,7 +309,7 @@ def internal_error(error):
 def api_exportar_json():
     """API para exportar dados em JSON"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -355,7 +355,7 @@ def api_exportar_json():
 def api_exportar_excel():
     """API para exportar dados em Excel"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -403,7 +403,7 @@ def api_exportar_excel():
 def api_exportar_csv():
     """API para exportar dados em CSV"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         aba = request.args.get('aba', 'resumo')  # resumo, clientes, receita
         
@@ -441,7 +441,7 @@ def api_exportar_csv():
 def api_exportar_pdf():
     """API para exportar relatório em PDF"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
@@ -493,7 +493,7 @@ def api_exportar_multiplo():
         import zipfile
         from io import BytesIO
         
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         formatos = request.args.getlist('formatos')  # json,excel,csv,pdf
         
@@ -569,7 +569,7 @@ def api_exportar_multiplo():
 def api_exportar_info():
     """API para informações sobre exportação disponível"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
+        filtro_dias = int(request.args.get('filtro_dias', 360))
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         
         # Obter estatísticas básicas
@@ -612,10 +612,10 @@ def api_faturamento_inclusao():
         filtro_dias = int(request.args.get('filtro_dias', 30))
         
         # Validar filtro
-        if filtro_dias not in [30, 60, 90]:
+        if filtro_dias not in [7,15,30, 60, 90]:
             return jsonify({
                 'success': False,
-                'error': 'Período inválido. Use: 30, 60 ou 90 dias'
+                'error': 'Período inválido. Use: 7, 15, 30, 60 ou 90 dias'
             }), 400
         
         # Obter dados

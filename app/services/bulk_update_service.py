@@ -35,47 +35,66 @@ class BulkUpdateService:
             'campos_atualizados': {}
         }
         
-        # Mapeamento de colunas (seu mapping original)
+    # Mapeamento de colunas do arquivo para campos do banco
         self.column_mapping = {
+            # Identificação
             'CTE': 'numero_cte',
             'Numero_CTE': 'numero_cte',
             'CTRC': 'numero_cte',
             'numero_cte': 'numero_cte',
+            
+            # Dados principais
             'Cliente': 'destinatario_nome',
             'Destinatario': 'destinatario_nome',
             'destinatario_nome': 'destinatario_nome',
+            
             'Veiculo': 'veiculo_placa',
             'Placa': 'veiculo_placa',
             'veiculo_placa': 'veiculo_placa',
+            
             'Valor_Frete': 'valor_total',
             'Valor': 'valor_total',
             'valor_total': 'valor_total',
+            
+            # Datas principais
             'Data_Emissao': 'data_emissao',
             'Data_Emissao_CTE': 'data_emissao',
             'data_emissao': 'data_emissao',
+            
             'Data_Baixa': 'data_baixa',
             'data_baixa': 'data_baixa',
+            
+            # Faturamento
             'Numero_Fatura': 'numero_fatura',
             'numero_fatura': 'numero_fatura',
+            
             'Data_Inclusao_Fatura': 'data_inclusao_fatura',
             'data_inclusao_fatura': 'data_inclusao_fatura',
+            
             'Data_Envio_Processo': 'data_envio_processo',
             'data_envio_processo': 'data_envio_processo',
+            
             'Data_Primeiro_Envio': 'primeiro_envio',
             'Primeiro_Envio': 'primeiro_envio',
             'primeiro_envio': 'primeiro_envio',
+            
             'Data_RQ_TMC': 'data_rq_tmc',
             'data_rq_tmc': 'data_rq_tmc',
+            
             'Data_Atesto': 'data_atesto',
             'data_atesto': 'data_atesto',
+            
             'Data_Envio_Final': 'envio_final',
             'Envio_Final': 'envio_final',
             'envio_final': 'envio_final',
+            
+            # Observações
             'Observacoes': 'observacao',
             'Observacao': 'observacao',
             'observacao': 'observacao',
             'Comentarios': 'observacao'
         }
+        
         
         self.date_fields = [
             'data_emissao', 'data_baixa', 'data_inclusao_fatura',

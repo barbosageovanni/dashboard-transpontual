@@ -1,0 +1,235 @@
+<!-- ARQUIVO: app/templates/baixas/conciliacao.html -->
+{% extends "base.html" %}
+
+{% block title %}Conciliação de Baixas{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-balance-scale"></i> Conciliação de Baixas</h2>
+                <div>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
+                    <a href="{{ url_for('baixas.api_exportar', formato='excel') }}" class="btn btn-success">
+                        <i class="fas fa-download"></i> Exportar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-clock"></i> Pendentes
+                    </h5>
+                    <h3 class="mb-0">{{ stats.pendentes }}</h3>
+                    <small>R$ {{ "{:,.2f}".format(stats.valor_pendente) }}</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-check"></i> Processadas
+                    </h5>
+                    <h3 class="mb-0">{{ stats.processadas }}</h3>
+                    <small>R$ {{ "{:,.2f}".format(stats.valor_processado) }}</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-percentage"></i> Taxa
+                    </h5>
+                    <h3 class="mb-0">
+                        {% set total = stats.pendentes + stats.processadas %}
+                        {% if total > 0 %}
+                            {{ "{:.1f}%".format((stats.processadas / total) * 100) }}
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h3>
+                    <small>de baixas processadas</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-calculator"></i> Total
+                    </h5>
+                    <h3 class="mb-0">{{ stats.pendentes + stats.processadas }}</h3>
+                    <small>R$ {{ "{:,.2f}".format(stats.valor_pendente + stats.valor_processado) }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de Conciliação -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tasks"></i> Ferramentas de Conciliação
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-upload"></i> Importar Baixas</h6>
+                            <p class="text-muted">Upload de arquivo com baixas para processamento em lote.</p>
+                            <form id="form-importar-baixas" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <input type="file" class="form-control" id="arquivo-baixas" 
+                                           accept=".csv,.xlsx,.xls" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Processar Arquivo
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-download"></i> Templates</h6>
+                            <p class="text-muted">Baixe modelos para importação de dados.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('baixas.api_template_baixas') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-file-csv"></i> Template CSV
+                                </a>
+                                <a href="{{ url_for('ctes.template_atualizacao_xlsx') }}" class="btn btn-outline-success">
+                                    <i class="fas fa-file-excel"></i> Template Excel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de CTEs Pendentes -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list"></i> CTEs Pendentes de Baixa
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="tabela-pendentes">
+                        <!-- Será carregado via JavaScript -->
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Carregando...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Resultados -->
+<div class="modal fade" id="modal-resultado" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Resultado do Processamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="conteudo-resultado">
+                <!-- Resultado será inserido aqui -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// JavaScript para conciliação de baixas
+document.addEventListener('DOMContentLoaded', function() {
+    carregarPendentes();
+    
+    // Form de importação
+    document.getElementById('form-importar-baixas').addEventListener('submit', function(e) {
+        e.preventDefault();
+        processarArquivoBaixas();
+    });
+});
+
+function carregarPendentes() {
+    // Implementar carregamento de CTEs pendentes
+    const tabela = document.getElementById('tabela-pendentes');
+    tabela.innerHTML = '<p class="text-muted">Carregando CTEs pendentes...</p>';
+    
+    // Aqui você pode fazer uma chamada AJAX para carregar os dados
+}
+
+function processarArquivoBaixas() {
+    const arquivo = document.getElementById('arquivo-baixas').files[0];
+    if (!arquivo) {
+        alert('Selecione um arquivo');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('arquivo', arquivo);
+    
+    fetch('{{ url_for("baixas.api_baixa_lote") }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.sucesso) {
+            mostrarResultado(data);
+        } else {
+            alert('Erro: ' + data.erro);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao processar arquivo');
+    });
+}
+
+function mostrarResultado(data) {
+    const conteudo = document.getElementById('conteudo-resultado');
+    conteudo.innerHTML = `
+        <div class="alert alert-success">
+            <h6>Processamento Concluído!</h6>
+            <ul class="mb-0">
+                <li>Processadas: ${data.resultados.processadas}</li>
+                <li>Sucessos: ${data.resultados.sucessos}</li>
+                <li>Erros: ${data.resultados.erros}</li>
+            </ul>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('modal-resultado'));
+    modal.show();
+    
+    // Recarregar estatísticas
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+}
+</script>
+{% endblock %}
