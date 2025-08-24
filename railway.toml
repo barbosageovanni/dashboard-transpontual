@@ -1,12 +1,27 @@
 [build]
 builder = "NIXPACKS"
+buildCommand = "pip install -r requirements.txt"
 
 [deploy]
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+startCommand = "gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120 --max-requests 1000 --max-requests-jitter 100 --preload"
 
 [env]
 PYTHONPATH = "/app"
 FLASK_ENV = "production"
+GUNICORN_CMD_ARGS = "--bind=0.0.0.0:$PORT --workers=4 --timeout=120 --max-requests=1000 --max-requests-jitter=100 --preload --log-level=info"
+
+# Otimizações Python
+PYTHONUNBUFFERED = "1"
+PYTHONHASHSEED = "random"
+
+# Configurações de performance
+WEB_CONCURRENCY = "4"
+MAX_WORKERS = "4"
+WORKER_TIMEOUT = "120"
+
+[build.env]
+PYTHON_VERSION = "3.11"

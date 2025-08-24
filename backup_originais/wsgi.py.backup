@@ -1,76 +1,20 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 WSGI Entry Point - Dashboard Baker Flask CORRIGIDO
 Arquivo principal para deploy em produção
-SOLUÇÃO: before_first_request substituído por inicialização adequada
 """
 
 import os
 import sys
-import threading
 from app import create_app, db
 from sqlalchemy import text
 
 # Configurar environment para produção
 os.environ.setdefault('FLASK_ENV', 'production')
 
-# Flag para controlar inicialização única
-_initialized = threading.Lock()
-_init_done = False
-
-def initialize_app_once():
-    """Inicialização única da aplicação"""
-    global _init_done
-    
-    if _init_done:
-        return
-        
-    with _initialized:
-        if _init_done:  # Double-check locking
-            return
-            
-        try:
-            print("🚀 Inicializando Dashboard Baker...")
-            
-            # Criar tabelas se não existirem
-            db.create_all()
-            
-            # Criar admin inicial se não existir
-            from app.models.user import User
-            admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
-            
-            if admin_count == 0:
-                print("👤 Criando usuário admin inicial...")
-                sucesso, resultado = User.criar_admin_inicial()
-                
-                if sucesso:
-                    print("✅ Admin inicial criado com sucesso")
-                else:
-                    print(f"❌ Erro ao criar admin: {resultado}")
-            else:
-                print(f"✅ {admin_count} admin(s) encontrado(s)")
-            
-            _init_done = True
-            print("✅ Dashboard Baker inicializado com sucesso")
-            
-        except Exception as e:
-            print(f"❌ Erro na inicialização: {str(e)}")
-
 # Criar aplicação
 application = create_app()
-
-# ===== MIDDLEWARE DE INICIALIZAÇÃO (Substitui before_first_request) =====
-
-@application.before_request
-def ensure_initialized():
-    """Garantir que a aplicação seja inicializada antes da primeira requisição"""
-    if not _init_done and os.environ.get('FLASK_ENV') == 'production':
-        try:
-            with application.app_context():
-                initialize_app_once()
-        except Exception as e:
-            print(f"Erro na inicialização via middleware: {e}")
 
 # ===== ENDPOINTS DE MONITORAMENTO =====
 
@@ -78,7 +22,7 @@ def ensure_initialized():
 def health_check():
     """Endpoint de healthcheck para monitoramento"""
     try:
-        # Testar conexão com banco
+        # Testar conexão com banco - MÉTODO CORRIGIDO
         with application.app_context():
             db.session.execute(text('SELECT 1'))
             db.session.commit()
@@ -101,10 +45,9 @@ def health_check():
 @application.route('/ping')
 def ping():
     """Endpoint simples de ping"""
-    from datetime import datetime
     return {
         'status': 'pong', 
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': str(db.func.now()),
         'service': 'dashboard-baker'
     }, 200
 
@@ -138,7 +81,7 @@ def info():
             'system': {
                 'python_version': sys.version,
                 'flask_env': os.environ.get('FLASK_ENV'),
-                'database_url_set': bool(os.environ.get('DATABASE_URL') or os.environ.get('SQLALCHEMY_DATABASE_URI'))
+                'database_url_set': 'DATABASE_URL' in os.environ or 'SQLALCHEMY_DATABASE_URI' in os.environ
             }
         }, 200
         
@@ -155,6 +98,9 @@ def readiness_check():
     """Verifica se a aplicação está pronta para receber tráfego"""
     try:
         with application.app_context():
+            # Verificar se tabelas existem
+            db.session.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"))
+            
             # Verificar se há pelo menos um usuário admin
             from app.models.user import User
             admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
@@ -182,6 +128,83 @@ def readiness_check():
             'error': str(e)
         }, 503
 
+# ===== INICIALIZAÇÃO EM PRODUÇÃO =====
+
+@application.before_first_request
+def initialize_production():
+    """Inicialização específica para produção"""
+    if os.environ.get('FLASK_ENV') == 'production':
+        application.logger.info("🚀 Inicializando Dashboard Baker em produção")
+        
+        try:
+            with application.app_context():
+                # Criar tabelas se não existirem
+                db.create_all()
+                
+                # Criar admin inicial se não existir
+                from app.models.user import User
+                admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
+                
+                if admin_count == 0:
+                    application.logger.info("👤 Criando usuário admin inicial...")
+                    sucesso, resultado = User.criar_admin_inicial()
+                    
+                    if sucesso:
+                        application.logger.info("✅ Admin inicial criado com sucesso")
+                    else:
+                        application.logger.error(f"❌ Erro ao criar admin: {resultado}")
+                else:
+                    application.logger.info(f"✅ {admin_count} admin(s) encontrado(s)")
+                
+                application.logger.info("✅ Dashboard Baker inicializado com sucesso")
+                
+        except Exception as e:
+            application.logger.error(f"❌ Erro na inicialização: {str(e)}")
+
+# ===== HANDLERS DE ERRO GLOBAIS =====
+
+@application.errorhandler(404)
+def not_found(error):
+    """Handler para 404"""
+    return {
+        'error': 'Not Found',
+        'message': 'The requested resource was not found',
+        'status': 404
+    }, 404
+
+@application.errorhandler(500)
+def internal_error(error):
+    """Handler para 500"""
+    application.logger.error(f"Internal error: {str(error)}")
+    return {
+        'error': 'Internal Server Error',
+        'message': 'An internal server error occurred',
+        'status': 500
+    }, 500
+
+# ===== CONFIGURAÇÕES DE PRODUÇÃO =====
+
+if os.environ.get('FLASK_ENV') == 'production':
+    # Configurar logging para produção
+    import logging
+    from logging.handlers import RotatingFileHandler
+    
+    # Criar diretório de logs se não existir
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+    
+    # Configurar handler de arquivo
+    file_handler = RotatingFileHandler('logs/dashboard_baker.log', maxBytes=10240000, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    
+    # Adicionar handler à aplicação
+    application.logger.addHandler(file_handler)
+    application.logger.setLevel(logging.INFO)
+    application.logger.info('🚀 Dashboard Baker Flask startup em produção')
+
 # ===== EXECUÇÃO LOCAL =====
 
 if __name__ == "__main__":
@@ -189,21 +212,9 @@ if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') != 'production'
     
-    print("🔍 Verificando dependências...")
-    try:
-        import pandas
-        print("✅ Pandas disponível - funcionalidades completas")
-    except ImportError:
-        print("⚠️ Pandas não disponível - funcionalidades limitadas")
-    
     print(f"🚀 Iniciando Dashboard Baker na porta {port}")
     print(f"📝 Debug: {'Ativado' if debug else 'Desativado'}")
     print(f"🌍 Ambiente: {os.environ.get('FLASK_ENV', 'development')}")
-    
-    # Inicializar para desenvolvimento local
-    if debug:
-        with application.app_context():
-            initialize_app_once()
     
     application.run(
         host='0.0.0.0', 
