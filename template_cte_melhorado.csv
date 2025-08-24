@@ -1,0 +1,4 @@
+﻿Número CTE;Destinatário;Placa Veículo;Valor Total;Data Emissão;Data Baixa;Número Fatura;Data Inclusão Fatura;Data Envio Processo;Primeiro Envio;Data RQ/TMC;Data Atesto;Envio Final;Observação;Origem dos Dados
+# FORMATOS ESPERADOS:;Razão Social Completa;ABC-1234;1500.50 (decimal com ponto);AAAA-MM-DD (2025-01-15);AAAA-MM-DD ou vazio;Número/Código da Fatura;AAAA-MM-DD ou vazio;AAAA-MM-DD ou vazio;AAAA-MM-DD ou vazio;AAAA-MM-DD ou vazio;AAAA-MM-DD ou vazio;AAAA-MM-DD ou vazio;Texto livre;Sistema/CSV/Manual
+12345;Cliente Exemplo Ltda;ABC-1234;1500.50;2025-01-15;2025-01-20;FAT001;2025-01-22;2025-01-25;2025-01-26;2025-01-28;2025-01-30;2025-02-01;Exemplo de observação do CTE;Sistema
+12346;Outro Cliente SA;XYZ-5678;2300.75;2025-01-16;;;;;;;;;CTE ainda em processo;CSV

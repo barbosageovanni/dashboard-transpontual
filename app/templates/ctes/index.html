@@ -5,7 +5,7 @@
 {% block extra_css %}
 <style>
 .module-header {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #007bff, #ffffff);
     color: white;
     padding: 2rem;
     border-radius: 15px;
@@ -29,7 +29,7 @@
 }
 
 .form-section h6 {
-    color: #007bff;
+    color: #f8f9fa;
     margin-bottom: 1rem;
 }
 
@@ -39,6 +39,65 @@
     padding: 1rem;
     margin-bottom: 1rem;
     border-left: 4px solid #ffc107;
+}
+
+
+/* ABAS ESTILO SUPABASE - CONTRASTE MÁXIMO */
+.nav-tabs {
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 2rem;
+}
+
+.nav-tabs .nav-link {
+    color: #374151 !important;
+    background: white !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 1rem 2rem !important;
+    border: 2px solid #e5e7eb !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    margin-right: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #1f2937 !important;
+    background: #f9fafb !important;
+    border-color: #3ecf8e !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: white !important;
+    background: linear-gradient(135deg, #3ecf8e 0%, #2dd4bf 100%) !important;
+    border-color: #3ecf8e !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 15px rgba(62, 207, 142, 0.3) !important;
+}
+
+/* Forçar texto das abas específicas */
+#listar-tab, #inserir-tab, #buscar-tab {
+    color: #374151 !important;
+    text-shadow: none !important;
+}
+
+#listar-tab.active, #inserir-tab.active, #buscar-tab.active {
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Content das abas */
+.tab-content {
+    background: white;
+    border-radius: 0 12px 12px 12px;
+    border: 2px solid #e5e7eb;
+    border-top: none;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 </style>
 {% endblock %}
@@ -172,7 +231,7 @@
                     </div>
                     <div class="d-flex gap-2">
                         <!-- Botão de Importação em Lote -->
-                        <a href="{{ url_for('ctes.importar_lote') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ url_for('ctes.atualizar_lote') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-upload"></i> Importação em Lote
                         </a>
                         
@@ -736,6 +795,98 @@
         font-size: 2rem !important;
     }
 }
+
+/* CONTRASTE MÁXIMO PARA ABAS CTEs */
+.nav-tabs .nav-link {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    font-weight: 800 !important;
+    border: 2px solid #dee2e6 !important;
+    font-size: 1rem !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: #ffffff !important;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    font-weight: 800 !important;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    color: #000000 !important;
+    background-color: #f8f9fa !important;
+    border-color: #007bff !important;
+}
+
+/* Força adicional para textos */
+#listar-tab, #inserir-tab, #buscar-tab {
+    color: #000000 !important;
+}
+
+#listar-tab.active, #inserir-tab.active, #buscar-tab.active {
+    color: #ffffff !important;
+}
+
+/* ABAS ESTILO SUPABASE - CONTRASTE MÁXIMO */
+.nav-tabs {
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 2rem;
+}
+
+.nav-tabs .nav-link {
+    color: #374151 !important;
+    background: white !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 1rem 2rem !important;
+    border: 2px solid #e5e7eb !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    margin-right: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #1f2937 !important;
+    background: #f9fafb !important;
+    border-color: #3ecf8e !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: white !important;
+    background: linear-gradient(135deg, #3ecf8e 0%, #2dd4bf 100%) !important;
+    border-color: #3ecf8e !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 15px rgba(62, 207, 142, 0.3) !important;
+}
+
+/* Forçar texto das abas específicas */
+#listar-tab, #inserir-tab, #buscar-tab {
+    color: #374151 !important;
+    text-shadow: none !important;
+}
+
+#listar-tab.active, #inserir-tab.active, #buscar-tab.active {
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Content das abas */
+.tab-content {
+    background: white;
+    border-radius: 0 12px 12px 12px;
+    border: 2px solid #e5e7eb;
+    border-top: none;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
 </style>
 
 <!-- ============================================================================ -->
@@ -764,7 +915,7 @@ $(document).ready(function() {
 
 <!-- No template principal dos CTEs, adicionar botão -->
 <div class="d-flex gap-2 mb-3">
-    <a href="{{ url_for('ctes.importar_lote') }}" class="btn btn-success">
+    <a href="{{ url_for('ctes.atualizar_lote') }}" class="btn btn-success">
         <i class="fas fa-upload"></i> Importar Lote
     </a>
     <button class="btn btn-outline-info" onclick="baixarTemplateCTE()">

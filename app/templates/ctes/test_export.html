@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Teste de Exportação - Dashboard Baker{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">🧪 Teste de Exportação de CTEs</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5>📋 Status das Correções:</h5>
+                        <ul>
+                            <li>✅ JavaScript corrigido: URLs de /export/ para /download/</li>
+                            <li>✅ CSS dos cards do dashboard ajustado (fonte menor, responsivo)</li>
+                            <li>✅ Erro de sintaxe no CSV corrigido (linha quebrada)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h5>📊 Exportar CTEs</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Teste os downloads diretamente:</p>
+                                    
+                                    <div class="d-grid gap-2">
+                                        <a href="/ctes/api/download/csv" class="btn btn-outline-info" target="_blank">
+                                            <i class="fas fa-file-csv"></i> Download CSV
+                                        </a>
+                                        
+                                        <a href="/ctes/api/download/excel" class="btn btn-outline-success" target="_blank">
+                                            <i class="fas fa-file-excel"></i> Download Excel
+                                        </a>
+                                        
+                                        <a href="/ctes/api/download/pdf" class="btn btn-outline-danger" target="_blank">
+                                            <i class="fas fa-file-pdf"></i> Download PDF (Não implementado)
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5>🎯 Teste com Filtros</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Links com filtros de exemplo:</p>
+                                    
+                                    <div class="d-grid gap-2">
+                                        <a href="/ctes/api/download/csv?texto=teste&data_inicio=2024-01-01" class="btn btn-outline-info btn-sm" target="_blank">
+                                            CSV com Filtros
+                                        </a>
+                                        
+                                        <a href="/ctes/api/download/excel?data_inicio=2024-01-01&data_fim=2024-12-31" class="btn btn-outline-success btn-sm" target="_blank">
+                                            Excel com Filtros
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h5>🔗 Links de Navegação</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <a href="{{ url_for('ctes.index') }}" class="btn btn-primary">
+                                            <i class="fas fa-list"></i> Voltar para CTEs
+                                        </a>
+                                        
+                                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-info">
+                                            <i class="fas fa-home"></i> Dashboard Principal
+                                        </a>
+                                        
+                                        <a href="{{ url_for('ctes.atualizar_lote') }}" class="btn btn-success">
+                                            <i class="fas fa-upload"></i> Importação em Lote
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-success">
+                                <h5>✅ Confirmação das Correções:</h5>
+                                <ol>
+                                    <li><strong>Exportação CSV/Excel:</strong> URLs corrigidas no JavaScript</li>
+                                    <li><strong>Cards do Dashboard:</strong> Fonte reduzida de 2.8rem para 2.2rem</li>
+                                    <li><strong>Responsividade:</strong> Media queries adicionados para mobile</li>
+                                    <li><strong>Sintaxe Python:</strong> Erro de quebra de linha corrigido</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

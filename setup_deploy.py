@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Script de Setup para Deploy - Dashboard Baker
-Automatiza criação dos arquivos necessários
+Setup de Deploy COMPLETO - Dashboard Baker Flask
+Prepara o projeto para deploy em Railway, Render ou Heroku
+VERSÃO FINAL COM TODAS AS CORREÇÕES
 """
 
 import os
 import sys
+import shutil
+import glob
+from datetime import datetime
 from pathlib import Path
 
 def criar_arquivo(nome, conteudo):
@@ -14,40 +18,194 @@ def criar_arquivo(nome, conteudo):
     try:
         with open(nome, 'w', encoding='utf-8') as f:
             f.write(conteudo)
-        print(f"✅ {nome} criado")
+        print(f"✅ {nome} criado/atualizado")
         return True
     except Exception as e:
         print(f"❌ Erro ao criar {nome}: {e}")
         return False
 
-def main():
-    print("🚀 SETUP DEPLOY - DASHBOARD BAKER")
-    print("=" * 50)
+def setup_deploy_completo():
+    """Configura o projeto completo para deploy em produção"""
     
-    # Verificar se está na pasta do projeto
-    if not os.path.exists('app') or not os.path.exists('iniciar.py'):
+    print("🚀 SETUP DE DEPLOY COMPLETO - DASHBOARD BAKER FLASK")
+    print("=" * 70)
+    
+    # Verificar se está na pasta correta
+    if not os.path.exists('app') or not os.path.exists('run.py'):
         print("❌ Execute este script na pasta raiz do projeto!")
-        print("💡 Deve conter as pastas 'app' e arquivo 'iniciar.py'")
-        sys.exit(1)
+        print("💡 Deve conter as pastas 'app' e arquivo 'run.py'")
+        return False
     
-    # Nome do repositório
-    nome_repo = input("📝 Nome do novo repositório (padrão: dashboard-transpontual): ").strip()
-    if not nome_repo:
-        nome_repo = "dashboard-transpontual"
+    print("✅ Pasta do projeto detectada")
     
-    print(f"📦 Configurando para repositório: {nome_repo}")
+    # 1. PROCFILE OTIMIZADO
+    print("\n1. 🔧 Criando Procfile otimizado...")
     
-    # 1. Requirements.txt
-    requirements = """Flask==2.3.3
-Flask-SQLAlchemy==3.0.5
-Flask-Migrate==4.0.5
-Flask-Login==0.6.3
-psycopg2-binary==2.9.7
-pandas==2.0.3
-numpy==1.24.3
-openpyxl==3.1.2
-python-dotenv==1.0.0
-gspread==5.10.0
+    procfile_content = """web: gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120 --max-requests 1000
+release: python -c "from app import create_app, db; app = create_app(); app.app_context().push(); db.create_all(); print('Banco inicializado')"
+"""
+    
+    criar_arquivo("Procfile", procfile_content)
+    
+    # 2. WSGI.PY COMPLETO
+    print("\n2. � Criando wsgi.py otimizado...")
+    
+    wsgi_content = '''#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+WSGI Entry Point - Dashboard Baker Flask
+Otimizado para Railway, Render e Heroku
+VERSÃO FINAL COM TODAS AS CORREÇÕES
+"""
+
+import os
+import sys
+from datetime import datetime
+
+# Adicionar pasta do projeto ao path
+sys.path.insert(0, os.path.dirname(__file__))
+
+from app import create_app, db
+
+# Configurar ambiente de produção
+os.environ.setdefault('FLASK_ENV', 'production')
+
+# Criar aplicação
+application = create_app()
+
+# Para compatibilidade
+app = application
+
+@application.route('/health')
+def health_check():
+    """Health check para deploy"""
+    try:
+        # Testar conexão com banco
+        from app.models.cte import CTE
+        total = CTE.query.count()
+        
+        return {
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "database": "connected",
+            "total_ctes": total,
+            "version": "3.0",
+            "features": ["importacao", "exportacao", "dashboard_responsivo"]
+        }
+    except Exception as e:
+        return {
+            "status": "error", 
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }, 500
+
+# Configurações específicas para produção
+if application.config.get('ENV') == 'production':
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    
+    # Criar tabelas se necessário
+    with application.app_context():
+        try:
+            db.create_all()
+            application.logger.info("✅ Tabelas do banco verificadas/criadas")
+        except Exception as e:
+            application.logger.error(f"❌ Erro ao criar tabelas: {e}")
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    application.run(host="0.0.0.0", port=port, debug=False)
+'''
+    
+    criar_arquivo("wsgi.py", wsgi_content)
+    
+    # 3. RUNTIME.TXT
+    print("\n3. 🐍 Criando runtime.txt...")
+    criar_arquivo("runtime.txt", "python-3.11.5\\n")
+    
+    # 4. RAILWAY.TOML COMPLETO
+    print("\n4. 🚂 Criando railway.toml...")
+    
+    railway_content = '''[build]
+builder = "nixpacks"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+startCommand = "gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120"
+
+[env]
+PYTHONUNBUFFERED = "1"
+FLASK_ENV = "production"
+WEB_CONCURRENCY = "4"
+'''
+    
+    criar_arquivo("railway.toml", railway_content)
+    
+    # 5. RENDER.YAML
+    print("\n5. 🎨 Criando render.yaml...")
+    
+    render_content = '''services:
+  - type: web
+    name: dashboard-baker-flask
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 4"
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dashboard-baker-db
+          property: connectionString
+    healthCheckPath: /health
+    autoDeploy: true
+
+databases:
+  - name: dashboard-baker-db
+    plan: free
+    databaseName: dashboard_baker
+    user: dashboard_user
+'''
+    
+    criar_arquivo("render.yaml", render_content)
+    
+    # 6. DOCKERFILE (OPCIONAL)
+    print("\n6. 🐳 Criando Dockerfile...")
+    
+    dockerfile_content = '''FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \\
+    gcc \\
+    postgresql-client \\
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements e instalar dependências Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar código da aplicação
+COPY . .
+
+# Variáveis de ambiente
+ENV FLASK_ENV=production
+ENV PYTHONUNBUFFERED=1
+
+# Porta
+EXPOSE $PORT
+
+# Comando para iniciar a aplicação
+CMD gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 4
+'''
+    
+    criar_arquivo("Dockerfile", dockerfile_content)
 oauth2client==4.1.3
 plotly==5.15.0
 gunicorn==21.2.0

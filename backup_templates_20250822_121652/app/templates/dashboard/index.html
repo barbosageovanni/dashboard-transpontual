@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Transpontual{% endblock %}
+
+{% block extra_css %}
+<!-- Chart.js - CARREGAR PRIMEIRO -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="/static/js/dashboard.js" defer></script>
+
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0a6ed1 0%, #feffff 100%);
+        min-height: 100vh;
+    }
+    
+    .dashboard-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin: 20px;
+        padding: 30px;
+    }
+    
+    .section-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .section-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        border-radius: 16px;
+        padding: 24px;
+        margin: 12px 0;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        border-color: rgba(102, 126, 234, 0.5);
+    }
+    
+    .metric-number {
+        font-size: 2.8rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #2c606d 0%, #24858b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+    
+    .metric-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+    }
+    
+    .metric-subtitle {
+        font-size: 0.8rem;
+        color: #718096;
+        font-weight: 500;
+    }
+    
+    .header-card {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(45, 86, 219, 0.9) 100%);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        margin-bottom: 30px;
+    }
+    
+    .alert-card {
+        border-radius: 16px;
+        padding: 20px;
+        margin: 12px 0;
+        border-left: 4px solid;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    
+    .alert-success { 
+        background: rgba(72, 187, 120, 0.1);
+        border-left-color: #48bb78;
+        border: 1px solid rgba(72, 187, 120, 0.2);
+    }
+    
+    .alert-warning { 
+        background: rgba(237, 137, 54, 0.1);
+        border-left-color: #ed8936;
+        border: 1px solid rgba(237, 137, 54, 0.2);
+    }
+    
+    .alert-danger { 
+        background: rgba(245, 101, 101, 0.1);
+        border-left-color: #f56565;
+        border: 1px solid rgba(245, 101, 101, 0.2);
+    }
+    
+    .variacao-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 16px;
+        margin: 8px 0;
+        border-left: 4px solid;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    
+    .performance-excelente { border-left-color: #48bb78; }
+    .performance-bom { border-left-color: #4299e1; }
+    .performance-atencao { border-left-color: #ed8936; }
+    .performance-critico { border-left-color: #f56565; }
+    
+    .chart-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(15px);
+        overflow: hidden;
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 400px;
+        padding: 20px;
+    }
+    
+    .loading-spinner {
+        text-align: center;
+        padding: 60px;
+        color: #667eea;
+    }
+    
+    .btn-modern {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .btn-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .badge-excelente {
+        background: rgba(72, 187, 120, 0.2);
+        color: #2f855a;
+        border: 1px solid rgba(72, 187, 120, 0.3);
+    }
+    
+    .badge-critico {
+        background: rgba(245, 101, 101, 0.2);
+        color: #c53030;
+        border: 1px solid rgba(245, 101, 101, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header Principal -->
+    <div class="header-card">
+        <h1 style="font-size: 3rem; margin-bottom: 15px; font-weight: 800;">Dashboard Transpontual</h1>
+        <p style="font-size: 1.3rem; opacity: 0.9; margin-bottom: 10px;">Sistema de Transporte e Logística Avançado</p>
+        <small id="ultimaAtualizacao" style="opacity: 0.7;">Carregando...</small>
+    </div>
+
+    <!-- Cards de Métricas Principais -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="valorTotal">R$ 0,00</div>
+                <div class="metric-title">Receita Total</div>
+                <div class="metric-subtitle" id="crescimentoMensal">📈 0% vs mês anterior</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="totalCtes">0</div>
+                <div class="metric-title">📋 CTEs Total</div>
+                <div class="metric-subtitle" id="ticketMedio">💵 Ticket médio: R$ 0,00</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="processosCompletos">0</div>
+                <div class="metric-title">✅ Processos Completos</div>
+                <div class="metric-subtitle" id="taxaConclusao">📊 0% do total</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="alertasAtivos">0</div>
+                <div class="metric-title">🚨 Alertas Ativos</div>
+                <div class="metric-subtitle" id="valorRisco">⚠️ R$ 0,00 em risco</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Financeiros Detalhados -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="receitaRealizada">R$ 0,00</div>
+                <div class="metric-title">💳 Receita Realizada</div>
+                <div class="metric-subtitle" id="taxaPagamento">📈 0% das faturas</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="valorPendente">R$ 0,00</div>
+                <div class="metric-title">⏳ Valor a Receber</div>
+                <div class="metric-subtitle" id="faturasPendentes">📄 0 faturas pendentes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="clientesAtivos">0</div>
+                <div class="metric-title">👥 Clientes Ativos</div>
+                <div class="metric-subtitle" id="veiculosAtivos">🚛 0 veículos</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-number" id="receitaMediaMensal">R$ 0,00</div>
+                <div class="metric-title">📅 Receita Média Mensal</div>
+                <div class="metric-subtitle">📊 Últimos 12 meses</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema de Alertas Inteligentes -->
+    <div class="section-card">
+        <div style="padding: 25px;">
+            <h3 style="text-align: center; margin-bottom: 25px; color: #4a5568;">🚨 Sistema de Alertas Inteligentes</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="alertaPrimeiroEnvio" class="alert-card alert-success">
+                        <h5 style="margin-bottom: 10px;">🚨 1º Envio Pendente</h5>
+                        <p style="margin-bottom: 5px;"><strong id="qtdPrimeiroEnvio">0</strong> CTEs pendentes</p>
+                        <small id="valorPrimeiroEnvio">R$ 0,00 em risco</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="alertaEnvioFinal" class="alert-card alert-success">
+                        <h5 style="margin-bottom: 10px;">📤 Envio Final Pendente</h5>
+                        <p style="margin-bottom: 5px;"><strong id="qtdEnvioFinal">0</strong> envios pendentes</p>
+                        <small id="valorEnvioFinal">R$ 0,00 pendentes</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="alertaFaturasVencidas" class="alert-card alert-success">
+                        <h5 style="margin-bottom: 10px;">💸 Faturas Vencidas</h5>
+                        <p style="margin-bottom: 5px;"><strong id="qtdFaturasVencidas">0</strong> faturas vencidas</p>
+                        <small id="valorFaturasVencidas">R$ 0,00 inadimplentes</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Análise de Variações Temporais -->
+    <div class="section-card">
+        <div style="padding: 25px;">
+            <h3 style="text-align: center; margin-bottom: 25px; color: #4a5568;">⏱️ Análise de Performance Temporal</h3>
+            <div id="variacoesContainer">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p style="margin-top: 15px;">Carregando variações temporais...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos de Análise -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0; color: #4a5568;">📈 Evolução da Receita Mensal</h5>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartEvolucaoMensal"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0; color: #4a5568;">👥 Top 10 Clientes por Receita</h5>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartTopClientes"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="text-center" style="margin-top: 40px;">
+        <button class="btn btn-modern me-3" onclick="atualizarDashboard()">
+            <i class="fas fa-sync-alt"></i> Atualizar Dashboard
+        </button>
+        <button class="btn btn-modern me-3" onclick="testarDebug()">
+            <i class="fas fa-bug"></i> Testar Debug
+        </button>
+        <a href="{{ url_for('ctes.listar') }}" class="btn btn-modern">
+            <i class="fas fa-list"></i> Ver Todos os CTEs
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Verificação de Chart.js -->
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

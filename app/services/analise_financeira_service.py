@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Serviço de Análise Financeira - Dashboard Baker Flask
+Serviço de Análise Financeira - Dashboard Baker Flask (ATUALIZADO)
 app/services/analise_financeira_service.py
-ATUALIZADO: Adicionada métrica de Receita por Inclusão Fatura
 """
 
 import pandas as pd
@@ -12,26 +11,29 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 from app.models.cte import CTE
 from app import db
-from sqlalchemy import func, and_, or_
-from scipy import stats
 import logging
+from app.services.projecoes_service import ProjecoesService
+from app.services.analise_veiculo_service import AnaliseVeiculoService
 
 class AnaliseFinanceiraService:
-    """Serviço para análises financeiras avançadas"""
+    """Serviço principal para análise financeira completa - VERSÃO EXPANDIDA"""
     
     @staticmethod
-    def gerar_analise_completa(filtro_dias: int = 180, filtro_cliente: str = None) -> Dict:
+    def analise_completa(filtro_dias: int = 180, filtro_cliente: str = None) -> Dict:
         """
-        Gera análise financeira completa com todas as métricas
-        ADICIONADO: Receita por Inclusão Fatura
+        Análise financeira completa com novos períodos: 7, 15, 30, 60, 90, 180 dias
         """
         try:
-            # Calcular data limite
-            data_limite = datetime.now().date() - timedelta(days=filtro_dias)
+            # Validar filtros - NOVOS PERÍODOS ADICIONADOS
+            filtros_validos = [7, 15, 30, 60, 90, 180]
+            if filtro_dias not in filtros_validos:
+                filtro_dias = 180
             
-            # Buscar dados filtrados
+            # Buscar dados base
+            data_limite = datetime.now().date() - timedelta(days=filtro_dias)
             query = CTE.query.filter(CTE.data_emissao >= data_limite)
             
+            # Aplicar filtro de cliente se fornecido
             if filtro_cliente:
                 query = query.filter(CTE.destinatario_nome.ilike(f'%{filtro_cliente}%'))
             
@@ -40,565 +42,551 @@ class AnaliseFinanceiraService:
             if not ctes:
                 return AnaliseFinanceiraService._analise_vazia()
             
-            # Converter para DataFrame
-            df = AnaliseFinanceiraService._ctes_para_dataframe(ctes)
+            # Preparar DataFrame base
+            df = AnaliseFinanceiraService._preparar_dataframe(ctes)
             
-            # Calcular todas as métricas
+            # MÓDULOS DE ANÁLISE EXPANDIDOS
+            
+            # 1. Métricas fundamentais (existente - melhorado)
+            metricas_fundamentais = AnaliseFinanceiraService._calcular_metricas_fundamentais(df)
+            
+            # 2. Análise de receita (existente - melhorado)
+            analise_receita = AnaliseFinanceiraService._analisar_receita(df)
+            
+            # 3. 🆕 PROJEÇÃO FUTURA (NOVO)
+            projecao_futura = ProjecoesService.projecao_recebimentos_3_meses()
+            
+            # 4. 🆕 COMPARAÇÃO TEMPORAL (NOVO)
+            comparacao_temporal = ProjecoesService.analise_comparativa_periodos(filtro_dias)
+            
+            # 5. 🆕 ANÁLISE POR VEÍCULO (NOVO) 
+            analise_veiculos = AnaliseVeiculoService.analise_completa_veiculos(filtro_dias)
+            
+            # 6. Análise de clientes (existente - melhorado)
+            analise_clientes = AnaliseFinanceiraService._analisar_clientes(df)
+            
+            # 7. Gráficos para dashboard (existente - melhorado)
+            graficos = AnaliseFinanceiraService._gerar_graficos(df)
+            
+            # 8. 🆕 INDICADORES DE TENDÊNCIA (NOVO)
+            indicadores_tendencia = AnaliseFinanceiraService._calcular_indicadores_tendencia(df, filtro_dias)
+            
+            # 9. 🆕 ANÁLISE DE SAZONALIDADE (NOVO)
+            analise_sazonalidade = AnaliseFinanceiraService._analisar_sazonalidade(df)
+            
+            # 10. 🆕 SCORE DE SAÚDE FINANCEIRA (NOVO)
+            score_saude = AnaliseFinanceiraService._calcular_score_saude_financeira(metricas_fundamentais, analise_receita)
+            
+            # Resultado final expandido
             return {
-                'receita_mensal': AnaliseFinanceiraService._calcular_receita_mensal(df),
-                # 🆕 NOVA MÉTRICA ADICIONADA
-                'receita_por_inclusao_fatura': AnaliseFinanceiraService._calcular_receita_por_inclusao_fatura(df, filtro_dias),
-                'ticket_medio': AnaliseFinanceiraService._calcular_ticket_medio(df),
-                'tempo_medio_cobranca': AnaliseFinanceiraService._calcular_tempo_cobranca(df),
-                'tendencia_linear': AnaliseFinanceiraService._calcular_tendencia_linear(df),
-                'concentracao_clientes': AnaliseFinanceiraService._calcular_concentracao_clientes(df),
-                'stress_test_receita': AnaliseFinanceiraService._calcular_stress_test(df),
-                'graficos': AnaliseFinanceiraService._gerar_dados_graficos(df),
-                'resumo_filtro': {
-                    'periodo_dias': filtro_dias,
-                    'cliente_filtro': filtro_cliente,
-                    'total_ctes': len(df),
+                'success': True,
+                'data_analise': datetime.now().strftime('%d/%m/%Y %H:%M'),
+                'periodo_analise': {
+                    'filtro_dias': filtro_dias,
                     'data_inicio': data_limite.strftime('%d/%m/%Y'),
-                    'data_fim': datetime.now().date().strftime('%d/%m/%Y')
+                    'data_fim': datetime.now().date().strftime('%d/%m/%Y'),
+                    'filtro_cliente': filtro_cliente,
+                    'total_registros': len(df)
+                },
+                
+                # MÓDULOS PRINCIPAIS
+                'metricas_fundamentais': metricas_fundamentais,
+                'analise_receita': analise_receita,
+                'analise_clientes': analise_clientes,
+                
+                # 🆕 NOVOS MÓDULOS
+                'projecao_futura': projecao_futura,
+                'comparacao_temporal': comparacao_temporal,
+                'analise_veiculos': analise_veiculos,
+                'indicadores_tendencia': indicadores_tendencia,
+                'analise_sazonalidade': analise_sazonalidade,
+                'score_saude_financeira': score_saude,
+                
+                # VISUALIZAÇÕES
+                'graficos': graficos,
+                
+                # RESUMO EXECUTIVO
+                'resumo_executivo': AnaliseFinanceiraService._gerar_resumo_executivo(
+                    metricas_fundamentais, analise_receita, projecao_futura, score_saude
+                )
+            }
+            
+        except Exception as e:
+            logging.error(f"Erro na análise financeira completa: {str(e)}")
+            return {'success': False, 'error': str(e)}
+    
+    @staticmethod
+    def _calcular_indicadores_tendencia(df: pd.DataFrame, filtro_dias: int) -> Dict:
+        """🆕 Calcula indicadores de tendência baseados no período"""
+        try:
+            # Dividir período em segmentos para análise de tendência
+            df['data_emissao'] = pd.to_datetime(df['data_emissao'])
+            
+            if filtro_dias <= 15:
+                # Para períodos curtos, analisar por dia
+                df['periodo'] = df['data_emissao'].dt.date
+                agrupamento = 'diário'
+            elif filtro_dias <= 60:
+                # Para períodos médios, analisar por semana
+                df['periodo'] = df['data_emissao'].dt.to_period('W')
+                agrupamento = 'semanal'
+            else:
+                # Para períodos longos, analisar por mês
+                df['periodo'] = df['data_emissao'].dt.to_period('M')
+                agrupamento = 'mensal'
+            
+            # Calcular métricas por período
+            tendencia = df.groupby('periodo').agg({
+                'valor_total': ['sum', 'count', 'mean'],
+                'destinatario_nome': 'nunique'
+            }).reset_index()
+            
+            # Flatten columns
+            tendencia.columns = ['periodo', 'receita_total', 'quantidade_ctes', 'ticket_medio', 'clientes_unicos']
+            
+            # Calcular tendência linear (slope)
+            if len(tendencia) >= 3:
+                from scipy.stats import linregress
+                x = np.arange(len(tendencia))
+                
+                slope_receita, _, r_receita, _, _ = linregress(x, tendencia['receita_total'])
+                slope_quantidade, _, r_quantidade, _, _ = linregress(x, tendencia['quantidade_ctes'])
+                slope_ticket, _, r_ticket, _, _ = linregress(x, tendencia['ticket_medio'])
+                
+                # Interpretar tendências
+                def interpretar_tendencia(slope, r_value):
+                    if abs(r_value) < 0.3:
+                        return "Estável", "secondary"
+                    elif slope > 0:
+                        return "Crescimento", "success"
+                    else:
+                        return "Declínio", "danger"
+                
+                tendencia_receita, cor_receita = interpretar_tendencia(slope_receita, r_receita)
+                tendencia_quantidade, cor_quantidade = interpretar_tendencia(slope_quantidade, r_quantidade)
+                tendencia_ticket, cor_ticket = interpretar_tendencia(slope_ticket, r_ticket)
+                
+                return {
+                    'agrupamento': agrupamento,
+                    'periodos_analisados': len(tendencia),
+                    'receita': {
+                        'tendencia': tendencia_receita,
+                        'cor': cor_receita,
+                        'variacao_percentual': round((slope_receita / tendencia['receita_total'].mean()) * 100, 2),
+                        'confianca': round(r_receita ** 2, 3)
+                    },
+                    'quantidade': {
+                        'tendencia': tendencia_quantidade,
+                        'cor': cor_quantidade,
+                        'variacao_percentual': round((slope_quantidade / tendencia['quantidade_ctes'].mean()) * 100, 2),
+                        'confianca': round(r_quantidade ** 2, 3)
+                    },
+                    'ticket_medio': {
+                        'tendencia': tendencia_ticket,
+                        'cor': cor_ticket,
+                        'variacao_percentual': round((slope_ticket / tendencia['ticket_medio'].mean()) * 100, 2),
+                        'confianca': round(r_ticket ** 2, 3)
+                    },
+                    'dados_grafico': {
+                        'labels': [str(p) for p in tendencia['periodo']],
+                        'receita': tendencia['receita_total'].tolist(),
+                        'quantidade': tendencia['quantidade_ctes'].tolist(),
+                        'ticket_medio': tendencia['ticket_medio'].tolist()
+                    }
+                }
+            else:
+                return {
+                    'agrupamento': agrupamento,
+                    'periodos_analisados': len(tendencia),
+                    'erro': 'Dados insuficientes para análise de tendência'
+                }
+                
+        except Exception as e:
+            logging.error(f"Erro nos indicadores de tendência: {str(e)}")
+            return {'erro': str(e)}
+    
+    @staticmethod
+    def _analisar_sazonalidade(df: pd.DataFrame) -> Dict:
+        """🆕 Analisa padrões sazonais nos dados"""
+        try:
+            df['data_emissao'] = pd.to_datetime(df['data_emissao'])
+            
+            # Análise por mês do ano
+            df['mes'] = df['data_emissao'].dt.month
+            por_mes = df.groupby('mes')['valor_total'].sum()
+            
+            # Análise por dia da semana
+            df['dia_semana'] = df['data_emissao'].dt.dayofweek  # 0=Monday, 6=Sunday
+            dias_semana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+            por_dia_semana = df.groupby('dia_semana')['valor_total'].sum()
+            
+            # Análise por dia do mês
+            df['dia_mes'] = df['data_emissao'].dt.day
+            por_dia_mes = df.groupby('dia_mes')['valor_total'].sum()
+            
+            # Identificar padrões
+            mes_mais_forte = por_mes.idxmax()
+            mes_mais_fraco = por_mes.idxmin()
+            dia_semana_mais_forte = por_dia_semana.idxmax()
+            dia_semana_mais_fraco = por_dia_semana.idxmin()
+            
+            # Calcular coeficiente de variação (medida de sazonalidade)
+            cv_mensal = (por_mes.std() / por_mes.mean()) * 100
+            cv_semanal = (por_dia_semana.std() / por_dia_semana.mean()) * 100
+            
+            # Interpretar níveis de sazonalidade
+            def interpretar_sazonalidade(cv):
+                if cv < 20:
+                    return "Baixa", "success"
+                elif cv < 40:
+                    return "Moderada", "warning"
+                else:
+                    return "Alta", "danger"
+            
+            nivel_sazonal_mensal, cor_mensal = interpretar_sazonalidade(cv_mensal)
+            nivel_sazonal_semanal, cor_semanal = interpretar_sazonalidade(cv_semanal)
+            
+            meses_nomes = {
+                1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+                5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+                9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'
+            }
+            
+            return {
+                'sazonalidade_mensal': {
+                    'nivel': nivel_sazonal_mensal,
+                    'cor': cor_mensal,
+                    'coeficiente_variacao': round(cv_mensal, 2),
+                    'mes_mais_forte': meses_nomes.get(mes_mais_forte, 'N/A'),
+                    'valor_mes_mais_forte': round(por_mes.max(), 2),
+                    'mes_mais_fraco': meses_nomes.get(mes_mais_fraco, 'N/A'),
+                    'valor_mes_mais_fraco': round(por_mes.min(), 2),
+                    'dados_grafico': {
+                        'labels': [meses_nomes.get(m, str(m)) for m in por_mes.index],
+                        'valores': por_mes.tolist()
+                    }
+                },
+                'sazonalidade_semanal': {
+                    'nivel': nivel_sazonal_semanal,
+                    'cor': cor_semanal,
+                    'coeficiente_variacao': round(cv_semanal, 2),
+                    'dia_mais_forte': dias_semana[dia_semana_mais_forte],
+                    'valor_dia_mais_forte': round(por_dia_semana.max(), 2),
+                    'dia_mais_fraco': dias_semana[dia_semana_mais_fraco],
+                    'valor_dia_mais_fraco': round(por_dia_semana.min(), 2),
+                    'dados_grafico': {
+                        'labels': [dias_semana[d] for d in por_dia_semana.index],
+                        'valores': por_dia_semana.tolist()
+                    }
+                },
+                'distribuicao_mensal': {
+                    'labels': [f'Dia {d}' for d in por_dia_mes.index],
+                    'valores': por_dia_mes.tolist()
                 }
             }
             
         except Exception as e:
-            logging.error(f"Erro na análise financeira: {str(e)}")
-            return AnaliseFinanceiraService._analise_vazia()
+            logging.error(f"Erro na análise de sazonalidade: {str(e)}")
+            return {'erro': str(e)}
     
     @staticmethod
-    def _ctes_para_dataframe(ctes: List[CTE]) -> pd.DataFrame:
-        """Converte lista de CTEs para DataFrame - ATUALIZADO"""
+    def _calcular_score_saude_financeira(metricas_fundamentais: Dict, analise_receita: Dict) -> Dict:
+        """🆕 Calcula score de saúde financeira (0-100)"""
+        try:
+            score_components = {}
+            
+            # 1. Volume de Receita (25 pontos)
+            receita_total = metricas_fundamentais.get('receita_total', 0)
+            if receita_total >= 1000000:  # >= 1M
+                score_components['receita'] = 25
+            elif receita_total >= 500000:  # >= 500K
+                score_components['receita'] = 20
+            elif receita_total >= 100000:  # >= 100K
+                score_components['receita'] = 15
+            elif receita_total >= 50000:   # >= 50K
+                score_components['receita'] = 10
+            else:
+                score_components['receita'] = 5
+            
+            # 2. Taxa de Pagamento (25 pontos)
+            taxa_pagamento = metricas_fundamentais.get('taxa_pagamento', 0)
+            if taxa_pagamento >= 90:
+                score_components['pagamento'] = 25
+            elif taxa_pagamento >= 80:
+                score_components['pagamento'] = 20
+            elif taxa_pagamento >= 70:
+                score_components['pagamento'] = 15
+            elif taxa_pagamento >= 60:
+                score_components['pagamento'] = 10
+            else:
+                score_components['pagamento'] = 5
+            
+            # 3. Diversificação de Clientes (20 pontos)
+            clientes_unicos = metricas_fundamentais.get('clientes_unicos', 0)
+            if clientes_unicos >= 50:
+                score_components['diversificacao'] = 20
+            elif clientes_unicos >= 30:
+                score_components['diversificacao'] = 15
+            elif clientes_unicos >= 20:
+                score_components['diversificacao'] = 10
+            elif clientes_unicos >= 10:
+                score_components['diversificacao'] = 7
+            else:
+                score_components['diversificacao'] = 3
+            
+            # 4. Taxa de Conclusão de Processos (15 pontos)
+            taxa_conclusao = metricas_fundamentais.get('taxa_conclusao', 0)
+            if taxa_conclusao >= 95:
+                score_components['conclusao'] = 15
+            elif taxa_conclusao >= 85:
+                score_components['conclusao'] = 12
+            elif taxa_conclusao >= 75:
+                score_components['conclusao'] = 9
+            elif taxa_conclusao >= 65:
+                score_components['conclusao'] = 6
+            else:
+                score_components['conclusao'] = 3
+            
+            # 5. Crescimento da Receita (15 pontos)
+            crescimento = analise_receita.get('crescimento_mensal', 0)
+            if crescimento >= 10:
+                score_components['crescimento'] = 15
+            elif crescimento >= 5:
+                score_components['crescimento'] = 12
+            elif crescimento >= 0:
+                score_components['crescimento'] = 8
+            elif crescimento >= -5:
+                score_components['crescimento'] = 5
+            else:
+                score_components['crescimento'] = 2
+            
+            # Score total
+            score_total = sum(score_components.values())
+            
+            # Classificação
+            if score_total >= 85:
+                classificacao = "Excelente"
+                cor = "success"
+                recomendacao = "Saúde financeira excelente. Continue as boas práticas."
+            elif score_total >= 70:
+                classificacao = "Boa"
+                cor = "info"
+                recomendacao = "Boa saúde financeira. Pequenos ajustes podem otimizar ainda mais."
+            elif score_total >= 55:
+                classificacao = "Regular"
+                cor = "warning"
+                recomendacao = "Saúde financeira regular. Foque em melhorar taxa de pagamento e diversificação."
+            elif score_total >= 40:
+                classificacao = "Fraca"
+                cor = "danger"
+                recomendacao = "Saúde financeira preocupante. Ação imediata necessária."
+            else:
+                classificacao = "Crítica"
+                cor = "dark"
+                recomendacao = "Situação crítica. Revisar urgentemente estratégia financeira."
+            
+            return {
+                'score_total': score_total,
+                'score_maximo': 100,
+                'classificacao': classificacao,
+                'cor': cor,
+                'recomendacao': recomendacao,
+                'componentes': {
+                    'receita': {
+                        'pontos': score_components['receita'],
+                        'maximo': 25,
+                        'percentual': round((score_components['receita'] / 25) * 100, 1)
+                    },
+                    'pagamento': {
+                        'pontos': score_components['pagamento'],
+                        'maximo': 25,
+                        'percentual': round((score_components['pagamento'] / 25) * 100, 1)
+                    },
+                    'diversificacao': {
+                        'pontos': score_components['diversificacao'],
+                        'maximo': 20,
+                        'percentual': round((score_components['diversificacao'] / 20) * 100, 1)
+                    },
+                    'conclusao': {
+                        'pontos': score_components['conclusao'],
+                        'maximo': 15,
+                        'percentual': round((score_components['conclusao'] / 15) * 100, 1)
+                    },
+                    'crescimento': {
+                        'pontos': score_components['crescimento'],
+                        'maximo': 15,
+                        'percentual': round((score_components['crescimento'] / 15) * 100, 1)
+                    }
+                }
+            }
+            
+        except Exception as e:
+            logging.error(f"Erro no cálculo do score de saúde: {str(e)}")
+            return {'erro': str(e)}
+    
+    @staticmethod
+    def _gerar_resumo_executivo(metricas: Dict, receita: Dict, projecao: Dict, score: Dict) -> Dict:
+        """🆕 Gera resumo executivo automático"""
+        try:
+            resumo = {
+                'receita_atual': metricas.get('receita_total', 0),
+                'crescimento_mensal': receita.get('crescimento_mensal', 0),
+                'projecao_3_meses': projecao.get('total_projetado_3_meses', 0) if projecao.get('success') else 0,
+                'score_saude': score.get('score_total', 0),
+                'classificacao_saude': score.get('classificacao', 'N/A'),
+                
+                # Destaques automáticos
+                'principais_insights': [],
+                'alertas': [],
+                'oportunidades': []
+            }
+            
+            # Gerar insights automáticos
+            if resumo['crescimento_mensal'] > 10:
+                resumo['principais_insights'].append("Forte crescimento mensal da receita")
+            elif resumo['crescimento_mensal'] < -5:
+                resumo['alertas'].append("Declínio preocupante na receita mensal")
+            
+            if score.get('score_total', 0) >= 80:
+                resumo['principais_insights'].append("Excelente saúde financeira geral")
+            elif score.get('score_total', 0) < 50:
+                resumo['alertas'].append("Saúde financeira requer atenção urgente")
+            
+            # Oportunidades baseadas em projeção
+            if projecao.get('success') and projecao.get('total_projetado_3_meses', 0) > resumo['receita_atual']:
+                resumo['oportunidades'].append("Projeção positiva para os próximos 3 meses")
+            
+            return resumo
+            
+        except Exception as e:
+            logging.error(f"Erro no resumo executivo: {str(e)}")
+            return {}
+    
+    # ========================================================================
+    # MÉTODOS EXISTENTES MANTIDOS (com pequenas melhorias)
+    # ========================================================================
+    
+    @staticmethod
+    def _preparar_dataframe(ctes: List) -> pd.DataFrame:
+        """Prepara DataFrame base para análises"""
         dados = []
         for cte in ctes:
             dados.append({
                 'numero_cte': cte.numero_cte,
                 'destinatario_nome': cte.destinatario_nome,
+                'veiculo_placa': cte.veiculo_placa,
                 'valor_total': float(cte.valor_total or 0),
                 'data_emissao': cte.data_emissao,
                 'data_baixa': cte.data_baixa,
-                'primeiro_envio': cte.primeiro_envio,
-                # 🆕 ADICIONADO: data_inclusao_fatura
-                'data_inclusao_fatura': cte.data_inclusao_fatura,
-                'mes_emissao': cte.data_emissao.strftime('%Y-%m') if cte.data_emissao else None,
-                # 🆕 ADICIONADO: mês de inclusão de fatura
-                'mes_inclusao_fatura': cte.data_inclusao_fatura.strftime('%Y-%m') if cte.data_inclusao_fatura else None,
-                'has_baixa': cte.data_baixa is not None
+                'has_baixa': cte.has_baixa,
+                'processo_completo': cte.processo_completo,
+                'origem_cidade': cte.origem_cidade,
+                'destino_cidade': cte.destino_cidade
             })
-        
-        df = pd.DataFrame(dados)
-        
-        # Converter datas - ATUALIZADO
-        for col in ['data_emissao', 'data_baixa', 'primeiro_envio', 'data_inclusao_fatura']:
-            if col in df.columns:
-                df[col] = pd.to_datetime(df[col], errors='coerce')
-        
-        return df
+        return pd.DataFrame(dados)
     
-    # 🆕 NOVA FUNÇÃO: Receita por Inclusão Fatura
     @staticmethod
-    def _calcular_receita_por_inclusao_fatura(df: pd.DataFrame, filtro_dias: int) -> Dict:
-        """
-        Calcula métricas de receita baseadas em data_inclusao_fatura
-        Nova métrica solicitada pelo usuário
-        """
-        try:
-            # Filtrar apenas CTEs com data_inclusao_fatura
-            df_inclusao = df[df['data_inclusao_fatura'].notna()].copy()
-            
-            if df_inclusao.empty:
-                return {
-                    'receita_total_periodo': 0.0,
-                    'receita_mes_corrente': 0.0,
-                    'receita_mes_anterior': 0.0,
-                    'variacao_percentual': 0.0,
-                    'total_ctes_com_inclusao': 0,
-                    'percentual_cobertura': 0.0,
-                    'ticket_medio_inclusao': 0.0,
-                    'status': 'Dados insuficientes'
+    def _calcular_metricas_fundamentais(df: pd.DataFrame) -> Dict:
+        """Calcula métricas fundamentais do período"""
+        total_ctes = len(df)
+        receita_total = df['valor_total'].sum()
+        clientes_unicos = df['destinatario_nome'].nunique()
+        
+        faturas_pagas = df[df['has_baixa'] == True].shape[0]
+        faturas_pendentes = total_ctes - faturas_pagas
+        
+        valor_pago = df[df['has_baixa'] == True]['valor_total'].sum()
+        valor_pendente = receita_total - valor_pago
+        
+        processos_completos = df[df['processo_completo'] == True].shape[0]
+        
+        return {
+            'total_ctes': total_ctes,
+            'receita_total': round(receita_total, 2),
+            'clientes_unicos': clientes_unicos,
+            'faturas_pagas': faturas_pagas,
+            'faturas_pendentes': faturas_pendentes,
+            'valor_pago': round(valor_pago, 2),
+            'valor_pendente': round(valor_pendente, 2),
+            'processos_completos': processos_completos,
+            'ticket_medio': round(receita_total / total_ctes, 2) if total_ctes > 0 else 0,
+            'taxa_pagamento': round((faturas_pagas / total_ctes) * 100, 2) if total_ctes > 0 else 0,
+            'taxa_conclusao': round((processos_completos / total_ctes) * 100, 2) if total_ctes > 0 else 0
+        }
+    
+    @staticmethod
+    def _analisar_receita(df: pd.DataFrame) -> Dict:
+        """Análise detalhada da receita"""
+        if df.empty:
+            return {'crescimento_mensal': 0, 'distribuicao_mensal': {}}
+        
+        df['mes_emissao'] = pd.to_datetime(df['data_emissao']).dt.to_period('M')
+        receita_mensal = df.groupby('mes_emissao')['valor_total'].sum()
+        
+        if len(receita_mensal) >= 2:
+            ultimo_mes = receita_mensal.iloc[-1]
+            penultimo_mes = receita_mensal.iloc[-2]
+            crescimento = ((ultimo_mes - penultimo_mes) / penultimo_mes) * 100 if penultimo_mes > 0 else 0
+        else:
+            crescimento = 0
+        
+        return {
+            'crescimento_mensal': round(crescimento, 2),
+            'receita_mensal_media': round(receita_mensal.mean(), 2),
+            'distribuicao_mensal': {
+                'labels': [str(mes) for mes in receita_mensal.index],
+                'valores': receita_mensal.tolist()
+            }
+        }
+    
+    @staticmethod
+    def _analisar_clientes(df: pd.DataFrame) -> Dict:
+        """Análise de clientes"""
+        if df.empty:
+            return {'top_clientes': []}
+        
+        clientes = df.groupby('destinatario_nome').agg({
+            'valor_total': ['sum', 'count'],
+            'numero_cte': 'nunique'
+        }).round(2)
+        
+        clientes.columns = ['faturamento', 'quantidade_viagens', 'ctes_unicos']
+        top_clientes = clientes.nlargest(10, 'faturamento')
+        
+        return {
+            'top_clientes': [
+                {
+                    'nome': nome,
+                    'faturamento': float(row['faturamento']),
+                    'viagens': int(row['quantidade_viagens']),
+                    'ticket_medio': round(row['faturamento'] / row['quantidade_viagens'], 2)
                 }
-            
-            # Filtrar por período baseado em data_inclusao_fatura
-            data_limite = datetime.now().date() - timedelta(days=filtro_dias)
-            df_periodo = df_inclusao[df_inclusao['data_inclusao_fatura'].dt.date >= data_limite]
-            
-            # Calcular métricas básicas
-            receita_total_periodo = df_periodo['valor_total'].sum()
-            total_ctes_com_inclusao = len(df_periodo)
-            total_ctes_geral = len(df)
-            percentual_cobertura = (total_ctes_com_inclusao / total_ctes_geral * 100) if total_ctes_geral > 0 else 0.0
-            ticket_medio_inclusao = df_periodo['valor_total'].mean() if not df_periodo.empty else 0.0
-            
-            # Análise mensal por inclusão de fatura
-            if 'mes_inclusao_fatura' in df_periodo.columns and not df_periodo.empty:
-                receita_mensal_inclusao = df_periodo.groupby('mes_inclusao_fatura')['valor_total'].sum().sort_index()
-                
-                if len(receita_mensal_inclusao) >= 2:
-                    receita_mes_corrente = float(receita_mensal_inclusao.iloc[-1])
-                    receita_mes_anterior = float(receita_mensal_inclusao.iloc[-2])
-                elif len(receita_mensal_inclusao) == 1:
-                    receita_mes_corrente = float(receita_mensal_inclusao.iloc[0])
-                    receita_mes_anterior = 0.0
-                else:
-                    receita_mes_corrente = 0.0
-                    receita_mes_anterior = 0.0
-                
-                # Calcular variação
-                variacao_percentual = ((receita_mes_corrente - receita_mes_anterior) / receita_mes_anterior * 100) if receita_mes_anterior > 0 else 0.0
-            else:
-                receita_mes_corrente = 0.0
-                receita_mes_anterior = 0.0
-                variacao_percentual = 0.0
-            
-            # Determinar status
-            if percentual_cobertura >= 80:
-                status = 'Excelente cobertura'
-            elif percentual_cobertura >= 60:
-                status = 'Boa cobertura'
-            elif percentual_cobertura >= 40:
-                status = 'Cobertura moderada'
-            else:
-                status = 'Baixa cobertura'
-            
-            return {
-                'receita_total_periodo': round(float(receita_total_periodo), 2),
-                'receita_mes_corrente': round(float(receita_mes_corrente), 2),
-                'receita_mes_anterior': round(float(receita_mes_anterior), 2),
-                'variacao_percentual': round(float(variacao_percentual), 2),
-                'total_ctes_com_inclusao': int(total_ctes_com_inclusao),
-                'percentual_cobertura': round(float(percentual_cobertura), 2),
-                'ticket_medio_inclusao': round(float(ticket_medio_inclusao), 2),
-                'status': status
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no cálculo de receita por inclusão fatura: {str(e)}")
-            return {
-                'receita_total_periodo': 0.0,
-                'receita_mes_corrente': 0.0,
-                'receita_mes_anterior': 0.0,
-                'variacao_percentual': 0.0,
-                'total_ctes_com_inclusao': 0,
-                'percentual_cobertura': 0.0,
-                'ticket_medio_inclusao': 0.0,
-                'status': 'Erro no cálculo'
-            }
-    
+                for nome, row in top_clientes.iterrows()
+            ]
+        }
     
     @staticmethod
-    def _calcular_receita_mensal(df: pd.DataFrame) -> Dict:
-        """Calcula métricas de receita mensal"""
-        try:
-            if df.empty or 'mes_emissao' not in df.columns:
-                return {
-                    'receita_mes_corrente': 0.0,
-                    'receita_mes_anterior': 0.0,
-                    'diferenca_absoluta': 0.0,
-                    'variacao_percentual': 0.0,
-                    'mes_corrente_nome': datetime.now().strftime('%B %Y'),
-                    'mes_anterior_nome': (datetime.now() - timedelta(days=30)).strftime('%B %Y')
-                }
-            
-            # Agrupar por mês
-            receita_mensal = df.groupby('mes_emissao')['valor_total'].sum().sort_index()
-            
-            # Pegar últimos 2 meses
-            meses = receita_mensal.index.tolist()
-            
-            if len(meses) >= 2:
-                mes_corrente = meses[-1]
-                mes_anterior = meses[-2]
-                receita_mes_corrente = float(receita_mensal[mes_corrente])
-                receita_mes_anterior = float(receita_mensal[mes_anterior])
-            elif len(meses) == 1:
-                mes_corrente = meses[0]
-                mes_anterior = None
-                receita_mes_corrente = float(receita_mensal[mes_corrente])
-                receita_mes_anterior = 0.0
-            else:
-                receita_mes_corrente = 0.0
-                receita_mes_anterior = 0.0
-                mes_corrente = datetime.now().strftime('%Y-%m')
-                mes_anterior = None
-            
-            # Calcular variação
-            diferenca_absoluta = receita_mes_corrente - receita_mes_anterior
-            variacao_percentual = ((diferenca_absoluta / receita_mes_anterior) * 100) if receita_mes_anterior > 0 else 0.0
-            
-            # Formatar nomes dos meses
-            try:
-                mes_corrente_nome = pd.to_datetime(mes_corrente).strftime('%B %Y')
-                mes_anterior_nome = pd.to_datetime(mes_anterior).strftime('%B %Y') if mes_anterior else 'N/A'
-            except:
-                mes_corrente_nome = mes_corrente if mes_corrente else 'N/A'
-                mes_anterior_nome = mes_anterior if mes_anterior else 'N/A'
-            
-            return {
-                'receita_mes_corrente': receita_mes_corrente,
-                'receita_mes_anterior': receita_mes_anterior,
-                'diferenca_absoluta': diferenca_absoluta,
-                'variacao_percentual': round(variacao_percentual, 2),
-                'mes_corrente_nome': mes_corrente_nome,
-                'mes_anterior_nome': mes_anterior_nome
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no cálculo de receita mensal: {str(e)}")
-            return {
-                'receita_mes_corrente': 0.0,
-                'receita_mes_anterior': 0.0,
-                'diferenca_absoluta': 0.0,
-                'variacao_percentual': 0.0,
-                'mes_corrente_nome': 'N/A',
-                'mes_anterior_nome': 'N/A'
-            }
-
-    @staticmethod
-    def _analise_vazia() -> Dict:
-        """Retorna estrutura vazia para análise - ATUALIZADA"""
+    def _gerar_graficos(df: pd.DataFrame) -> Dict:
+        """Gera dados para gráficos"""
+        if df.empty:
+            return {}
+        
+        # Receita mensal
+        df['mes_emissao'] = pd.to_datetime(df['data_emissao']).dt.to_period('M')
+        receita_mensal = df.groupby('mes_emissao')['valor_total'].sum()
+        
+        # Top clientes
+        top_clientes = df.groupby('destinatario_nome')['valor_total'].sum().nlargest(10)
+        
         return {
             'receita_mensal': {
-                'receita_mes_corrente': 0.0,
-                'receita_mes_anterior': 0.0,
-                'diferenca_absoluta': 0.0,
-                'variacao_percentual': 0.0,
-                'mes_corrente_nome': 'N/A',
-                'mes_anterior_nome': 'N/A'
+                'labels': [str(mes) for mes in receita_mensal.index],
+                'valores': receita_mensal.tolist()
             },
-            # 🆕 ADICIONADO: estrutura vazia para nova métrica
-            'receita_por_inclusao_fatura': {
-                'receita_total_periodo': 0.0,
-                'receita_mes_corrente': 0.0,
-                'receita_mes_anterior': 0.0,
-                'variacao_percentual': 0.0,
-                'total_ctes_com_inclusao': 0,
-                'percentual_cobertura': 0.0,
-                'ticket_medio_inclusao': 0.0,
-                'status': 'Sem dados'
-            },
-            'ticket_medio': {'valor': 0.0, 'mediana': 0.0, 'desvio_padrao': 0.0},
-            'tempo_medio_cobranca': {'dias_medio': 0.0, 'mediana': 0.0, 'total_analisados': 0},
-            'tendencia_linear': {'inclinacao': 0.0, 'r_squared': 0.0, 'previsao_proximo_mes': 0.0},
-            'concentracao_clientes': {'percentual_top5': 0.0, 'top_clientes': []},
-            'stress_test_receita': {'cenarios': []},
-            'graficos': AnaliseFinanceiraService._graficos_vazios(),
-            'resumo_filtro': {
-                'periodo_dias': 0,
-                'cliente_filtro': None,
-                'total_ctes': 0,
-                'data_inicio': 'N/A',
-                'data_fim': 'N/A'
+            'top_clientes': {
+                'labels': list(top_clientes.index),
+                'valores': list(top_clientes.values)
             }
-        }
-
-    # [TODAS AS OUTRAS FUNÇÕES MANTIDAS IGUAIS...]
-    
-    @staticmethod
-    def _calcular_ticket_medio(df: pd.DataFrame) -> Dict:
-        """Calcula ticket médio por fatura"""
-        try:
-            if df.empty:
-                return {'valor': 0.0, 'mediana': 0.0, 'desvio_padrao': 0.0}
-            
-            ticket_medio = df['valor_total'].mean()
-            mediana = df['valor_total'].median()
-            desvio_padrao = df['valor_total'].std()
-            
-            return {
-                'valor': round(float(ticket_medio), 2),
-                'mediana': round(float(mediana), 2),
-                'desvio_padrao': round(float(desvio_padrao), 2)
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no cálculo de ticket médio: {str(e)}")
-            return {'valor': 0.0, 'mediana': 0.0, 'desvio_padrao': 0.0}
-    
-    @staticmethod
-    def _calcular_tempo_cobranca(df: pd.DataFrame) -> Dict:
-        """Calcula tempo médio entre primeiro_envio e data_baixa"""
-        try:
-            if df.empty:
-                return {'dias_medio': 0.0, 'mediana': 0.0, 'total_analisados': 0}
-            
-            # Filtrar apenas CTEs com ambas as datas
-            df_cobranca = df[
-                df['primeiro_envio'].notna() & 
-                df['data_baixa'].notna()
-            ].copy()
-            
-            if df_cobranca.empty:
-                return {'dias_medio': 0.0, 'mediana': 0.0, 'total_analisados': 0}
-            
-            # Calcular diferença em dias
-            df_cobranca['dias_cobranca'] = (
-                df_cobranca['data_baixa'] - df_cobranca['primeiro_envio']
-            ).dt.days
-            
-            # Filtrar valores válidos (não negativos)
-            dias_validos = df_cobranca[df_cobranca['dias_cobranca'] >= 0]['dias_cobranca']
-            
-            if dias_validos.empty:
-                return {'dias_medio': 0.0, 'mediana': 0.0, 'total_analisados': 0}
-            
-            return {
-                'dias_medio': round(float(dias_validos.mean()), 1),
-                'mediana': round(float(dias_validos.median()), 1),
-                'total_analisados': len(dias_validos),
-                'min_dias': int(dias_validos.min()),
-                'max_dias': int(dias_validos.max())
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no cálculo de tempo de cobrança: {str(e)}")
-            return {'dias_medio': 0.0, 'mediana': 0.0, 'total_analisados': 0}
-    
-    @staticmethod
-    def _calcular_tendencia_linear(df: pd.DataFrame) -> Dict:
-        """Calcula tendência linear da receita mensal (últimos 6 meses)"""
-        try:
-            if df.empty or 'mes_emissao' not in df.columns:
-                return {'inclinacao': 0.0, 'r_squared': 0.0, 'previsao_proximo_mes': 0.0}
-            
-            # Agrupar por mês e pegar últimos 6 meses
-            receita_mensal = df.groupby('mes_emissao')['valor_total'].sum().sort_index()
-            receita_mensal = receita_mensal.tail(6)  # Últimos 6 meses
-            
-            if len(receita_mensal) < 3:  # Mínimo 3 pontos para regressão
-                return {'inclinacao': 0.0, 'r_squared': 0.0, 'previsao_proximo_mes': 0.0}
-            
-            # Preparar dados para regressão
-            x = np.arange(len(receita_mensal))
-            y = receita_mensal.values
-            
-            # Regressão linear
-            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-            
-            # Previsão para próximo mês
-            proximo_x = len(receita_mensal)
-            previsao_proximo_mes = slope * proximo_x + intercept
-            
-            return {
-                'inclinacao': round(float(slope), 2),
-                'r_squared': round(float(r_value ** 2), 3),
-                'previsao_proximo_mes': round(float(previsao_proximo_mes), 2),
-                'p_value': round(float(p_value), 4),
-                'meses_analisados': len(receita_mensal)
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no cálculo de tendência linear: {str(e)}")
-            return {'inclinacao': 0.0, 'r_squared': 0.0, 'previsao_proximo_mes': 0.0}
-    
-    @staticmethod
-    def _calcular_concentracao_clientes(df: pd.DataFrame) -> Dict:
-        """Calcula concentração dos Top 5 clientes"""
-        try:
-            if df.empty:
-                return {'percentual_top5': 0.0, 'top_clientes': []}
-            
-            # Agrupar por cliente
-            receita_cliente = df.groupby('destinatario_nome')['valor_total'].sum().sort_values(ascending=False)
-            
-            # Top 5 clientes
-            top5_clientes = receita_cliente.head(5)
-            receita_total = df['valor_total'].sum()
-            
-            # Calcular percentual
-            receita_top5 = top5_clientes.sum()
-            percentual_top5 = (receita_top5 / receita_total * 100) if receita_total > 0 else 0.0
-            
-            # Preparar lista dos top clientes
-            top_clientes = []
-            for i, (cliente, valor) in enumerate(top5_clientes.items(), 1):
-                percentual_individual = (valor / receita_total * 100) if receita_total > 0 else 0.0
-                top_clientes.append({
-                    'posicao': i,
-                    'nome': cliente,
-                    'receita': float(valor),
-                    'percentual': round(percentual_individual, 2)
-                })
-            
-            return {
-                'percentual_top5': round(percentual_top5, 2),
-                'receita_top5': float(receita_top5),
-                'receita_total': float(receita_total),
-                'top_clientes': top_clientes
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no cálculo de concentração de clientes: {str(e)}")
-            return {'percentual_top5': 0.0, 'top_clientes': []}
-    
-    @staticmethod
-    def _calcular_stress_test(df: pd.DataFrame) -> Dict:
-        """Simula impacto de inadimplência dos maiores clientes"""
-        try:
-            if df.empty:
-                return {'cenarios': []}
-            
-            # Agrupar por cliente
-            receita_cliente = df.groupby('destinatario_nome')['valor_total'].sum().sort_values(ascending=False)
-            receita_total = df['valor_total'].sum()
-            
-            # Cenários de stress test
-            cenarios = [
-                {'nome': 'Top 1 Cliente', 'clientes': 1},
-                {'nome': 'Top 3 Clientes', 'clientes': 3},
-                {'nome': 'Top 5 Clientes', 'clientes': 5},
-            ]
-            
-            resultados = []
-            for cenario in cenarios:
-                n_clientes = cenario['clientes']
-                if len(receita_cliente) >= n_clientes:
-                    receita_impactada = receita_cliente.head(n_clientes).sum()
-                    percentual_impacto = (receita_impactada / receita_total * 100) if receita_total > 0 else 0.0
-                    receita_restante = receita_total - receita_impactada
-                    
-                    resultados.append({
-                        'cenario': cenario['nome'],
-                        'receita_perdida': float(receita_impactada),
-                        'percentual_impacto': round(percentual_impacto, 2),
-                        'receita_restante': float(receita_restante),
-                        'percentual_restante': round(100 - percentual_impacto, 2)
-                    })
-            
-            return {'cenarios': resultados}
-            
-        except Exception as e:
-            logging.error(f"Erro no stress test: {str(e)}")
-            return {'cenarios': []}
-    
-    @staticmethod
-    def _gerar_dados_graficos(df: pd.DataFrame) -> Dict:
-        """Gera dados para todos os gráficos"""
-        try:
-            if df.empty:
-                return AnaliseFinanceiraService._graficos_vazios()
-            
-            return {
-                'receita_mensal': AnaliseFinanceiraService._grafico_receita_mensal(df),
-                'distribuicao_valores': AnaliseFinanceiraService._grafico_distribuicao_valores(df),
-                'tempo_cobranca': AnaliseFinanceiraService._grafico_tempo_cobranca(df),
-                'concentracao_clientes': AnaliseFinanceiraService._grafico_concentracao_clientes(df),
-                'tendencia_linear': AnaliseFinanceiraService._grafico_tendencia_linear(df)
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro na geração de gráficos: {str(e)}")
-            return AnaliseFinanceiraService._graficos_vazios()
-    
-    @staticmethod
-    def _grafico_receita_mensal(df: pd.DataFrame) -> Dict:
-        """Dados para gráfico de receita mensal"""
-        receita_mensal = df.groupby('mes_emissao')['valor_total'].sum().sort_index()
-        
-        return {
-            'labels': [pd.to_datetime(mes).strftime('%b/%Y') for mes in receita_mensal.index],
-            'valores': [float(valor) for valor in receita_mensal.values],
-            'quantidade_ctes': [int(qtd) for qtd in df.groupby('mes_emissao').size().values]
-        }
-    
-    @staticmethod
-    def _grafico_distribuicao_valores(df: pd.DataFrame) -> Dict:
-        """Dados para histograma de distribuição de valores"""
-        valores = df['valor_total'].values
-        
-        # Criar bins para histograma
-        bins = np.histogram_bin_edges(valores, bins=10)
-        hist, _ = np.histogram(valores, bins=bins)
-        
-        return {
-            'bins': [f'R$ {int(bins[i])}-{int(bins[i+1])}' for i in range(len(bins)-1)],
-            'frequencias': [int(freq) for freq in hist]
-        }
-    
-    @staticmethod
-    def _grafico_tempo_cobranca(df: pd.DataFrame) -> Dict:
-        """Dados para gráfico de tempo de cobrança"""
-        df_cobranca = df[
-            df['primeiro_envio'].notna() & 
-            df['data_baixa'].notna()
-        ].copy()
-        
-        if df_cobranca.empty:
-            return {'labels': [], 'valores': []}
-        
-        df_cobranca['dias_cobranca'] = (
-            df_cobranca['data_baixa'] - df_cobranca['primeiro_envio']
-        ).dt.days
-        
-        # Agrupar por faixas de dias
-        faixas = [
-            (0, 30, '0-30 dias'),
-            (31, 60, '31-60 dias'),
-            (61, 90, '61-90 dias'),
-            (91, float('inf'), '90+ dias')
-        ]
-        
-        labels = []
-        valores = []
-        
-        for min_dias, max_dias, label in faixas:
-            if max_dias == float('inf'):
-                count = len(df_cobranca[df_cobranca['dias_cobranca'] >= min_dias])
-            else:
-                count = len(df_cobranca[
-                    (df_cobranca['dias_cobranca'] >= min_dias) & 
-                    (df_cobranca['dias_cobranca'] <= max_dias)
-                ])
-            labels.append(label)
-            valores.append(count)
-        
-        return {'labels': labels, 'valores': valores}
-    
-    @staticmethod
-    def _grafico_concentracao_clientes(df: pd.DataFrame) -> Dict:
-        """Dados para gráfico de concentração de clientes"""
-        receita_cliente = df.groupby('destinatario_nome')['valor_total'].sum().sort_values(ascending=False)
-        top5 = receita_cliente.head(5)
-        outros = receita_cliente.iloc[5:].sum() if len(receita_cliente) > 5 else 0
-        
-        labels = list(top5.index) + (['Outros'] if outros > 0 else [])
-        valores = list(top5.values) + ([float(outros)] if outros > 0 else [])
-        
-        return {
-            'labels': labels,
-            'valores': [float(v) for v in valores]
-        }
-    
-    @staticmethod
-    def _grafico_tendencia_linear(df: pd.DataFrame) -> Dict:
-        """Dados para gráfico de tendência linear"""
-        receita_mensal = df.groupby('mes_emissao')['valor_total'].sum().sort_index().tail(6)
-        
-        if len(receita_mensal) < 3:
-            return {'labels': [], 'valores_reais': [], 'valores_tendencia': []}
-        
-        # Calcular linha de tendência
-        x = np.arange(len(receita_mensal))
-        y = receita_mensal.values
-        slope, intercept, _, _, _ = stats.linregress(x, y)
-        
-        tendencia = slope * x + intercept
-        
-        return {
-            'labels': [pd.to_datetime(mes).strftime('%b/%Y') for mes in receita_mensal.index],
-            'valores_reais': [float(valor) for valor in receita_mensal.values],
-            'valores_tendencia': [float(valor) for valor in tendencia]
-        }
-    
-    @staticmethod
-    def _graficos_vazios() -> Dict:
-        """Retorna estrutura vazia para gráficos"""
-        return {
-            'receita_mensal': {'labels': [], 'valores': [], 'quantidade_ctes': []},
-            'distribuicao_valores': {'bins': [], 'frequencias': []},
-            'tempo_cobranca': {'labels': [], 'valores': []},
-            'concentracao_clientes': {'labels': [], 'valores': []},
-            'tendencia_linear': {'labels': [], 'valores_reais': [], 'valores_tendencia': []}
         }
     
     @staticmethod
@@ -615,94 +603,17 @@ class AnaliseFinanceiraService:
             logging.error(f"Erro ao obter lista de clientes: {str(e)}")
             return []
     
-    # 🆕 NOVA FUNÇÃO: Faturamento mensal por data_inclusao_fatura com filtros específicos
     @staticmethod
-    def obter_faturamento_por_inclusao(filtro_dias: int = 30) -> Dict:
-        """
-        Obtém faturamento baseado em data_inclusao_fatura com filtros específicos
-        Filtros disponíveis: 30, 60, 90 dias
-        """
-        try:
-            # Validar filtro
-            if filtro_dias not in [30, 60, 90]:
-                filtro_dias = 30
-            
-            # Calcular data limite
-            data_limite = datetime.now().date() - timedelta(days=filtro_dias)
-            
-            # Buscar CTEs com data_inclusao_fatura no período
-            ctes = CTE.query.filter(
-                CTE.data_inclusao_fatura >= data_limite,
-                CTE.data_inclusao_fatura.isnot(None)
-            ).all()
-            
-            if not ctes:
-                return {
-                    'faturamento_total': 0.0,
-                    'faturamento_mensal': {},
-                    'quantidade_ctes': 0,
-                    'ticket_medio': 0.0,
-                    'periodo_dias': filtro_dias,
-                    'data_inicio': data_limite.strftime('%d/%m/%Y'),
-                    'data_fim': datetime.now().date().strftime('%d/%m/%Y'),
-                    'status': 'Sem dados no período'
-                }
-            
-            # Converter para DataFrame
-            df = pd.DataFrame([{
-                'numero_cte': cte.numero_cte,
-                'destinatario_nome': cte.destinatario_nome,
-                'valor_total': float(cte.valor_total or 0),
-                'data_inclusao_fatura': cte.data_inclusao_fatura,
-                'mes_inclusao': cte.data_inclusao_fatura.strftime('%Y-%m') if cte.data_inclusao_fatura else None
-            } for cte in ctes])
-            
-            # Calcular métricas
-            faturamento_total = df['valor_total'].sum()
-            quantidade_ctes = len(df)
-            ticket_medio = df['valor_total'].mean()
-            
-            # Faturamento mensal
-            faturamento_mensal = df.groupby('mes_inclusao')['valor_total'].sum().to_dict()
-            faturamento_mensal_formatado = {}
-            for mes, valor in faturamento_mensal.items():
-                mes_nome = pd.to_datetime(mes).strftime('%B %Y')
-                faturamento_mensal_formatado[mes_nome] = float(valor)
-            
-            # Determinar status
-            if quantidade_ctes >= 50:
-                status = 'Volume alto'
-            elif quantidade_ctes >= 20:
-                status = 'Volume moderado'
-            else:
-                status = 'Volume baixo'
-            
-            return {
-                'faturamento_total': round(float(faturamento_total), 2),
-                'faturamento_mensal': faturamento_mensal_formatado,
-                'quantidade_ctes': int(quantidade_ctes),
-                'ticket_medio': round(float(ticket_medio), 2),
-                'periodo_dias': filtro_dias,
-                'data_inicio': data_limite.strftime('%d/%m/%Y'),
-                'data_fim': datetime.now().date().strftime('%d/%m/%Y'),
-                'status': status,
-                'graficos': {
-                    'faturamento_mensal': {
-                        'labels': list(faturamento_mensal_formatado.keys()),
-                        'valores': list(faturamento_mensal_formatado.values())
-                    }
-                }
-            }
-            
-        except Exception as e:
-            logging.error(f"Erro no faturamento por inclusão: {str(e)}")
-            return {
-                'faturamento_total': 0.0,
-                'faturamento_mensal': {},
-                'quantidade_ctes': 0,
-                'ticket_medio': 0.0,
-                'periodo_dias': filtro_dias,
-                'data_inicio': 'N/A',
-                'data_fim': 'N/A',
-                'status': 'Erro no cálculo'
-            }
+    def _analise_vazia() -> Dict:
+        """Retorna estrutura vazia"""
+        return {
+            'success': False,
+            'error': 'Nenhum dado encontrado para análise',
+            'metricas_fundamentais': {},
+            'analise_receita': {},
+            'analise_clientes': {},
+            'projecao_futura': {},
+            'comparacao_temporal': {},
+            'analise_veiculos': {},
+            'graficos': {}
+        }

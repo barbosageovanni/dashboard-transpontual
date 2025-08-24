@@ -1,0 +1,324 @@
+
+<!-- ARQUIVO: app/templates/admin/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-cog"></i> Painel Administrativo</h2>
+                <div>
+                    <button class="btn btn-outline-primary" onclick="location.reload()">
+                        <i class="fas fa-sync"></i> Atualizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-users"></i> Total de Usuários
+                    </h5>
+                    <h3 class="mb-0">{{ stats.users.total or 0 }}</h3>
+                    <small>{{ stats.users.active or 0 }} ativos</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-shield"></i> Administradores
+                    </h5>
+                    <h3 class="mb-0">{{ stats.users.admins or 0 }}</h3>
+                    <small>com privilégios admin</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-file-invoice"></i> Total CTEs
+                    </h5>
+                    <h3 class="mb-0">{{ stats.system.total_ctes or 0 }}</h3>
+                    <small>{{ stats.system.ctes_today or 0 }} hoje</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-clock"></i> Uptime
+                    </h5>
+                    <h3 class="mb-0">{{ stats.system.uptime or '99.9%' }}</h3>
+                    <small>disponibilidade</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Administrativas -->
+    <div class="row">
+        <!-- Gerenciamento de Usuários -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users-cog"></i> Gerenciar Usuários
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Gerencie contas de usuário, permissões e configurações de acesso.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Criar novos usuários</li>
+                        <li><i class="fas fa-check text-success"></i> Alterar permissões</li>
+                        <li><i class="fas fa-check text-success"></i> Resetar senhas</li>
+                        <li><i class="fas fa-check text-success"></i> Desativar contas</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.users') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-users"></i> Acessar Usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configurações do Sistema -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-server"></i> Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Configurações gerais do sistema e monitoramento de performance.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Configurações gerais</li>
+                        <li><i class="fas fa-check text-success"></i> Backup de dados</li>
+                        <li><i class="fas fa-check text-success"></i> Logs do sistema</li>
+                        <li><i class="fas fa-check text-success"></i> Performance</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success w-100" onclick="abrirConfiguracoes()">
+                        <i class="fas fa-cog"></i> Configurações
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatórios e Auditoria -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar"></i> Relatórios
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Relatórios de sistema, auditoria e análise de uso.
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Logs de acesso</li>
+                        <li><i class="fas fa-check text-success"></i> Relatórios de uso</li>
+                        <li><i class="fas fa-check text-success"></i> Auditoria de dados</li>
+                        <li><i class="fas fa-check text-success"></i> Estatísticas</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-info w-100" onclick="abrirRelatorios()">
+                        <i class="fas fa-file-alt"></i> Ver Relatórios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Atividade Recente -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> Atividade Recente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="atividade-recente">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-success">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Usuário criado</h6>
+                                <small class="text-muted">Novo usuário adicionado ao sistema</small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <small class="text-muted">Há 2 horas</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-primary">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Importação de CTEs</h6>
+                                <small class="text-muted">150 CTEs importados com sucesso</small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <small class="text-muted">Há 4 horas</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar bg-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Backup realizado</h6>
+                                <small class="text-muted">Backup automático executado</small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <small class="text-muted">Há 1 dia</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt"></i> Ações Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-primary w-100" onclick="criarUsuario()">
+                                <i class="fas fa-user-plus"></i> Novo Usuário
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-success w-100" onclick="executarBackup()">
+                                <i class="fas fa-database"></i> Backup Manual
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-info w-100" onclick="verLogs()">
+                                <i class="fas fa-file-text"></i> Ver Logs
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-warning w-100" onclick="limparCache()">
+                                <i class="fas fa-trash"></i> Limpar Cache
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modais -->
+<div class="modal fade" id="modal-acao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-titulo">Ação Administrativa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modal-conteudo">
+                <!-- Conteúdo dinâmico -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="modal-confirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Funções administrativas
+function abrirConfiguracoes() {
+    alert('Página de configurações em desenvolvimento');
+}
+
+function abrirRelatorios() {
+    alert('Página de relatórios em desenvolvimento');
+}
+
+function criarUsuario() {
+    window.location.href = '{{ url_for("admin.users") }}#novo-usuario';
+}
+
+function executarBackup() {
+    if (confirm('Deseja executar backup manual do sistema?')) {
+        // Implementar backup manual
+        alert('Backup iniciado. Você será notificado quando concluído.');
+    }
+}
+
+function verLogs() {
+    alert('Visualização de logs em desenvolvimento');
+}
+
+function limparCache() {
+    if (confirm('Deseja limpar o cache do sistema?')) {
+        // Implementar limpeza de cache
+        alert('Cache limpo com sucesso.');
+    }
+}
+
+// Atualizar estatísticas automaticamente
+setInterval(function() {
+    // Implementar atualização automática das estatísticas
+}, 30000); // A cada 30 segundos
+</script>
+
+<style>
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+</style>
+{% endblock %}

@@ -57,6 +57,216 @@
         }
     </style>
     {% block extra_css %}{% endblock %}
+<style>
+/* ========================================
+   DESIGN GLOBAL ESTILO SUPABASE
+   Interface profissional e moderna
+======================================== */
+
+:root {
+    --supabase-primary: #3ecf8e;
+    --supabase-secondary: #2dd4bf;
+    --supabase-dark: #1e1e2e;
+    --supabase-dark-light: #2d2d44;
+    --supabase-gray: #6b7280;
+    --supabase-light: #f9fafb;
+}
+
+/* Navbar profissional */
+.navbar {
+    background: linear-gradient(135deg, var(--supabase-dark) 0%, var(--supabase-dark-light) 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.navbar-brand {
+    font-weight: 800 !important;
+    font-size: 1.5rem !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+}
+
+.navbar-brand:hover {
+    color: var(--supabase-primary) !important;
+    transform: scale(1.05) !important;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    margin: 0 0.25rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+    background: rgba(62, 207, 142, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Dropdowns profissionais */
+.dropdown-menu {
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+    padding: 0.5rem !important;
+}
+
+.dropdown-item {
+    border-radius: 8px !important;
+    margin: 0.25rem 0 !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+.dropdown-item:hover {
+    background: var(--supabase-primary) !important;
+    color: white !important;
+    transform: translateX(5px) !important;
+}
+
+/* Botões estilo Supabase */
+.btn-primary {
+    background: linear-gradient(135deg, var(--supabase-primary) 0%, var(--supabase-secondary) 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 2rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(62, 207, 142, 0.3) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(62, 207, 142, 0.4) !important;
+}
+
+/* Cards profissionais */
+.card {
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--supabase-light) 0%, white 100%) !important;
+    border-bottom: 1px solid rgba(62, 207, 142, 0.1) !important;
+    font-weight: 700 !important;
+}
+
+/* Body background */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    min-height: 100vh !important;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+}
+
+/* Container principal */
+.container, .container-fluid {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+/* Alertas estilo Supabase */
+.alert {
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.alert-success {
+    background: rgba(62, 207, 142, 0.1) !important;
+    color: #059669 !important;
+    border-left: 4px solid var(--supabase-primary) !important;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+/* Tabelas profissionais */
+.table {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--supabase-dark) 0%, var(--supabase-dark-light) 100%) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    border: none !important;
+    padding: 1rem !important;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease !important;
+}
+
+.table tbody tr:hover {
+    background: rgba(62, 207, 142, 0.05) !important;
+    transform: scale(1.01) !important;
+}
+
+/* Inputs estilo Supabase */
+.form-control, .form-select {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--supabase-primary) !important;
+    box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.1) !important;
+}
+
+/* Badges profissionais */
+.badge {
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px !important;
+}
+
+/* Animações suaves */
+* {
+    transition: all 0.3s ease !important;
+}
+
+/* Scrollbar customizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--supabase-primary), var(--supabase-secondary));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--supabase-secondary), var(--supabase-primary));
+}</style>
 </head>
 <body>
     <!-- Navegação -->
@@ -72,20 +282,55 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    {% if current_user.is_authenticated %}
+                    <!-- Dashboard -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard.index') }}">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('ctes.listar') }}">
+                    
+                    <!-- CTEs -->
+                    <!-- CTEs com Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="ctesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-file-invoice"></i> CTEs
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="ctesDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('ctes.listar') }}">
+                                <i class="fas fa-list"></i> Listar CTEs
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('ctes.listar') }}#inserir">
+                                <i class="fas fa-plus"></i> Inserir CTE
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('ctes.listar') }}#buscar">
+                                <i class="fas fa-search"></i> Buscar/Editar
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/ctes/atualizar-lote">
+                                <i class="fas fa-sync-alt"></i> Atualizar Lote
+                            </a></li>
+                        </ul>
                     </li>
+                    
+                    <!-- Baixas -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('ctes.atualizar_lote') }}">
-                            <i class="fas fa-sync-alt"></i> Atualizar Lote
+                        <a class="nav-link" href="{{ url_for('baixas.index') }}">
+                            <i class="fas fa-money-check-alt"></i> Baixas
+                        </a>
+                    </li>
+                    
+                    <!-- Análise Financeira -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('analise_financeira.index') }}">
+                            <i class="fas fa-chart-line"></i> Análise Financeira
+                        </a>
+                    </li>
+                    
+                    <!-- Administração -->
+                    {% if current_user.tipo_usuario == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.index') }}">
+                            <i class="fas fa-cogs"></i> Administração
                         </a>
                     </li>
                     {% endif %}

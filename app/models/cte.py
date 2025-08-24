@@ -1,174 +1,30 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Modelo CTE - Conhecimento de Transporte Eletrônico
+app/models/cte.py - VERSÃO LIMPA E OTIMIZADA
+"""
+
+from __future__ import annotations
+
 from app import db
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from typing import Dict, List, Tuple, Optional, Union
-import pandas as pd
 import logging
-import re
-import io
-
-# =============================================================================
-# Helpers internos (conversões seguras) - CORRIGIDOS
-# =============================================================================
-
-def _to_int_safe(value) -> Optional[int]:
-    """Conversão segura para inteiro"""
-    if value is None or (isinstance(value, float) and pd.isna(value)):
-        return None
-    try:
-        if isinstance(value, str):
-            v = value.strip()
-            if not v:
-                return None
-            # trata "123.0"
-            return int(float(v))
-        return int(float(value))
-    except (ValueError, TypeError):
-        return None
-
-def _to_float_safe(value) -> Optional[float]:
-    """Conversão segura para float"""
-    if value is None or (isinstance(value, float) and pd.isna(value)):
-        return None
-    try:
-        if isinstance(value, str):
-            v = value.strip()
-            if not v:
-                return None
-            # remove R$, pontos e converte vírgula para ponto
-            v = v.replace('R$', '').replace('.', '').replace(',', '.')
-            return float(v)
-        if isinstance(value, (int, float, Decimal)):
-            return float(value)
-        return None
-    except (ValueError, TypeError):
-        return None
-
-_DATE_RE_ISO = re.compile(r'^\d{4}-\d{2}-\d{2}$')
-_DATE_RE_BR  = re.compile(r'^\d{2}/\d{2}/\d{4}$')
-
-def _to_date_safe(value) -> Optional[date]:
-    """Conversão segura para data"""
-    if value is None or (isinstance(value, float) and pd.isna(value)):
-        return None
-    try:
-        if isinstance(value, date):
-            return value
-        if isinstance(value, datetime):
-            return value.date()
-        if isinstance(value, str):
-            v = value.strip()
-            if not v:
-                return None
-            # tenta formatos comuns
-            if _DATE_RE_BR.match(v):
-                return datetime.strptime(v, '%d/%m/%Y').date()
-            if _DATE_RE_ISO.match(v):
-                return datetime.strptime(v, '%Y-%m-%d').date()
-            # fallback: deixa o pandas tentar
-            return pd.to_datetime(v, errors='coerce').date()
-        # números (Excel) — pandas já lê como Timestamp normalmente
-        return pd.to_datetime(value, errors='coerce').date()
-    except Exception:
-        return None
-
-def _to_str_safe(value) -> Optional[str]:
-    """Conversão segura para string"""
-    if value is None or (isinstance(value, float) and pd.isna(value)):
-        return None
-    s = str(value).strip()
-    return s if s else None
-
-# Mapeia cabeçalhos de planilha -> nomes dos campos do modelo
-HEADER_MAP = {
-    # essenciais
-    'numero cte': 'numero_cte',
-    'número cte': 'numero_cte',
-    'numero_cte': 'numero_cte',
-    'num_cte': 'numero_cte',
-    'cte': 'numero_cte',
-
-    'destinatario nome': 'destinatario_nome',
-    'destinatário nome': 'destinatario_nome',
-    'destinatario_nome': 'destinatario_nome',
-    'cliente': 'destinatario_nome',
-    'nome_cliente': 'destinatario_nome',
-
-    'valor total': 'valor_total',
-    'valor_total': 'valor_total',
-    'valor': 'valor_total',
-    'total': 'valor_total',
-
-    # demais campos
-    'data emissão': 'data_emissao',
-    'data emissao': 'data_emissao',
-    'data_emissao': 'data_emissao',
-    'emissao': 'data_emissao',
-
-    'placa veículo': 'veiculo_placa',
-    'veiculo placa': 'veiculo_placa',
-    'veiculo_placa': 'veiculo_placa',
-    'placa': 'veiculo_placa',
-
-    'data inclusão fatura': 'data_inclusao_fatura',
-    'data inclusao fatura': 'data_inclusao_fatura',
-    'data_inclusao_fatura': 'data_inclusao_fatura',
-    'inclusao_fatura': 'data_inclusao_fatura',
-
-    'número fatura': 'numero_fatura',
-    'numero fatura': 'numero_fatura',
-    'numero_fatura': 'numero_fatura',
-    'fatura': 'numero_fatura',
-
-    'primeiro envio': 'primeiro_envio',
-    'primeiro_envio': 'primeiro_envio',
-    '1_envio': 'primeiro_envio',
-
-    'envio final': 'envio_final',
-    'envio_final': 'envio_final',
-    'final': 'envio_final',
-
-    'data atesto': 'data_atesto',
-    'data_atesto': 'data_atesto',
-    'atesto': 'data_atesto',
-
-    'data baixa': 'data_baixa',
-    'data_baixa': 'data_baixa',
-    'baixa': 'data_baixa',
-
-    'data envio processo': 'data_envio_processo',
-    'data_envio_processo': 'data_envio_processo',
-    'envio_processo': 'data_envio_processo',
-
-    'data rq tmc': 'data_rq_tmc',
-    'data_rq_tmc': 'data_rq_tmc',
-    'rq_tmc': 'data_rq_tmc',
-
-    'observação': 'observacao',
-    'observacao': 'observacao',
-    'obs': 'observacao',
-}
-
-def _normalize_headers(cols: List[str]) -> List[str]:
-    """Normaliza cabeçalhos da planilha"""
-    out = []
-    for c in cols:
-        k = (c or '').strip().lower()
-        k = HEADER_MAP.get(k, k)  # aplica mapeamento se existir
-        out.append(k)
-    return out
-
-
-# =============================================================================
-# Modelo CTE - VERSÃO CORRIGIDA
-# =============================================================================
 
 class CTE(db.Model):
-    """Modelo para CTEs - usa a tabela existente."""
+    """
+    Modelo para CTEs (Conhecimentos de Transporte Eletrônico)
+    Tabela: dashboard_baker
+    """
     __tablename__ = 'dashboard_baker'
 
+    # ==================== CAMPOS DA TABELA ====================
+    
+    # Chave primária
     id = db.Column(db.Integer, primary_key=True)
     numero_cte = db.Column(db.Integer, unique=True, nullable=False, index=True)
 
@@ -177,11 +33,11 @@ class CTE(db.Model):
     veiculo_placa = db.Column(db.String(20))
     valor_total = db.Column(db.Numeric(15, 2), nullable=False, default=0)
 
-    # Datas principais
+    # Datas do processo
     data_emissao = db.Column(db.Date)
     data_baixa = db.Column(db.Date)
 
-    # Faturamento / Processo
+    # Dados de faturamento e processo
     numero_fatura = db.Column(db.String(100))
     data_inclusao_fatura = db.Column(db.Date)
     data_envio_processo = db.Column(db.Date)
@@ -190,787 +46,463 @@ class CTE(db.Model):
     data_atesto = db.Column(db.Date)
     envio_final = db.Column(db.Date)
 
-    # Observações e metadados
+    # Metadados
     observacao = db.Column(db.Text)
     origem_dados = db.Column(db.String(50), default='Sistema')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self) -> str:
-        return f'<CTE {self.numero_cte}>'
+        return f'<CTE {self.numero_cte}: {self.destinatario_nome or "Sem nome"}>'
 
-    # -------------------------------------------------------------------------
-    # Propriedades calculadas
-    # -------------------------------------------------------------------------
+    # ==================== HELPERS DE PARSING ====================
+    
+    @staticmethod
+    def _clean_text(v: Optional[Union[str, int, float]]) -> Optional[str]:
+        """Limpa e normaliza texto"""
+        if v is None:
+            return None
+        s = str(v).strip()
+        return s if s and s.lower() not in ['', 'null', 'none', 'nan'] else None
+
+    @staticmethod
+    def _parse_date(v: Optional[Union[str, date]]) -> Optional[date]:
+        """
+        Parse de datas flexível
+        Aceita: None, date, 'yyyy-mm-dd', 'dd/mm/yyyy', 'yyyy/mm/dd'
+        """
+        if v in (None, ""):
+            return None
+        if isinstance(v, date):
+            return v
+        
+        s = str(v).strip()
+        if not s or s.lower() in ['null', 'none', 'nan']:
+            return None
+        
+        # Formatos suportados
+        formatos = ["%Y-%m-%d", "%d/%m/%Y", "%Y/%m/%d", "%d-%m-%Y"]
+        
+        for fmt in formatos:
+            try:
+                return datetime.strptime(s, fmt).date()
+            except ValueError:
+                continue
+        
+        # Tentativa com ISO flexível
+        try:
+            return datetime.fromisoformat(s.replace("/", "-")).date()
+        except Exception:
+            logging.warning(f"Data não reconhecida: {s}")
+            return None
+
+    @staticmethod
+    def _parse_money(v: Optional[Union[str, int, float, Decimal]]) -> Optional[Decimal]:
+        """Parse de valores monetários flexível"""
+        if v in (None, ""):
+            return None
+        if isinstance(v, Decimal):
+            return v
+        
+        # Limpar formatação brasileira e internacional
+        s = str(v).strip().replace("R$", "").replace("$", "")
+        s = s.replace(" ", "").replace("\u00a0", "")  # Remove espaços
+        
+        # Se tem vírgula e ponto, assume formato brasileiro (1.234,56)
+        if "," in s and "." in s:
+            if s.rfind(",") > s.rfind("."):
+                # Formato brasileiro: 1.234,56
+                s = s.replace(".", "").replace(",", ".")
+            # Senão mantém formato internacional: 1,234.56
+            else:
+                s = s.replace(",", "")
+        # Se tem apenas vírgula, pode ser decimal brasileiro
+        elif "," in s and s.count(",") == 1:
+            # Se tem mais de 3 dígitos após vírgula, é separador de milhares
+            if len(s.split(",")[-1]) > 3:
+                s = s.replace(",", "")
+            else:
+                s = s.replace(",", ".")
+        
+        try:
+            return Decimal(s)
+        except (InvalidOperation, ValueError):
+            logging.warning(f"Valor monetário não reconhecido: {v}")
+            return None
+
+    # ==================== PROPRIEDADES CALCULADAS ====================
+    
     @property
     def has_baixa(self) -> bool:
-        """Verifica se tem baixa"""
+        """Verifica se CTE possui baixa/pagamento"""
         return self.data_baixa is not None
 
     @property
     def processo_completo(self) -> bool:
-        """Verifica se o processo está completo"""
-        campos = [self.data_emissao, self.primeiro_envio, self.data_atesto, self.envio_final]
-        return all(d is not None for d in campos)
+        """Verifica se processo está completo (todas etapas preenchidas)"""
+        etapas_obrigatorias = [
+            self.data_emissao,
+            self.primeiro_envio,
+            self.data_atesto,
+            self.envio_final
+        ]
+        return all(etapa is not None for etapa in etapas_obrigatorias)
 
     @property
     def status_processo(self) -> str:
-        """Retorna status do processo"""
+        """Retorna status do processo baseado nas etapas concluídas"""
         if self.processo_completo:
-            return 'Finalizado' if self.data_baixa else 'Completo'
-        if self.envio_final:
+            return 'Finalizado' if self.has_baixa else 'Completo'
+        elif self.envio_final:
             return 'Envio Final'
-        if self.data_atesto:
+        elif self.data_atesto:
             return 'Atestado'
-        if self.primeiro_envio:
+        elif self.primeiro_envio:
             return 'Enviado'
-        if self.data_emissao:
+        elif self.data_emissao:
             return 'Emitido'
+        else:
+            return 'Pendente'
+
+    @property
+    def status_baixa(self) -> str:
+        """Status da baixa/pagamento"""
+        if self.has_baixa:
+            return 'Pago'
+        elif self.data_emissao:
+            dias_vencido = (datetime.now().date() - self.data_emissao).days
+            if dias_vencido > 60:
+                return 'Vencido'
+            elif dias_vencido > 30:
+                return 'A Vencer'
         return 'Pendente'
 
-    # -------------------------------------------------------------------------
-    # MÉTODO FALTANTE - ADICIONADO PARA CORRIGIR ERRO
-    # -------------------------------------------------------------------------
-    @classmethod
-    def validar_dados_importacao(cls, dados: Dict) -> Tuple[bool, List[str]]:
-        """
-        Validação específica para dados de importação
-        🔧 MÉTODO FALTANTE ADICIONADO - CORRIGE O ERRO DOS LOGS
-        """
-        erros = []
-        
-        try:
-            # Função helper para validação segura
-            def validar_texto(valor, nome_campo, min_length=1):
-                """Valida texto de forma segura"""
-                if valor is None:
-                    return None
-                if not isinstance(valor, str):
-                    valor = str(valor)
-                valor_limpo = valor.strip()
-                if len(valor_limpo) < min_length:
-                    return None
-                return valor_limpo
-            
-            # Validações obrigatórias
-            if not dados.get('numero_cte'):
-                erros.append("Número do CTE é obrigatório")
-            elif not isinstance(dados['numero_cte'], (int, float)) or dados['numero_cte'] <= 0:
-                erros.append("Número do CTE deve ser um número positivo")
-            
-            # Validação segura do destinatário
-            destinatario_validado = validar_texto(dados.get('destinatario_nome'), 'destinatario_nome', 3)
-            if not destinatario_validado:
-                erros.append("Nome do destinatário é obrigatório e deve ter pelo menos 3 caracteres")
-            
-            # Validação segura do valor
-            try:
-                valor_total = dados.get('valor_total')
-                if valor_total is None:
-                    erros.append("Valor total é obrigatório")
-                else:
-                    valor_float = float(valor_total)
-                    if valor_float < 0:
-                        erros.append("Valor total não pode ser negativo")
-                    elif valor_float > 1000000:  # Limite de 1 milhão
-                        erros.append("Valor total muito alto (máximo: R$ 1.000.000,00)")
-            except (ValueError, TypeError):
-                erros.append("Valor total deve ser numérico")
-            
-            # Validações de formato - COM PROTEÇÃO
-            veiculo_validado = validar_texto(dados.get('veiculo_placa'), 'veiculo_placa', 1)
-            if dados.get('veiculo_placa') and not veiculo_validado:
-                erros.append("Placa do veículo inválida")
-            
-            # Verificar se CTE já existe (opcional - depende do contexto)
-            if dados.get('numero_cte'):
-                existe = cls.query.filter_by(numero_cte=dados['numero_cte']).first()
-                if existe:
-                    erros.append(f"CTE {dados['numero_cte']} já existe no sistema")
-            
-            return len(erros) == 0, erros
-            
-        except Exception as e:
-            erros.append(f"Erro na validação: {str(e)}")
-            return False, erros
+    @property
+    def dias_em_processo(self) -> Optional[int]:
+        """Dias desde a emissão"""
+        if not self.data_emissao:
+            return None
+        return (datetime.now().date() - self.data_emissao).days
 
-    # -------------------------------------------------------------------------
-    # MÉTODOS DE TEMPLATE CSV - ADICIONADOS
-    # -------------------------------------------------------------------------
-    @classmethod
-    def gerar_template_csv_atualizacao(cls) -> str:
+    # ==================== SERIALIZAÇÃO ====================
+    
+    def to_dict(self, incluir_detalhes=False) -> Dict:
         """
-        Gera template CSV para atualização (todos os campos)
-        🔧 MÉTODO FALTANTE ADICIONADO
+        Converte CTE para dicionário (JSON-serializável)
+        
+        Args:
+            incluir_detalhes: Se True, inclui campos extras e cálculos
         """
-        # Headers para atualização (todos os campos)
-        headers = [
-            'numero_cte',
-            'destinatario_nome', 
-            'veiculo_placa',
-            'valor_total',
-            'data_emissao',
-            'numero_fatura',
-            'data_baixa',
-            'observacao',
-            'data_inclusao_fatura',
-            'data_envio_processo',
-            'primeiro_envio',
-            'data_rq_tmc',
-            'data_atesto',
-            'envio_final'
-        ]
-        
-        # Linha de exemplo
-        exemplo = [
-            '123456',
-            'EMPRESA EXEMPLO LTDA',
-            'ABC1234',
-            '1500.50',
-            '2025-01-15',
-            'FAT001',
-            '2025-02-15',
-            'Observação exemplo',
-            '2025-01-16',
-            '2025-01-17',
-            '2025-01-18',
-            '2025-01-19',
-            '2025-01-20',
-            '2025-01-21'
-        ]
-        
-        # Montar CSV com separador ';'
-        output = io.StringIO()
-        output.write(';'.join(headers) + '\n')
-        output.write(';'.join(exemplo) + '\n')
-        
-        content = output.getvalue()
-        output.close()
-        
-        return content
-
-    @classmethod
-    def processar_csv_atualizacao(cls, csv_path: str, modo='alterar') -> Dict:
-        """
-        Processa CSV para atualização/upsert de CTEs
-        🔧 MÉTODO FALTANTE ADICIONADO
-        """
-        resultado = {
-            'sucesso': True,
-            'atualizados': 0,
-            'inseridos': 0,
-            'erros': 0,
-            'detalhes': [],
-            'erro': None
-        }
-        
         try:
-            # Ler CSV
-            try:
-                df = pd.read_csv(csv_path, sep=';', encoding='utf-8-sig')
-            except Exception:
-                df = pd.read_csv(csv_path, sep=',', encoding='utf-8-sig')
-            
-            # Normalizar headers
-            df.columns = _normalize_headers(list(df.columns))
-            
-            for index, row in df.iterrows():
-                try:
-                    numero_cte = _to_int_safe(row.get('numero_cte'))
-                    if not numero_cte or numero_cte <= 0:
-                        resultado['erros'] += 1
-                        resultado['detalhes'].append(f"Linha {index + 2}: Número CTE inválido")
-                        continue
-                    
-                    # Buscar CTE existente
-                    cte_existente = cls.query.filter_by(numero_cte=numero_cte).first()
-                    
-                    # Preparar dados usando o método _from_row existente
-                    dados = cls._from_row(row)
-                    if not dados:
-                        resultado['erros'] += 1
-                        resultado['detalhes'].append(f"Linha {index + 2}: Dados inválidos")
-                        continue
-                    
-                    if cte_existente and modo in ['alterar', 'upsert']:
-                        # Atualizar existente
-                        ok, msg = cte_existente.alterar(dados)
-                        if ok:
-                            resultado['atualizados'] += 1
-                            resultado['detalhes'].append(f"CTE {numero_cte} atualizado")
-                        else:
-                            resultado['erros'] += 1
-                            resultado['detalhes'].append(f"CTE {numero_cte}: {msg}")
-                        
-                    elif not cte_existente and modo in ['inserir', 'upsert']:
-                        # Inserir novo
-                        ok, obj_or_msg = cls.criar_cte_otimizado(dados)
-                        if ok:
-                            resultado['inseridos'] += 1
-                            resultado['detalhes'].append(f"CTE {numero_cte} inserido")
-                        else:
-                            resultado['erros'] += 1
-                            resultado['detalhes'].append(f"CTE {numero_cte}: {obj_or_msg}")
-                        
-                    else:
-                        resultado['erros'] += 1
-                        if cte_existente:
-                            resultado['detalhes'].append(f"CTE {numero_cte} já existe (modo: {modo})")
-                        else:
-                            resultado['detalhes'].append(f"CTE {numero_cte} não encontrado (modo: {modo})")
-                    
-                except Exception as e:
-                    resultado['erros'] += 1
-                    resultado['detalhes'].append(f"Linha {index + 2}: Erro - {str(e)}")
-            
-            # Commit das alterações
-            if resultado['atualizados'] > 0 or resultado['inseridos'] > 0:
-                db.session.commit()
-            
-        except Exception as e:
-            db.session.rollback()
-            resultado['sucesso'] = False
-            resultado['erro'] = str(e)
-            logging.exception("Erro no processamento CSV de atualização")
-        
-        return resultado
-
-    # -------------------------------------------------------------------------
-    # Serialização
-    # -------------------------------------------------------------------------
-    def to_dict(self) -> Dict:
-        """Conversão para dicionário com tratamento de erro"""
-        try:
-            return {
+            dados_basicos = {
                 'id': self.id,
                 'numero_cte': self.numero_cte,
                 'destinatario_nome': self.destinatario_nome or '',
                 'veiculo_placa': self.veiculo_placa or '',
-                'valor_total': float(self.valor_total) if self.valor_total is not None else 0.0,
+                'valor_total': float(self.valor_total or 0),
+                'numero_fatura': self.numero_fatura or '',
+                'observacao': self.observacao or '',
+                
+                # Datas (formato ISO)
                 'data_emissao': self.data_emissao.isoformat() if self.data_emissao else None,
                 'data_baixa': self.data_baixa.isoformat() if self.data_baixa else None,
-                'numero_fatura': self.numero_fatura or '',
-                'data_inclusao_fatura': self.data_inclusao_fatura.isoformat() if self.data_inclusao_fatura else None,
-                'data_envio_processo': self.data_envio_processo.isoformat() if self.data_envio_processo else None,
-                'primeiro_envio': self.primeiro_envio.isoformat() if self.primeiro_envio else None,
-                'data_rq_tmc': self.data_rq_tmc.isoformat() if self.data_rq_tmc else None,
-                'data_atesto': self.data_atesto.isoformat() if self.data_atesto else None,
-                'envio_final': self.envio_final.isoformat() if self.envio_final else None,
-                'observacao': self.observacao or '',
+                
+                # Status calculados
                 'has_baixa': self.has_baixa,
                 'processo_completo': self.processo_completo,
                 'status_processo': self.status_processo,
-                'created_at': self.created_at.isoformat() if self.created_at else None,
-                'origem_dados': self.origem_dados or 'Sistema'
+                'status_baixa': self.status_baixa,
             }
+            
+            # Adicionar detalhes se solicitado
+            if incluir_detalhes:
+                dados_basicos.update({
+                    'data_inclusao_fatura': self.data_inclusao_fatura.isoformat() if self.data_inclusao_fatura else None,
+                    'data_envio_processo': self.data_envio_processo.isoformat() if self.data_envio_processo else None,
+                    'primeiro_envio': self.primeiro_envio.isoformat() if self.primeiro_envio else None,
+                    'data_rq_tmc': self.data_rq_tmc.isoformat() if self.data_rq_tmc else None,
+                    'data_atesto': self.data_atesto.isoformat() if self.data_atesto else None,
+                    'envio_final': self.envio_final.isoformat() if self.envio_final else None,
+                    'origem_dados': self.origem_dados or '',
+                    'dias_em_processo': self.dias_em_processo,
+                    'created_at': self.created_at.isoformat() if self.created_at else None,
+                    'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+                })
+            
+            return dados_basicos
+            
         except Exception as e:
-            logging.exception("Erro em to_dict")
+            logging.error(f"Erro ao serializar CTE {self.numero_cte}: {e}")
+            # Retorno mínimo em caso de erro
             return {
-                'numero_cte': self.numero_cte,
-                'erro': str(e),
+                'numero_cte': getattr(self, 'numero_cte', None),
+                'destinatario_nome': getattr(self, 'destinatario_nome', '') or '',
+                'valor_total': float(getattr(self, 'valor_total', 0) or 0),
+                'has_baixa': False,
+                'processo_completo': False,
+                'status_processo': 'Erro',
+                'erro_serializacao': str(e)
             }
 
-    def to_dict_importacao(self) -> Dict:
-        """Conversão otimizada para importação/exportação"""
-        try:
-            fmt = '%Y-%m-%d'
-            fd = lambda d: d.strftime(fmt) if d else None
-            return {
-                'numero_cte': self.numero_cte,
-                'destinatario_nome': self.destinatario_nome,
-                'veiculo_placa': self.veiculo_placa,
-                'valor_total': float(self.valor_total) if self.valor_total is not None else 0.0,
-                'data_emissao': fd(self.data_emissao),
-                'numero_fatura': self.numero_fatura,
-                'data_baixa': fd(self.data_baixa),
-                'observacao': self.observacao,
-                'data_inclusao_fatura': fd(self.data_inclusao_fatura),
-                'data_envio_processo': fd(self.data_envio_processo),
-                'primeiro_envio': fd(self.primeiro_envio),
-                'data_rq_tmc': fd(self.data_rq_tmc),
-                'data_atesto': fd(self.data_atesto),
-                'envio_final': fd(self.envio_final),
-                'origem_dados': self.origem_dados,
-                'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S') if self.created_at else None,
-                'updated_at': self.updated_at.strftime('%Y-%m-%d %H:%M:%S') if self.updated_at else None
-            }
-        except Exception as e:
-            logging.exception("Erro ao converter CTE para dict de importação")
-            return {'numero_cte': self.numero_cte, 'erro': str(e)}
-
-    # -------------------------------------------------------------------------
-    # CRUD
-    # -------------------------------------------------------------------------
+    # ==================== MÉTODOS CRUD ====================
+    
     @classmethod
-    def buscar_por_numero(cls, numero_cte: int) -> Optional['CTE']:
+    def buscar_por_numero(cls, numero_cte: int) -> Optional["CTE"]:
         """Busca CTE por número"""
         try:
-            return cls.query.filter_by(numero_cte=numero_cte).first()
-        except Exception as e:
-            logging.error(f"Erro ao buscar CTE {numero_cte}: {e}")
+            return cls.query.filter_by(numero_cte=int(numero_cte)).first()
+        except (ValueError, TypeError):
             return None
 
     @classmethod
-    def criar_cte(cls, dados: Dict) -> Tuple[bool, Union[str, 'CTE']]:
-        """Cria novo CTE com validação"""
+    def criar_cte(cls, dados: Dict) -> Tuple[bool, Union[str, "CTE"]]:
+        """
+        Cria novo CTE
+        
+        Returns:
+            Tuple[bool, Union[str, CTE]]: (sucesso, mensagem_erro_ou_cte)
+        """
         try:
-            # Normalizar payload
-            payload = cls._normalize_payload(dados)
-            if payload.get('numero_cte') is None:
+            if not dados.get('numero_cte'):
                 return False, "Número do CTE é obrigatório"
 
-            # Verificar duplicata
-            if cls.buscar_por_numero(payload['numero_cte']):
-                return False, f"CTE {payload['numero_cte']} já existe"
+            numero = int(dados['numero_cte'])
+            
+            # Verificar se já existe
+            if cls.buscar_por_numero(numero):
+                return False, f"CTE {numero} já existe no sistema"
 
-            # Validar dados
-            valido, erros = cls.validar_dados_importacao(payload)
-            if not valido:
-                return False, "; ".join(erros)
+            # Criar nova instância
+            cte = cls()
+            sucesso, mensagem = cte._aplicar_dados(dados)
+            
+            if not sucesso:
+                return False, mensagem
 
-            cte = cls(**payload)
+            # Salvar no banco
             db.session.add(cte)
             db.session.commit()
+            
+            logging.info(f"CTE {numero} criado com sucesso")
             return True, cte
+            
         except Exception as e:
             db.session.rollback()
-            logging.exception(f"Erro ao criar CTE: {e}")
-            return False, str(e)
+            logging.error(f"Erro ao criar CTE: {e}")
+            return False, f"Erro interno: {str(e)}"
 
-    def alterar(self, dados: Dict) -> Tuple[bool, str]:
-        """Alterar SOMENTE os campos presentes em `dados`."""
+    def atualizar(self, dados: Dict) -> Tuple[bool, str]:
+        """
+        Atualiza dados do CTE
+        
+        Returns:
+            Tuple[bool, str]: (sucesso, mensagem)
+        """
         try:
-            payload = self._normalize_payload(dados)
-            for k, v in payload.items():
-                if hasattr(self, k) and k not in ['id', 'numero_cte']:
-                    setattr(self, k, v)
+            sucesso, mensagem = self._aplicar_dados(dados)
+            if not sucesso:
+                return False, mensagem
+                
             self.updated_at = datetime.utcnow()
             db.session.commit()
+            
+            logging.info(f"CTE {self.numero_cte} atualizado com sucesso")
             return True, "CTE atualizado com sucesso"
+            
         except Exception as e:
             db.session.rollback()
-            logging.exception(f"Erro ao alterar CTE {self.numero_cte}: {e}")
-            return False, str(e)
+            logging.error(f"Erro ao atualizar CTE {self.numero_cte}: {e}")
+            return False, f"Erro ao atualizar: {str(e)}"
 
-    @classmethod
-    def alterar_cte(cls, numero_cte: int, dados: Dict) -> Tuple[bool, str]:
-        """Altera CTE por número"""
-        inst = cls.buscar_por_numero(numero_cte)
-        if not inst:
-            return False, f"CTE {numero_cte} não encontrado"
-        return inst.alterar(dados)
-
-    def registrar_baixa(self, data_baixa: date, observacao: str = "") -> Tuple[bool, str]:
-        """Registra baixa do CTE"""
+    def deletar(self) -> Tuple[bool, str]:
+        """Remove CTE do banco"""
         try:
-            if self.data_baixa:
-                return False, "CTE já possui baixa"
-            self.data_baixa = data_baixa
-            if observacao:
-                self.observacao = f"{self.observacao or ''} | BAIXA: {observacao}"
-            self.updated_at = datetime.utcnow()
+            numero = self.numero_cte
+            db.session.delete(self)
             db.session.commit()
-            return True, f"Baixa registrada para CTE {self.numero_cte}"
+            
+            logging.info(f"CTE {numero} removido com sucesso")
+            return True, f"CTE {numero} removido com sucesso"
+            
         except Exception as e:
             db.session.rollback()
-            logging.exception(f"Erro ao registrar baixa CTE {self.numero_cte}: {e}")
-            return False, str(e)
+            logging.error(f"Erro ao deletar CTE {self.numero_cte}: {e}")
+            return False, f"Erro ao deletar: {str(e)}"
 
-    # -------------------------------------------------------------------------
-    # Importação / Atualização em lote
-    # -------------------------------------------------------------------------
-    @classmethod
-    def obter_ctes_existentes_bulk(cls, numeros_cte: List[int]) -> set:
-        """Obtém CTEs existentes em lote"""
-        if not numeros_cte:
-            return set()
-        try:
-            result = db.session.query(cls.numero_cte).filter(cls.numero_cte.in_(numeros_cte)).all()
-            return set(r[0] for r in result)
-        except Exception as e:
-            logging.error(f"Erro ao obter CTEs existentes: {e}")
-            return set()
-
-    @classmethod
-    def criar_cte_otimizado(cls, dados: Dict) -> Tuple[bool, Union[str, 'CTE']]:
-        """Versão otimizada do método criar_cte para importação em lote"""
-        try:
-            payload = cls._normalize_payload(dados)
-            ncte = payload.get('numero_cte')
-            if not ncte:
-                return False, "Número do CTE inválido"
-
-            if not _to_str_safe(payload.get('destinatario_nome')):
-                return False, "Nome do destinatário é obrigatório"
-
-            v = payload.get('valor_total')
-            if v is None or float(v) < 0:
-                return False, "Valor total inválido"
-
-            if cls.buscar_por_numero(ncte):
-                return False, f"CTE {ncte} já existe"
-
-            cte = cls(**payload)
-            db.session.add(cte)
-            db.session.flush()
-            return True, cte
-        except IntegrityError as e:
-            db.session.rollback()
-            if 'numero_cte' in str(e):
-                return False, f"CTE {dados.get('numero_cte')} já existe"
-            return False, f"Erro de integridade: {str(e)}"
-        except Exception as e:
-            db.session.rollback()
-            logging.exception(f"Erro ao criar CTE otimizado: {e}")
-            return False, f"Erro ao criar CTE: {str(e)}"
-
-    @classmethod
-    def aplicar_alteracoes_lote(cls, lista_dados: List[Dict], modo: str = 'alterar', batch_size: int = 500) -> Dict:
+    # ==================== APLICAÇÃO DE DADOS ====================
+    
+    def _aplicar_dados(self, dados: Dict) -> Tuple[bool, str]:
         """
-        Aplica alterações em lote.
-        modo:
-          - 'alterar' -> só atualiza existentes
-          - 'inserir' -> só insere novos
-          - 'upsert'  -> atualiza se existir, senão cria
+        Aplica dados no modelo com parsing tolerante
+        Suporta nomes de campos em português e inglês
         """
-        res = {
-            'processados': 0,
-            'atualizados': 0,
-            'inseridos': 0,
-            'erros': 0,
-            'detalhes': [],
-            'tempo_inicio': datetime.now()
+        if not dados:
+            return True, "Nenhum dado para aplicar"
+        
+        # Mapeamento de aliases para campos reais
+        mapeamento_campos = {
+            # Campos principais
+            'numero_cte': 'numero_cte', 'Número CTE': 'numero_cte', 'num_cte': 'numero_cte',
+            'destinatario_nome': 'destinatario_nome', 'Cliente': 'destinatario_nome', 'destinatario': 'destinatario_nome',
+            'veiculo_placa': 'veiculo_placa', 'Placa Veículo': 'veiculo_placa', 'placa': 'veiculo_placa',
+            'valor_total': 'valor_total', 'Valor Total': 'valor_total', 'valor': 'valor_total',
+            
+            # Datas
+            'data_emissao': 'data_emissao', 'Data Emissão': 'data_emissao', 'emissao': 'data_emissao',
+            'data_baixa': 'data_baixa', 'Data Baixa': 'data_baixa', 'baixa': 'data_baixa',
+            'numero_fatura': 'numero_fatura', 'Número Fatura': 'numero_fatura', 'fatura': 'numero_fatura',
+            
+            # Processo
+            'data_inclusao_fatura': 'data_inclusao_fatura', 'Data Inclusão Fatura': 'data_inclusao_fatura',
+            'data_envio_processo': 'data_envio_processo', 'Data Envio Processo': 'data_envio_processo',
+            'primeiro_envio': 'primeiro_envio', 'Primeiro Envio': 'primeiro_envio', '1º Envio': 'primeiro_envio',
+            'data_rq_tmc': 'data_rq_tmc', 'Data RQ/TMC': 'data_rq_tmc', 'RQ/TMC': 'data_rq_tmc',
+            'data_atesto': 'data_atesto', 'Data Atesto': 'data_atesto', 'atesto': 'data_atesto',
+            'envio_final': 'envio_final', 'Envio Final': 'envio_final', 'final': 'envio_final',
+            
+            # Outros
+            'observacao': 'observacao', 'Observação': 'observacao', 'obs': 'observacao',
         }
 
-        try:
-            numeros = [_to_int_safe(d.get('numero_cte')) for d in lista_dados]
-            numeros = [n for n in numeros if n]
-            existentes = cls.obter_ctes_existentes_bulk(numeros)
+        # Normalizar dados
+        dados_normalizados = {}
+        for chave, valor in dados.items():
+            campo_real = mapeamento_campos.get(chave, chave)
+            dados_normalizados[campo_real] = valor
 
-            for i in range(0, len(lista_dados), batch_size):
-                batch = lista_dados[i:i+batch_size]
+        # Aplicar cada campo
+        try:
+            # Número CTE (obrigatório para criação)
+            if 'numero_cte' in dados_normalizados and dados_normalizados['numero_cte'] not in (None, ''):
                 try:
-                    for dados in batch:
-                        res['processados'] += 1
-                        ndados = cls._normalize_payload(dados)
-                        ncte = ndados.get('numero_cte')
-                        if not ncte:
-                            res['erros'] += 1
-                            res['detalhes'].append({'cte': None, 'sucesso': False, 'mensagem': 'Número CTE ausente'})
-                            continue
+                    self.numero_cte = int(str(dados_normalizados['numero_cte']).strip())
+                except (ValueError, TypeError):
+                    return False, f"Número do CTE inválido: {dados_normalizados['numero_cte']}"
 
-                        existe = ncte in existentes
+            # Campos de texto
+            if 'destinatario_nome' in dados_normalizados:
+                self.destinatario_nome = self._clean_text(dados_normalizados['destinatario_nome'])
 
-                        if modo == 'alterar':
-                            if not existe:
-                                res['detalhes'].append({'cte': ncte, 'sucesso': False, 'mensagem': 'CTE não existe (ignorado)'})
-                                continue
-                            ok, msg = cls.alterar_cte(ncte, ndados)
-                            if ok:
-                                res['atualizados'] += 1
-                            else:
-                                res['erros'] += 1
-                            res['detalhes'].append({'cte': ncte, 'sucesso': ok, 'mensagem': msg})
+            if 'veiculo_placa' in dados_normalizados:
+                self.veiculo_placa = self._clean_text(dados_normalizados['veiculo_placa'])
+                
+            if 'numero_fatura' in dados_normalizados:
+                self.numero_fatura = self._clean_text(dados_normalizados['numero_fatura'])
+                
+            if 'observacao' in dados_normalizados:
+                self.observacao = self._clean_text(dados_normalizados['observacao'])
 
-                        elif modo == 'inserir':
-                            if existe:
-                                res['detalhes'].append({'cte': ncte, 'sucesso': False, 'mensagem': 'CTE já existe (ignorado)'})
-                                continue
-                            ok, obj_or_msg = cls.criar_cte_otimizado(ndados)
-                            if ok:
-                                res['inseridos'] += 1
-                                res['detalhes'].append({'cte': ncte, 'sucesso': True, 'mensagem': 'Inserido'})
-                            else:
-                                res['erros'] += 1
-                                res['detalhes'].append({'cte': ncte, 'sucesso': False, 'mensagem': obj_or_msg})
+            # Valor total
+            if 'valor_total' in dados_normalizados:
+                valor = self._parse_money(dados_normalizados['valor_total'])
+                if valor is None and dados_normalizados['valor_total'] not in (None, ''):
+                    return False, f"Valor total inválido: {dados_normalizados['valor_total']}"
+                if valor is not None:
+                    self.valor_total = valor
 
-                        else:  # upsert
-                            if existe:
-                                ok, msg = cls.alterar_cte(ncte, ndados)
-                                if ok:
-                                    res['atualizados'] += 1
-                                else:
-                                    res['erros'] += 1
-                                res['detalhes'].append({'cte': ncte, 'sucesso': ok, 'mensagem': msg})
-                            else:
-                                ok, obj_or_msg = cls.criar_cte_otimizado(ndados)
-                                if ok:
-                                    res['inseridos'] += 1
-                                    res['detalhes'].append({'cte': ncte, 'sucesso': True, 'mensagem': 'Inserido'})
-                                else:
-                                    res['erros'] += 1
-                                    res['detalhes'].append({'cte': ncte, 'sucesso': False, 'mensagem': obj_or_msg})
+            # Datas do processo
+            campos_data = [
+                'data_emissao', 'data_baixa', 'data_inclusao_fatura', 'data_envio_processo',
+                'primeiro_envio', 'data_rq_tmc', 'data_atesto', 'envio_final'
+            ]
+            
+            for campo_data in campos_data:
+                if campo_data in dados_normalizados:
+                    data_parseada = self._parse_date(dados_normalizados[campo_data])
+                    setattr(self, campo_data, data_parseada)
 
-                    db.session.commit()
-                except Exception as e:
-                    db.session.rollback()
-                    logging.exception(f"Erro no lote: {e}")
-                    for dados in batch:
-                        res['erros'] += 1
-                        res['detalhes'].append({'cte': dados.get('numero_cte'), 'sucesso': False, 'mensagem': f'Erro no lote: {e}'})
-
-            res['tempo_fim'] = datetime.now()
-            res['duracao'] = (res['tempo_fim'] - res['tempo_inicio']).total_seconds()
-            return res
+            return True, "Dados aplicados com sucesso"
+            
         except Exception as e:
-            logging.exception("Erro em aplicar_alteracoes_lote")
-            res['erro_geral'] = str(e)
-            return res
+            logging.error(f"Erro ao aplicar dados: {e}")
+            return False, f"Erro interno ao aplicar dados: {str(e)}"
 
-    # -------------------------------------------------------------------------
-    # CSV — Importação e Atualização
-    # -------------------------------------------------------------------------
+    # ==================== MÉTODOS UTILITÁRIOS ====================
+    
     @classmethod
-    def processar_csv_importacao(cls, arquivo_path: str) -> Dict:
-        """Importa APENAS novos CTEs a partir de CSV"""
+    def obter_ctes_existentes_bulk(cls, numeros: List[int]) -> set:
+        """
+        Retorna conjunto de números de CTEs que já existem no banco
+        Útil para importações em lote
+        """
         try:
-            try:
-                df = pd.read_csv(arquivo_path, sep=';', encoding='utf-8-sig')
-            except Exception:
-                df = pd.read_csv(arquivo_path, sep=',', encoding='utf-8-sig')
-
-            df.columns = _normalize_headers(list(df.columns))
-            dados = []
-            for _, row in df.iterrows():
-                d = cls._from_row(row)
-                if d:
-                    dados.append(d)
-            return cls.criar_ctes_lote(dados)
-        except Exception as e:
-            logging.exception(f"Erro no processamento CSV de importação: {e}")
-            return {'erro_geral': str(e), 'processados': 0, 'sucessos': 0, 'erros': 0}
-
-    # -------------------------------------------------------------------------
-    # Fluxos já existentes — preservados
-    # -------------------------------------------------------------------------
-    @classmethod
-    def criar_ctes_lote(cls, lista_dados: List[Dict], batch_size: int = 500) -> Dict:
-        """Cria CTEs em lote (apenas novos)"""
-        res = {
-            'processados': 0,
-            'sucessos': 0,
-            'erros': 0,
-            'ctes_existentes': 0,
-            'detalhes': [],
-            'tempo_inicio': datetime.now()
-        }
-        try:
-            numeros = [d['numero_cte'] for d in lista_dados if d.get('numero_cte')]
-            existentes = cls.obter_ctes_existentes_bulk(numeros)
-            res['ctes_existentes'] = len(existentes)
-
-            novos = [d for d in lista_dados if d.get('numero_cte') not in existentes]
-
-            for i in range(0, len(novos), batch_size):
-                batch = novos[i:i+batch_size]
+            if not numeros:
+                return set()
+            
+            # Converter para int e remover inválidos
+            numeros_validos = []
+            for num in numeros:
                 try:
-                    for dados in batch:
-                        res['processados'] += 1
-                        ok, obj_or_msg = cls.criar_cte_otimizado(dados)
-                        if ok:
-                            res['sucessos'] += 1
-                            res['detalhes'].append({'cte': dados['numero_cte'], 'sucesso': True, 'mensagem': 'CTE criado'})
-                        else:
-                            res['erros'] += 1
-                            res['detalhes'].append({'cte': dados.get('numero_cte'), 'sucesso': False, 'mensagem': str(obj_or_msg)})
-                    db.session.commit()
-                except Exception as e:
-                    db.session.rollback()
-                    logging.exception(f"Erro no lote: {e}")
-                    for d in batch:
-                        res['erros'] += 1
-                        res['detalhes'].append({'cte': d.get('numero_cte'), 'sucesso': False, 'mensagem': f'Erro no lote: {e}'})
-
-            for numero_cte in existentes:
-                res['detalhes'].append({'cte': numero_cte, 'sucesso': False, 'mensagem': 'CTE já existe no banco'})
-
-            res['tempo_fim'] = datetime.now()
-            res['duracao'] = (res['tempo_fim'] - res['tempo_inicio']).total_seconds()
-            return res
+                    numeros_validos.append(int(num))
+                except (ValueError, TypeError):
+                    continue
+            
+            if not numeros_validos:
+                return set()
+            
+            # Query otimizada
+            resultado = db.session.query(cls.numero_cte).filter(
+                cls.numero_cte.in_(numeros_validos)
+            ).all()
+            
+            return {r[0] for r in resultado}
+            
         except Exception as e:
-            logging.exception("Erro em criar_ctes_lote")
-            res['erro_geral'] = str(e)
-            return res
+            logging.error(f"Erro em obter_ctes_existentes_bulk: {e}")
+            return set()
 
-    # -------------------------------------------------------------------------
-    # Normalização de linha/payload
-    # -------------------------------------------------------------------------
     @classmethod
-    def _from_row(cls, row) -> Optional[Dict]:
-        """Converte uma linha do DataFrame em payload normalizado."""
+    def estatisticas_rapidas(cls) -> Dict:
+        """Retorna estatísticas básicas dos CTEs"""
         try:
-            num = _to_int_safe(row.get('numero_cte'))
-            if not num:
-                return None
-
-            destino = _to_str_safe(row.get('destinatario_nome'))
-            if not destino or len(destino) < 1:
-                return None
-
-            valor = _to_float_safe(row.get('valor_total'))
-            if valor is None:
-                return None
-
-            data = {
-                'numero_cte': num,
-                'destinatario_nome': destino,
-                'veiculo_placa': _to_str_safe(row.get('veiculo_placa')),
-                'valor_total': valor,
-
-                'data_emissao': _to_date_safe(row.get('data_emissao')),
-                'numero_fatura': _to_str_safe(row.get('numero_fatura')),
-                'data_baixa': _to_date_safe(row.get('data_baixa')),
-                'observacao': _to_str_safe(row.get('observacao')),
-
-                'data_inclusao_fatura': _to_date_safe(row.get('data_inclusao_fatura')),
-                'data_envio_processo': _to_date_safe(row.get('data_envio_processo')),
-                'primeiro_envio': _to_date_safe(row.get('primeiro_envio')),
-                'data_rq_tmc': _to_date_safe(row.get('data_rq_tmc')),
-                'data_atesto': _to_date_safe(row.get('data_atesto')),
-                'envio_final': _to_date_safe(row.get('envio_final')),
-
-                'origem_dados': _to_str_safe(row.get('origem_dados')) or 'Planilha',
+            from sqlalchemy import func
+            
+            total = cls.query.count()
+            com_baixa = cls.query.filter(cls.data_baixa.isnot(None)).count()
+            
+            # Soma de valores
+            valor_total = db.session.query(func.sum(cls.valor_total)).scalar() or 0
+            valor_pago = db.session.query(func.sum(cls.valor_total)).filter(
+                cls.data_baixa.isnot(None)
+            ).scalar() or 0
+            
+            return {
+                'total_ctes': total,
+                'com_baixa': com_baixa,
+                'sem_baixa': total - com_baixa,
+                'valor_total': float(valor_total),
+                'valor_pago': float(valor_pago),
+                'valor_pendente': float(valor_total - valor_pago),
+                'percentual_pago': round((valor_pago / valor_total * 100) if valor_total > 0 else 0, 2)
             }
-            return data
+            
         except Exception as e:
-            logging.error(f"Erro ao processar linha: {e}")
-            return None
+            logging.error(f"Erro ao calcular estatísticas: {e}")
+            return {'erro': str(e)}
 
-    @classmethod
-    def _normalize_payload(cls, dados: Dict) -> Dict:
-        """Normaliza dicionário (tipos corretos) antes de inserir/alterar."""
-        payload = {}
-
-        if 'numero_cte' in dados:
-            payload['numero_cte'] = _to_int_safe(dados.get('numero_cte'))
-
-        if 'destinatario_nome' in dados:
-            payload['destinatario_nome'] = _to_str_safe(dados.get('destinatario_nome'))
-
-        if 'veiculo_placa' in dados:
-            payload['veiculo_placa'] = _to_str_safe(dados.get('veiculo_placa'))
-
-        if 'valor_total' in dados:
-            v = _to_float_safe(dados.get('valor_total'))
-            payload['valor_total'] = v if v is not None else None
-
-        # datas
-        for campo in (
-            'data_emissao', 'data_baixa', 'data_inclusao_fatura', 'data_envio_processo',
-            'primeiro_envio', 'data_rq_tmc', 'data_atesto', 'envio_final'
-        ):
-            if campo in dados:
-                payload[campo] = _to_date_safe(dados.get(campo))
-
-        if 'numero_fatura' in dados:
-            payload['numero_fatura'] = _to_str_safe(dados.get('numero_fatura'))
-
-        if 'observacao' in dados:
-            payload['observacao'] = _to_str_safe(dados.get('observacao'))
-
-        if 'origem_dados' in dados:
-            payload['origem_dados'] = _to_str_safe(dados.get('origem_dados'))
-
-        return payload
-
-
-# =============================================================================
-# Funções auxiliares pós-importação (opcionais)
-# =============================================================================
-
-def otimizar_banco_para_importacao() -> bool:
-    """Otimiza configurações do banco para importação"""
-    try:
-        db.session.execute(text("SET work_mem = '256MB'"))
-        db.session.execute(text("SET autovacuum = off"))
-        db.session.execute(text("SET checkpoint_completion_target = 0.9"))
-        db.session.commit()
-        return True
-    except Exception as e:
-        logging.error(f"Erro ao otimizar banco: {e}")
-        return False
-
-def restaurar_configuracao_banco() -> bool:
-    """Restaura configurações padrão do banco"""
-    try:
-        db.session.execute(text("SET work_mem = DEFAULT"))
-        db.session.execute(text("SET autovacuum = DEFAULT"))
-        db.session.execute(text("SET checkpoint_completion_target = DEFAULT"))
-        db.session.execute(text("VACUUM ANALYZE dashboard_baker"))
-        db.session.commit()
-        return True
-    except Exception as e:
-        logging.error(f"Erro ao restaurar configurações: {e}")
-        return False
-
-def validar_integridade_pos_importacao() -> Dict:
-    """Valida integridade dos dados após importação"""
-    try:
-        result = db.session.execute(text("""
-            SELECT 
-                COUNT(*) as total_registros,
-                COUNT(CASE WHEN numero_cte IS NULL THEN 1 END) as ctes_sem_numero,
-                COUNT(CASE WHEN destinatario_nome IS NULL OR destinatario_nome = '' THEN 1 END) as ctes_sem_destinatario,
-                COUNT(CASE WHEN valor_total < 0 THEN 1 END) as valores_negativos,
-                COUNT(CASE WHEN valor_total > 1000000 THEN 1 END) as valores_altos,
-                COUNT(DISTINCT numero_cte) as ctes_unicos,
-                MIN(numero_cte) as menor_cte,
-                MAX(numero_cte) as maior_cte,
-                SUM(valor_total) as valor_total
-            FROM dashboard_baker
-        """)).fetchone()
-
-        duplicatas = db.session.execute(text("""
-            SELECT numero_cte, COUNT(*) as quantidade 
-            FROM dashboard_baker 
-            GROUP BY numero_cte 
-            HAVING COUNT(*) > 1
-        """)).fetchall()
-
-        return {
-            'validacao_ok': (result[1] == 0 and result[2] == 0 and result[3] == 0 and len(duplicatas) == 0),
-            'total_registros': result[0],
-            'ctes_sem_numero': result[1],
-            'ctes_sem_destinatario': result[2],
-            'valores_negativos': result[3],
-            'valores_altos': result[4],
-            'ctes_unicos': result[5],
-            'faixa_numeros': f"{result[6]} a {result[7]}" if result[6] and result[7] else "N/A",
-            'valor_total': float(result[8] or 0),
-            'duplicatas': len(duplicatas),
-            'detalhes_duplicatas': [{'numero_cte': d[0], 'quantidade': d[1]} for d in duplicatas]
-        }
-    except Exception as e:
-        logging.error(f"Erro na validação de integridade: {e}")
-        return {'erro': str(e)}
-
-# -----------------------------------------------------------------------------
-# Templates CSV - FUNÇÕES AUXILIARES
-# -----------------------------------------------------------------------------
-
-def gerar_template_csv_importacao() -> str:
-    """Template para importação (novos)."""
-    template_data = {
-        'numero_cte': [12345, 12346, 12347],
-        'destinatario_nome': ['Cliente Exemplo Ltda', 'Empresa ABC S/A', 'Transportadora XYZ'],
-        'valor_total': [1500.50, 2750.00, 850.75],
-        'data_emissao': ['01/01/2025', '02/01/2025', '03/01/2025'],
-        'veiculo_placa': ['ABC1234', 'XYZ5678', 'DEF9012'],
-        'numero_fatura': ['NF001', 'NF002', ''],
-        'data_baixa': ['', '', '15/01/2025'],
-        'observacao': ['Primeira importação', 'Dados migrados', 'Cliente prioritário'],
-        'data_inclusao_fatura': ['02/01/2025', '03/01/2025', '04/01/2025'],
-        'data_envio_processo': ['03/01/2025', '04/01/2025', '05/01/2025'],
-        'primeiro_envio': ['04/01/2025', '05/01/2025', '06/01/2025'],
-        'data_rq_tmc': ['05/01/2025', '06/01/2025', '07/01/2025'],
-        'data_atesto': ['06/01/2025', '', '08/01/2025'],
-        'envio_final': ['07/01/2025', '', '09/01/2025']
-    }
-    df = pd.DataFrame(template_data)
-    return df.to_csv(sep=';', index=False, encoding='utf-8-sig')
-
-def gerar_template_csv_atualizacao() -> str:
-    """
-    Template para ATUALIZAÇÃO — inclui **todos** os campos
-    """
-    return CTE.gerar_template_csv_atualizacao()
+    def calcular_dias_processo(self) -> Dict[str, Optional[int]]:
+        """Calcula variações de dias entre etapas do processo"""
+        variacoes = {}
+        
+        try:
+            # Mapeamento de variações
+            calculos = [
+                ('cte_inclusao_fatura', self.data_emissao, self.data_inclusao_fatura),
+                ('cte_envio_processo', self.data_emissao, self.data_envio_processo),
+                ('inclusao_envio_processo', self.data_inclusao_fatura, self.data_envio_processo),
+                ('inclusao_primeiro_envio', self.data_inclusao_fatura, self.primeiro_envio),
+                ('rq_tmc_primeiro_envio', self.data_rq_tmc, self.primeiro_envio),
+                ('primeiro_envio_atesto', self.primeiro_envio, self.data_atesto),
+                ('atesto_envio_final', self.data_atesto, self.envio_final),
+            ]
+            
+            for nome, data_inicio, data_fim in calculos:
+                if data_inicio and data_fim:
+                    variacoes[nome] = (data_fim - data_inicio).days
+                else:
+                    variacoes[nome] = None
+                    
+        except Exception as e:
+            logging.error(f"Erro ao calcular dias do processo CTE {self.numero_cte}: {e}")
+            
+        return variacoes

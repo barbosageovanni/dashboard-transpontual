@@ -1,296 +1,1080 @@
-﻿{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Lote - CTEs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        body {
+            background: var(--gradient);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(0,0,0,0.2) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        .content-wrapper {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+        }
+        
+        .footer {
+            background: rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+    </style>
+    
+<style>
+/* Estilo (mantido) */
+.supabase-container{background:linear-gradient(135deg,#1e1e2e 0%,#2d2d44 100%);border-radius:12px;padding:2.5rem;color:#fff;margin-bottom:2rem;border:1px solid rgba(255,255,255,.1)}
+.supabase-card{background:rgba(255,255,255,.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.supabase-button{background:linear-gradient(135deg,#3ecf8e 0%,#2dd4bf 100%);border:none;border-radius:8px;padding:.75rem 2rem;color:#fff;font-weight:600;transition:.3s;box-shadow:0 4px 15px rgba(62,207,142,.3)}
+.supabase-button:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(62,207,142,.4);background:linear-gradient(135deg,#2dd4bf 0%,#3ecf8e 100%)}
+.upload-zone{border:2px dashed #3ecf8e;border-radius:12px;padding:3rem;text-align:center;background:rgba(62,207,142,.05);transition:.3s;cursor:pointer}
+.upload-zone:hover{border-color:#2dd4bf;background:rgba(62,207,142,.1)}
+.progress-container{background:rgba(255,255,255,.1);border-radius:10px;padding:1.5rem;margin-top:1rem;display:none}
+.status-badge{display:inline-block;padding:.5rem 1rem;border-radius:50px;font-size:.875rem;font-weight:600;margin:.25rem}
+.badge-success{background:rgba(62,207,142,.2);color:#3ecf8e}
+.badge-error{background:rgba(239,68,68,.2);color:#ef4444}
+.badge-warning{background:rgba(245,158,11,.2);color:#f59e0b}
 
-{% block title %}Atualização em Lote - CTEs{% endblock %}
+/* CORREÇÕES ADICIONAIS */
+.upload-zone.dragover {
+    border-color: #2dd4bf !important;
+    background: rgba(62,207,142,.2) !important;
+    transform: scale(1.02) !important;
+}
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-warning text-dark">
-                    <h4><i class="fas fa-sync-alt"></i> Atualização em Lote de CTEs</h4>
-                    <p class="mb-0">Sistema de atualização em massa com validação automática</p>
-                </div>
-                <div class="card-body">
+.progress-bar-animated.processing {
+    animation: progress-pulse 2s infinite !important;
+}
+
+@keyframes progress-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.supabase-button:disabled {
+    background: #6b7280 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.error-alert {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    color: #dc2626 !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-top: 1rem !important;
+}
+
+.success-alert {
+    background: rgba(62, 207, 142, 0.1) !important;
+    border: 1px solid rgba(62, 207, 142, 0.3) !important;
+    color: #059669 !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-top: 1rem !important;
+}
+</style>
+
+<style>
+/* ========================================
+   DESIGN GLOBAL ESTILO SUPABASE
+   Interface profissional e moderna
+======================================== */
+
+:root {
+    --supabase-primary: #3ecf8e;
+    --supabase-secondary: #2dd4bf;
+    --supabase-dark: #1e1e2e;
+    --supabase-dark-light: #2d2d44;
+    --supabase-gray: #6b7280;
+    --supabase-light: #f9fafb;
+}
+
+/* Navbar profissional */
+.navbar {
+    background: linear-gradient(135deg, var(--supabase-dark) 0%, var(--supabase-dark-light) 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.navbar-brand {
+    font-weight: 800 !important;
+    font-size: 1.5rem !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+}
+
+.navbar-brand:hover {
+    color: var(--supabase-primary) !important;
+    transform: scale(1.05) !important;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    margin: 0 0.25rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+    background: rgba(62, 207, 142, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Dropdowns profissionais */
+.dropdown-menu {
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+    padding: 0.5rem !important;
+}
+
+.dropdown-item {
+    border-radius: 8px !important;
+    margin: 0.25rem 0 !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+.dropdown-item:hover {
+    background: var(--supabase-primary) !important;
+    color: white !important;
+    transform: translateX(5px) !important;
+}
+
+/* Botões estilo Supabase */
+.btn-primary {
+    background: linear-gradient(135deg, var(--supabase-primary) 0%, var(--supabase-secondary) 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 2rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(62, 207, 142, 0.3) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(62, 207, 142, 0.4) !important;
+}
+
+/* Cards profissionais */
+.card {
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--supabase-light) 0%, white 100%) !important;
+    border-bottom: 1px solid rgba(62, 207, 142, 0.1) !important;
+    font-weight: 700 !important;
+}
+
+/* Body background */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    min-height: 100vh !important;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+}
+
+/* Container principal */
+.container, .container-fluid {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+/* Alertas estilo Supabase */
+.alert {
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.alert-success {
+    background: rgba(62, 207, 142, 0.1) !important;
+    color: #059669 !important;
+    border-left: 4px solid var(--supabase-primary) !important;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+/* Tabelas profissionais */
+.table {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--supabase-dark) 0%, var(--supabase-dark-light) 100%) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    border: none !important;
+    padding: 1rem !important;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease !important;
+}
+
+.table tbody tr:hover {
+    background: rgba(62, 207, 142, 0.05) !important;
+    transform: scale(1.01) !important;
+}
+
+/* Inputs estilo Supabase */
+.form-control, .form-select {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--supabase-primary) !important;
+    box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.1) !important;
+}
+
+/* Badges profissionais */
+.badge {
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px !important;
+}
+
+/* Animações suaves */
+* {
+    transition: all 0.3s ease !important;
+}
+
+/* Scrollbar customizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--supabase-primary), var(--supabase-secondary));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--supabase-secondary), var(--supabase-primary));
+}
+</style>
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard/">
+                <i class="fas fa-truck"></i> Dashboard Transpontual
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Dashboard -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
                     
-                    <!-- Alertas informativos -->
-                    <div class="alert alert-info">
-                        <h6><i class="fas fa-info-circle"></i> Como funciona:</h6>
-                        <ol>
-                            <li>Baixe o template Excel/CSV</li>
-                            <li>Preencha com os dados atualizados</li>
-                            <li>Escolha o modo de atualização</li>
-                            <li>Faça preview antes de executar</li>
-                            <li>Execute a atualização</li>
-                        </ol>
-                    </div>
+                    <!-- CTEs -->
+                    <!-- CTEs com Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="ctesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-file-invoice"></i> CTEs
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="ctesDropdown">
+                            <li><a class="dropdown-item" href="/ctes/listar">
+                                <i class="fas fa-list"></i> Listar CTEs
+                            </a></li>
+                            <li><a class="dropdown-item" href="/ctes/listar#inserir">
+                                <i class="fas fa-plus"></i> Inserir CTE
+                            </a></li>
+                            <li><a class="dropdown-item" href="/ctes/listar#buscar">
+                                <i class="fas fa-search"></i> Buscar/Editar
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/ctes/atualizar-lote">
+                                <i class="fas fa-sync-alt"></i> Atualizar Lote
+                            </a></li>
+                        </ul>
+                    </li>
                     
-                    <div class="row">
-                        <!-- Configuração -->
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-cog"></i> Configuração da Atualização</h5>
-                                </div>
-                                <div class="card-body">
-                                    
-                                    <!-- Modo de atualização -->
-                                    <div class="mb-3">
-                                        <label class="form-label">Modo de Atualização:</label>
-                                        <select class="form-control" id="modoAtualizacao">
-                                            <option value="empty_only">Apenas campos vazios (Recomendado)</option>
-                                            <option value="all">Todos os campos (Sobrescrever existentes)</option>
-                                        </select>
-                                        <small class="text-muted">
-                                            <strong>Campos vazios:</strong> Atualiza apenas campos que estão vazios no banco<br>
-                                            <strong>Todos os campos:</strong> Sobrescreve dados existentes
-                                        </small>
-                                    </div>
-                                    
-                                    <!-- Upload de arquivo -->
-                                    <div class="mb-3">
-                                        <label class="form-label">Arquivo de Atualização:</label>
-                                        <div class="upload-area border rounded p-4 text-center" 
-                                             style="border-style: dashed !important; border-color: #ffc107 !important; background: #fffbf0;">
-                                            <i class="fas fa-cloud-upload-alt fa-3x text-warning mb-3"></i>
-                                            <h6>Arraste o arquivo aqui ou clique para selecionar</h6>
-                                            <p class="text-muted mb-2">Formatos: Excel (.xlsx, .xls) ou CSV</p>
-                                            <input type="file" id="arquivoAtualizacao" class="form-control" 
-                                                   accept=".xlsx,.xls,.csv" style="display: none;">
-                                            <button type="button" class="btn btn-outline-warning" onclick="#arquivoAtualizacao.click()">
-                                                <i class="fas fa-folder-open"></i> Selecionar Arquivo
-                                            </button>
-                                        </div>
-                                        <div id="arquivoSelecionado" class="mt-2" style="display: none;">
-                                            <div class="alert alert-success">
-                                                <i class="fas fa-file-check"></i> <span id="nomeArquivo"></span>
-                                                <button class="btn btn-sm btn-outline-danger float-end" onclick="limparArquivo()">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Botões de ação -->
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-info" onclick="fazerPreview()" id="btnPreview" disabled>
-                                            <i class="fas fa-eye"></i> Preview
-                                        </button>
-                                        <button class="btn btn-warning" onclick="executarAtualizacao()" id="btnExecutar" disabled>
-                                            <i class="fas fa-sync-alt"></i> Executar Atualização
-                                        </button>
-                                        <a href="{{ url_for('ctes.download_template_atualizacao') }}" class="btn btn-outline-secondary">
-                                            <i class="fas fa-download"></i> Template Excel
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Estatísticas -->
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-chart-bar"></i> Estatísticas</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <strong>Total CTEs:</strong> {{ stats.total_ctes|number_format }}
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Atualizações hoje:</strong> {{ stats.atualizacoes_hoje|number_format }}
-                                    </div>
-                                    {% if stats.ultimo_update %}
-                                    <div class="mb-3">
-                                        <strong>Última atualização:</strong><br>
-                                        <small>CTE {{ stats.ultimo_update.numero_cte }}<br>
-                                        {{ stats.ultimo_update.updated_at.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Baixas -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/baixas/">
+                            <i class="fas fa-money-check-alt"></i> Baixas
+                        </a>
+                    </li>
                     
-                    <!-- Área de resultados -->
-                    <div id="resultadosArea" style="display: none;">
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h5><i class="fas fa-chart-line"></i> Resultados</h5>
-                            </div>
-                            <div class="card-body" id="resultadosContent">
-                                <!-- Conteúdo dinâmico -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Análise Financeira -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analise-financeira/">
+                            <i class="fas fa-chart-line"></i> Análise Financeira
+                        </a>
+                    </li>
+                    
+                    <!-- Administração -->
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">
+                            <i class="fas fa-cogs"></i> Administração
+                        </a>
+                    </li>
+                    
+                </ul>
+                
+                <ul class="navbar-nav">
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> Administrador do Sistema
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/auth/logout">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </a></li>
+                        </ul>
+                    </li>
+                    
+                </ul>
             </div>
         </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container content-wrapper">
+        <!-- Flash Messages -->
+        
+            
+        
+
+        
+<div class="container-fluid">
+  <div class="supabase-container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="mb-3"><i class="fas fa-sync-alt me-3"></i>Atualização em Lote de CTEs</h1>
+        <p class="lead mb-0">Envie um arquivo <strong>CSV</strong> ou <strong>Excel (.xlsx)</strong> para atualizar múltiplos CTEs de uma vez.</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <a href="/ctes/listar" class="btn btn-outline-light">
+          <i class="fas fa-arrow-left"></i> Voltar aos CTEs
+        </a>
+      </div>
     </div>
+  </div>
+
+  <div class="supabase-card">
+    <h4><i class="fas fa-info-circle me-2"></i>Como usar</h4>
+    <div class="row mt-3">
+      <div class="col-md-7">
+        <h6>📋 Colunas aceitas (todas atualizáveis):</h6>
+        <code>numero_cte</code> (obrigatória), <code>destinatario_nome</code>, <code>valor_total</code>, <code>veiculo_placa</code>,
+        <code>data_emissao</code>, <code>data_inclusao_fatura</code>, <code>data_envio_processo</code>, <code>primeiro_envio</code>,
+        <code>data_rq_tmc</code>, <code>data_atesto</code>, <code>envio_final</code>, <code>data_baixa</code>,
+        <code>numero_fatura</code>, <code>observacao</code>.
+      </div>
+      <div class="col-md-5">
+        <h6>🗓️ Datas:</h6>
+        <p>Use <code>YYYY-MM-DD</code> ou <code>DD/MM/YYYY</code>. Ex.: <code>2025-08-22</code> ou <code>22/08/2025</code>.</p>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-primary btn-sm" href="/ctes/template-atualizacao.csv">
+            <i class="fas fa-download"></i> Template CSV
+          </a>
+          <a class="btn btn-outline-success btn-sm" href="/ctes/template-atualizacao.xlsx">
+            <i class="fas fa-file-excel"></i> Template Excel
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="supabase-card">
+    <h4><i class="fas fa-cloud-upload-alt me-2"></i>Upload do arquivo</h4>
+    
+    <!-- Status do Sistema -->
+    <div id="systemStatus" class="mb-3"></div>
+    
+    <form id="formAtualizarLote" enctype="multipart/form-data">
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('arquivo').click()">
+        <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color:#3ecf8e"></i>
+        <h5>Clique aqui ou arraste o arquivo (.csv ou .xlsx)</h5>
+        <p class="text-muted">Tamanho máximo: 50MB</p>
+        <input type="file" id="arquivo" name="arquivo" accept=".csv,.xlsx,.xls" style="display:none">
+      </div>
+      
+      <div id="arquivoInfo" style="display:none" class="mt-3">
+        <div class="alert alert-info">
+          <i class="fas fa-file me-2"></i>
+          <span id="nomeArquivo"></span>
+          <small id="tamanhoArquivo" class="text-muted ms-2"></small>
+          <button type="button" class="btn btn-sm btn-outline-danger ms-3" onclick="removerArquivo()">
+            <i class="fas fa-times"></i> Remover
+          </button>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4">
+        <button type="submit" id="btnProcessar" class="supabase-button" disabled>
+          <i class="fas fa-sync-alt me-2"></i> Processar Atualização
+        </button>
+        <button type="button" id="btnCancelar" class="btn btn-outline-danger ms-3" style="display:none" onclick="cancelarProcessamento()">
+          <i class="fas fa-times me-2"></i> Cancelar
+        </button>
+      </div>
+    </form>
+    
+    <div id="progressContainer" class="progress-container">
+      <h6><i class="fas fa-cog fa-spin me-2"></i>Processando arquivo...</h6>
+      <div class="progress mb-3">
+        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated processing" style="width:0%">
+          Preparando...
+        </div>
+      </div>
+      <div id="processSteps">
+        <div id="step1" class="mb-2">
+          <i class="fas fa-check text-success"></i> Arquivo validado
+        </div>
+        <div id="step2" class="mb-2">
+          <i class="fas fa-spinner fa-spin text-primary"></i> Enviando dados...
+        </div>
+        <div id="step3" class="mb-2 text-muted">
+          <i class="fas fa-clock"></i> Processando registros...
+        </div>
+        <div id="step4" class="mb-2 text-muted">
+          <i class="fas fa-clock"></i> Finalizando...
+        </div>
+      </div>
+      <small class="text-muted mt-2 d-block">⏱️ Isso pode levar alguns minutos dependendo do tamanho do arquivo</small>
+    </div>
+  </div>
+
+  <div id="resultadosContainer" style="display:none" class="supabase-card">
+    <h4><i class="fas fa-chart-bar me-2"></i>Resultados</h4>
+    <div id="resultadosContent"></div>
+  </div>
 </div>
 
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-// Configurar upload de arquivo
-#arquivoAtualizacao.on('change', function() {
-    const file = this.files[0];
-    if (file) {
-        #nomeArquivo.text(file.name);
-        #arquivoSelecionado.show();
-        #btnPreview, #btnExecutar.prop('disabled', false);
-    }
+// ===================================
+// SISTEMA DE UPLOAD ROBUSTO E CORRIGIDO
+// ===================================
+
+// Configurações
+const UPLOAD_CONFIG = {
+    maxFileSize: 50 * 1024 * 1024, // 50MB
+    allowedExtensions: ['.csv', '.xlsx', '.xls'],
+    timeout: 300000, // 5 minutos
+    retryAttempts: 3,
+    retryDelay: 2000
+};
+
+// Estado global
+let uploadState = {
+    isProcessing: false,
+    currentFile: null,
+    currentAttempt: 0,
+    abortController: null
+};
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Sistema de upload inicializado');
+    
+    // Configurar eventos
+    setupEventListeners();
+    
+    // Testar conectividade
+    testAPIConnection();
 });
 
-// Configurar drag and drop
-.upload-area.on('click', function() {
-    #arquivoAtualizacao.click();
-});
-
-function limparArquivo() {
-    #arquivoAtualizacao.val('');
-    #arquivoSelecionado.hide();
-    #btnPreview, #btnExecutar.prop('disabled', true);
-    #resultadosArea.hide();
+function setupEventListeners() {
+    // Upload de arquivo
+    document.getElementById('arquivo').addEventListener('change', handleFileSelection);
+    
+    // Drag and drop
+    const uploadZone = document.getElementById('uploadZone');
+    setupDragAndDrop(uploadZone);
+    
+    // Form submit
+    document.getElementById('formAtualizarLote').addEventListener('submit', processFile);
 }
 
-function fazerPreview() {
-    const arquivo = #arquivoAtualizacao[0].files[0];
-    const modo = #modoAtualizacao.val();
+function setupDragAndDrop(uploadZone) {
+    uploadZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('dragover');
+    });
     
-    if (!arquivo) {
-        alert('Selecione um arquivo primeiro');
-        return;
-    }
+    uploadZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+    });
     
-    const formData = new FormData();
-    formData.append('arquivo', arquivo);
-    formData.append('modo', modo);
-    
-    #btnPreview.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processando...');
-    
-    $.ajax({
-        url: '{{ url_for("ctes.api_preview_atualizacao") }}',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.sucesso) {
-                mostrarPreview(response);
-            } else {
-                alert('Erro: ' + response.erro);
-            }
-        },
-        error: function(xhr) {
-            alert('Erro na requisição: ' + xhr.responseText);
-        },
-        complete: function() {
-            #btnPreview.prop('disabled', false).html('<i class="fas fa-eye"></i> Preview');
+    uploadZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+            const fileInput = document.getElementById('arquivo');
+            fileInput.files = files;
+            handleFileSelection({target: fileInput});
         }
     });
 }
 
-function mostrarPreview(data) {
-    let html = 
-        <div class="alert alert-info">
-            <h6>Preview da Atualização</h6>
-            <p><strong>Total de linhas no arquivo:</strong> </p>
-            <p><strong>CTEs para atualizar:</strong> </p>
-            <p><strong>Modo:</strong> </p>
-        </div>
-    ;
+function handleFileSelection(event) {
+    const file = event.target.files[0];
     
-    if (data.preview.length > 0) {
-        html += '<h6>Exemplos de atualizações:</h6>';
-        html += '<div class="table-responsive"><table class="table table-sm">';
-        html += '<thead><tr><th>CTE</th><th>Campos a atualizar</th></tr></thead><tbody>';
+    if (!file) {
+        clearFileInfo();
+        return;
+    }
+    
+    console.log('📁 Arquivo selecionado:', {
+        name: file.name,
+        size: file.size,
+        type: file.type
+    });
+    
+    // Validar arquivo
+    const validation = validateFile(file);
+    if (!validation.valid) {
+        showError(validation.message);
+        clearFileSelection();
+        return;
+    }
+    
+    // Armazenar arquivo
+    uploadState.currentFile = file;
+    
+    // Mostrar informações
+    showFileInfo(file);
+    
+    // Habilitar botão
+    document.getElementById('btnProcessar').disabled = false;
+}
+
+function validateFile(file) {
+    // Verificar extensão
+    const extension = '.' + file.name.split('.').pop().toLowerCase();
+    if (!UPLOAD_CONFIG.allowedExtensions.includes(extension)) {
+        return {
+            valid: false,
+            message: `Formato não suportado. Use: ${UPLOAD_CONFIG.allowedExtensions.join(', ')}`
+        };
+    }
+    
+    // Verificar tamanho
+    if (file.size > UPLOAD_CONFIG.maxFileSize) {
+        return {
+            valid: false,
+            message: `Arquivo muito grande. Máximo: ${formatFileSize(UPLOAD_CONFIG.maxFileSize)}`
+        };
+    }
+    
+    // Verificar se não está vazio
+    if (file.size === 0) {
+        return {
+            valid: false,
+            message: 'Arquivo está vazio'
+        };
+    }
+    
+    return {valid: true};
+}
+
+function showFileInfo(file) {
+    document.getElementById('nomeArquivo').textContent = file.name;
+    document.getElementById('tamanhoArquivo').textContent = `(${formatFileSize(file.size)})`;
+    document.getElementById('arquivoInfo').style.display = 'block';
+}
+
+function processFile(e) {
+    e.preventDefault();
+    
+    if (!uploadState.currentFile) {
+        showError('Selecione um arquivo primeiro');
+        return;
+    }
+    
+    if (uploadState.isProcessing) {
+        console.warn('⚠️ Processamento já está em andamento');
+        return;
+    }
+    
+    console.log('🚀 Iniciando processamento...');
+    
+    // Atualizar estado
+    uploadState.isProcessing = true;
+    uploadState.currentAttempt = 0;
+    uploadState.abortController = new AbortController();
+    
+    // Mostrar interface de processamento
+    showProcessingUI();
+    
+    // Executar upload
+    executeUpload();
+}
+
+function executeUpload() {
+    uploadState.currentAttempt++;
+    
+    console.log(`🔄 Tentativa ${uploadState.currentAttempt}/${UPLOAD_CONFIG.retryAttempts}`);
+    
+    const formData = new FormData();
+    formData.append('arquivo', uploadState.currentFile);
+    formData.append('modo', 'upsert'); // CORRIGIDO: Permitir inserção de novos CTEs
+    
+    // ===== CORREÇÃO CRÍTICA: ROTA CORRIGIDA =====
+    const API_URL = '/ctes/api/atualizar-lote'; // Rota correta com /api/
+    
+    fetch(API_URL, {
+        method: 'POST',
+        body: formData,
+        signal: uploadState.abortController.signal,
+        // IMPORTANTE: Não definir Content-Type para FormData
+    })
+    .then(response => {
+        console.log(`📡 Status da resposta: ${response.status}`);
         
-        data.preview.forEach(item => {
-            html += <tr><td></td><td>;
-            Object.entries(item.changes).forEach(([field, change]) => {
-                html += <small><strong>:</strong> <br></small>;
-            });
-            html += '</td></tr>';
-        });
-        
-        html += '</tbody></table></div>';
-        
-        if (data.total_para_atualizar > 10) {
-            html += <p class="text-muted">... e mais  atualizações</p>;
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+        
+        return response.json();
+    })
+    .then(data => {
+        console.log('✅ Upload concluído:', data);
+        handleUploadSuccess(data);
+    })
+    .catch(error => {
+        console.error('❌ Erro no upload:', error);
+        handleUploadError(error);
+    });
+    
+    // Simular progresso
+    simulateProgress();
+}
+
+function simulateProgress() {
+    let progress = 0;
+    const progressBar = document.getElementById('progressBar');
+    
+    const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 90) {
+            progress = 90; // Parar em 90% até receber resposta
+        }
+        
+        updateProgressBar(progress);
+        
+        if (!uploadState.isProcessing) {
+            clearInterval(interval);
+            updateProgressBar(100);
+        }
+    }, 500);
+}
+
+function updateProgressBar(percent) {
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.width = percent + '%';
+    
+    if (percent < 25) {
+        progressBar.textContent = 'Enviando...';
+    } else if (percent < 50) {
+        progressBar.textContent = 'Validando...';
+        updateStep(2, 'success');
+        updateStep(3, 'processing');
+    } else if (percent < 75) {
+        progressBar.textContent = 'Processando...';
+        updateStep(3, 'success');
+        updateStep(4, 'processing');
+    } else if (percent < 100) {
+        progressBar.textContent = 'Finalizando...';
     } else {
-        html += '<div class="alert alert-warning">Nenhuma atualização necessária com os critérios selecionados.</div>';
+        progressBar.textContent = 'Concluído!';
+        updateStep(4, 'success');
     }
-    
-    #resultadosContent.html(html);
-    #resultadosArea.show();
 }
 
-function executarAtualizacao() {
-    const arquivo = #arquivoAtualizacao[0].files[0];
-    const modo = #modoAtualizacao.val();
+function updateStep(stepNumber, status) {
+    const step = document.getElementById(`step${stepNumber}`);
+    if (!step) return;
     
-    if (!arquivo) {
-        alert('Selecione um arquivo primeiro');
+    if (status === 'success') {
+        step.innerHTML = step.innerHTML.replace('fa-spinner fa-spin text-primary', 'fa-check text-success')
+                                     .replace('fa-clock', 'fa-check text-success')
+                                     .replace('text-muted', '');
+    } else if (status === 'processing') {
+        step.innerHTML = step.innerHTML.replace('fa-clock', 'fa-spinner fa-spin text-primary')
+                                     .replace('text-muted', '');
+    }
+}
+
+function handleUploadSuccess(data) {
+    uploadState.isProcessing = false;
+    hideProcessingUI();
+    
+    console.log('🎉 Processamento concluído com sucesso');
+    
+    if (data.success) {
+        showSuccessResults(data);
+    } else {
+        showError(data.error || data.message || 'Erro desconhecido no processamento');
+    }
+    
+    // Limpar formulário
+    resetForm();
+}
+
+function handleUploadError(error) {
+    console.error('❌ Erro detalhado:', error);
+    
+    let shouldRetry = false;
+    let errorMessage = 'Erro no processamento do arquivo';
+    
+    if (error.name === 'AbortError') {
+        console.log('Upload cancelado pelo usuário');
         return;
     }
     
-    if (!confirm('Deseja realmente executar a atualização? Esta ação não pode ser desfeita.')) {
-        return;
+    // Analisar tipo de erro
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        shouldRetry = true;
+    } else if (error.message.includes('timeout')) {
+        errorMessage = 'Timeout no processamento. O arquivo pode ser muito grande.';
+        shouldRetry = true;
+    } else if (error.message.includes('HTTP 500')) {
+        errorMessage = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+        shouldRetry = true;
+    } else if (error.message.includes('HTTP 400')) {
+        errorMessage = 'Dados inválidos no arquivo. Verifique o formato e conteúdo.';
+        shouldRetry = false;
     }
     
-    const formData = new FormData();
-    formData.append('arquivo', arquivo);
-    formData.append('modo', modo);
+    // Tentar novamente se necessário
+    if (shouldRetry && uploadState.currentAttempt < UPLOAD_CONFIG.retryAttempts) {
+        console.log(`🔄 Tentando novamente em ${UPLOAD_CONFIG.retryDelay}ms...`);
+        showRetryMessage();
+        
+        setTimeout(() => {
+            executeUpload();
+        }, UPLOAD_CONFIG.retryDelay);
+    } else {
+        // Falha definitiva
+        uploadState.isProcessing = false;
+        hideProcessingUI();
+        showError(errorMessage);
+        
+        if (uploadState.currentAttempt >= UPLOAD_CONFIG.retryAttempts) {
+            showError('Número máximo de tentativas excedido. Tente novamente mais tarde.');
+        }
+    }
+}
+
+function showProcessingUI() {
+    document.getElementById('btnProcessar').disabled = true;
+    document.getElementById('btnProcessar').innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processando...';
+    document.getElementById('btnCancelar').style.display = 'inline-block';
+    document.getElementById('progressContainer').style.display = 'block';
+    document.getElementById('resultadosContainer').style.display = 'none';
     
-    #btnExecutar.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Executando...');
+    // Reset steps
+    for (let i = 1; i <= 4; i++) {
+        const step = document.getElementById(`step${i}`);
+        if (i === 1) {
+            step.innerHTML = '<i class="fas fa-check text-success"></i> Arquivo validado';
+        } else if (i === 2) {
+            step.innerHTML = '<i class="fas fa-spinner fa-spin text-primary"></i> Enviando dados...';
+        } else {
+            step.innerHTML = '<i class="fas fa-clock text-muted"></i> Aguardando...';
+            step.classList.add('text-muted');
+        }
+    }
+}
+
+function hideProcessingUI() {
+    document.getElementById('btnProcessar').disabled = false;
+    document.getElementById('btnProcessar').innerHTML = '<i class="fas fa-sync-alt me-2"></i> Processar Atualização';
+    document.getElementById('btnCancelar').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+}
+
+function showSuccessResults(data) {
+    const resultados = data.resultados || {};
+    const processados = resultados.processados || 0;
+    const sucessos = resultados.sucessos || 0;
+    const erros = resultados.erros || 0;
     
-    $.ajax({
-        url: '{{ url_for("ctes.api_atualizar_lote") }}',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.sucesso) {
-                mostrarResultados(response);
-                location.reload(); // Recarregar para atualizar estatísticas
-            } else {
-                alert('Erro: ' + response.erro);
+    const alertClass = erros > 0 ? 'alert-warning' : 'alert-success';
+    const icon = erros > 0 ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
+    
+    const html = `
+        <div class="alert ${alertClass}">
+            <h5><i class="${icon}"></i> Processamento Concluído</h5>
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <h3 class="text-primary">${processados}</h3>
+                    <small>Processados</small>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="text-success">${sucessos}</h3>
+                    <small>Sucessos</small>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="text-danger">${erros}</h3>
+                    <small>Erros</small>
+                </div>
+                <div class="col-md-3">
+                    <a href="/ctes/listar" class="supabase-button">
+                        <i class="fas fa-eye"></i> Ver CTEs
+                    </a>
+                </div>
+            </div>
+            
+            ${Array.isArray(resultados.detalhes) && resultados.detalhes.length > 0 ? `
+            <hr>
+            <h6>Detalhes do Processamento:</h6>
+            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>CTE</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                            <th>Mensagem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${resultados.detalhes.slice(0, 50).map(detalhe => `
+                        <tr class="${detalhe.success ? 'table-success' : 'table-danger'}">
+                            <td>${detalhe.numero_cte || detalhe.cte || '-'}</td>
+                            <td><i class="fas fa-${detalhe.success ? 'check text-success' : 'times text-danger'}"></i></td>
+                            <td>${detalhe.acao || detalhe.action || '-'}</td>
+                            <td>${detalhe.message || detalhe.mensagem || '-'}</td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            ${resultados.detalhes.length > 50 ? `
+            <small class="text-muted">Mostrando primeiros 50 de ${resultados.detalhes.length} registros processados.</small>
+            ` : ''}
+            ` : ''}
+        </div>
+    `;
+    
+    document.getElementById('resultadosContent').innerHTML = html;
+    document.getElementById('resultadosContainer').style.display = 'block';
+}
+
+function showError(message) {
+    const html = `
+        <div class="error-alert">
+            <h6><i class="fas fa-exclamation-circle me-2"></i>Erro no Processamento</h6>
+            <p class="mb-0">${message}</p>
+        </div>
+    `;
+    
+    document.getElementById('resultadosContent').innerHTML = html;
+    document.getElementById('resultadosContainer').style.display = 'block';
+}
+
+function showRetryMessage() {
+    const progressBar = document.getElementById('progressBar');
+    progressBar.textContent = `Tentativa ${uploadState.currentAttempt + 1}/${UPLOAD_CONFIG.retryAttempts}...`;
+    progressBar.style.width = '50%';
+}
+
+function cancelarProcessamento() {
+    if (uploadState.abortController) {
+        uploadState.abortController.abort();
+    }
+    
+    uploadState.isProcessing = false;
+    hideProcessingUI();
+    
+    console.log('⏹️ Upload cancelado pelo usuário');
+    showError('Upload cancelado pelo usuário');
+}
+
+function removerArquivo() {
+    clearFileSelection();
+    clearFileInfo();
+    document.getElementById('btnProcessar').disabled = true;
+}
+
+function clearFileSelection() {
+    document.getElementById('arquivo').value = '';
+    uploadState.currentFile = null;
+}
+
+function clearFileInfo() {
+    document.getElementById('arquivoInfo').style.display = 'none';
+}
+
+function resetForm() {
+    clearFileSelection();
+    clearFileInfo();
+    document.getElementById('btnProcessar').disabled = true;
+    uploadState.currentFile = null;
+    uploadState.currentAttempt = 0;
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+async function testAPIConnection() {
+    try {
+        const response = await fetch('/ctes/api/test-conexao', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
-        },
-        error: function(xhr) {
-            alert('Erro na requisição: ' + xhr.responseText);
-        },
-        complete: function() {
-            #btnExecutar.prop('disabled', false).html('<i class="fas fa-sync-alt"></i> Executar Atualização');
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.conexao === 'OK') {
+                showSystemStatus('✅ Sistema operacional', 'success');
+                console.log('✅ API conectada:', data);
+            } else {
+                showSystemStatus('⚠️ Sistema com limitações', 'warning');
+            }
+        } else {
+            showSystemStatus('❌ Problemas de conectividade', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Erro na API:', error);
+        showSystemStatus('❌ Sem conexão com o servidor', 'danger');
+    }
+}
+
+function showSystemStatus(message, type) {
+    const statusDiv = document.getElementById('systemStatus');
+    const alertClass = type === 'success' ? 'alert-success' : 
+                      type === 'warning' ? 'alert-warning' : 'alert-danger';
+    
+    statusDiv.innerHTML = `
+        <div class="alert ${alertClass} alert-sm">
+            <small>${message}</small>
+        </div>
+    `;
+}
+
+// Funcoes de debug
+function debugUploadSystem() {
+    console.log('🔍 Debug do sistema:', {
+        uploadState: uploadState,
+        config: UPLOAD_CONFIG,
+        elementos: {
+            arquivo: document.getElementById('arquivo') ? 'OK' : 'FALTANDO',
+            btnProcessar: document.getElementById('btnProcessar') ? 'OK' : 'FALTANDO',
+            progressContainer: document.getElementById('progressContainer') ? 'OK' : 'FALTANDO'
         }
     });
 }
 
-function mostrarResultados(data) {
-    const stats = data.stats;
-    let html = 
-        <div class="alert alert-success">
-            <h6><i class="fas fa-check"></i> Atualização Concluída!</h6>
-            <div class="row">
-                <div class="col-md-3"><strong>Processados:</strong> </div>
-                <div class="col-md-3"><strong>Atualizados:</strong> </div>
-                <div class="col-md-3"><strong>Sem alteração:</strong> </div>
-                <div class="col-md-3"><strong>Erros:</strong> </div>
-            </div>
-        </div>
-    ;
-    
-    if (Object.keys(stats.campos_atualizados).length > 0) {
-        html += '<h6>Campos atualizados:</h6><ul>';
-        Object.entries(stats.campos_atualizados).forEach(([field, count]) => {
-            html += <li>:  atualizações</li>;
-        });
-        html += '</ul>';
-    }
-    
-    #resultadosContent.html(html);
-    #resultadosArea.show();
-}
+// Expor funções para debug
+window.debugUploadSystem = debugUploadSystem;
+window.uploadState = uploadState;
+
+console.log('📋 Sistema carregado. Use debugUploadSystem() para diagnóstico.');
 </script>
-{% endblock %}
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <p class="mb-0">
+                © 2025 Dashboard Transpontual - Sistema de Gestão Financeira
+                <span class="ms-3">Versão 3.0</span>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

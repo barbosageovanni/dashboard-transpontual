@@ -1,0 +1,841 @@
+{% extends "base.html" %}
+
+{% block title %}Gestão de CTEs - Dashboard Baker{% endblock %}
+
+{% block extra_css %}
+<style>
+.module-header {
+    background: linear-gradient(135deg, #007bff, #ffffff);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.search-box {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #007bff;
+}
+
+.form-section h6 {
+    color: #f8f9fa;
+    margin-bottom: 1rem;
+}
+
+.debug-section {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #ffc107;
+}
+
+/* CONTRASTE MÁXIMO PARA ABAS CTEs */
+.nav-tabs .nav-link {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    font-weight: 800 !important;
+    border: 2px solid #dee2e6 !important;
+    font-size: 1rem !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: #ffffff !important;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    font-weight: 800 !important;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    color: #000000 !important;
+    background-color: #f8f9fa !important;
+    border-color: #007bff !important;
+}
+
+/* Força adicional para textos */
+#listar-tab, #inserir-tab, #buscar-tab {
+    color: #000000 !important;
+}
+
+#listar-tab.active, #inserir-tab.active, #buscar-tab.active {
+    color: #ffffff !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="module-header">
+            <h1><i class="fas fa-file-invoice"></i> Gestão de CTEs</h1>
+            <p class="lead">CRUD completo para conhecimentos de transporte</p>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs" id="ctesTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="listar-tab" data-bs-toggle="tab" data-bs-target="#listar" type="button">
+            <i class="fas fa-list"></i> Listar CTEs
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="inserir-tab" data-bs-toggle="tab" data-bs-target="#inserir" type="button">
+            <i class="fas fa-plus"></i> Inserir CTE
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="buscar-tab" data-bs-toggle="tab" data-bs-target="#buscar" type="button">
+            <i class="fas fa-search"></i> Buscar e Editar
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="ctesTabContent">
+<!-- Listar CTEs -->
+    <div class="tab-pane fade show active" id="listar" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-body">
+                <!-- Filtros Avançados -->
+                <div class="search-box">
+                    <h6><i class="fas fa-filter"></i> Filtros de Busca</h6>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="filtroTexto" class="form-label">Busca por Texto</label>
+                                <input type="text" class="form-control" id="filtroTexto" 
+                                       placeholder="CTE, cliente, fatura, veículo...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="filtroStatusBaixa" class="form-label">Status Baixa</label>
+                                <select class="form-select" id="filtroStatusBaixa">
+                                    <option value="">Todos</option>
+                                    <option value="com_baixa">Com Baixa</option>
+                                    <option value="sem_baixa">Sem Baixa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="filtroStatusProcesso" class="form-label">Status Processo</label>
+                                <select class="form-select" id="filtroStatusProcesso">
+                                    <option value="">Todos</option>
+                                    <option value="completo">Completo</option>
+                                    <option value="incompleto">Incompleto</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="dataInicio" class="form-label">Data Início</label>
+                                <input type="date" class="form-control" id="dataInicio">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="dataFim" class="form-label">Data Fim</label>
+                                <input type="date" class="form-control" id="dataFim">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="aplicarFiltros()">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="limparFiltros()">
+                                        <i class="fas fa-times"></i> Limpar
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm" onclick="testarFiltros()" title="Debug CTE 22403">
+                                        <i class="fas fa-bug"></i> Debug
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ SEÇÃO DE DEBUG ADICIONADA -->
+                <div class="debug-section">
+                    <h6><i class="fas fa-tools"></i> Ferramentas de Diagnóstico</h6>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="mb-2">
+                                <small>Use estas ferramentas para identificar e corrigir problemas nos status dos CTEs:</small>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group w-100" role="group">
+                                <button type="button" class="btn btn-outline-warning btn-sm" onclick="executarAuditoria()">
+                                    <i class="fas fa-search"></i> Auditar Status
+                                </button>
+                                <button type="button" class="btn btn-outline-info btn-sm" onclick="corrigirTodosStatus()">
+                                    <i class="fas fa-sync"></i> Recalcular Status
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Ações -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <span id="totalRegistros" class="text-muted">0 registros encontrados</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <!-- Botão de Importação em Lote -->
+                        <a href="{{ url_for('ctes.importar_lote') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-upload"></i> Importação em Lote
+                        </a>
+                        
+                        <!-- Botões de Download -->
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-success btn-sm" onclick="downloadExcel()">
+                                <i class="fas fa-file-excel"></i> Excel
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="downloadPDF()">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </button>
+                            <button type="button" class="btn btn-outline-info btn-sm" onclick="downloadCSV()">
+                                <i class="fas fa-file-csv"></i> CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabela de Resultados -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="tabelaCTEs">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>CTE</th>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Emissão</th>
+                                <th>Status Baixa</th>
+                                <th>Status Processo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginação -->
+                <nav aria-label="Paginação" id="paginacao" style="display: none;">
+                    <ul class="pagination justify-content-center">
+                        <!-- Preenchido via JavaScript -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inserir CTE -->
+    <div class="tab-pane fade" id="inserir" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-plus"></i> Inserir Novo CTE</h5>
+                
+                <form id="formInserirCTE">
+                    <!-- Dados Principais -->
+                    <div class="form-section">
+                        <h6><i class="fas fa-file-alt"></i> Dados Principais</h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="numero_cte_novo" class="form-label">Número CTE *</label>
+                                    <input type="number" class="form-control" name="numero_cte" id="numero_cte_novo" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="destinatario_nome" class="form-label">Nome do Destinatário</label>
+                                    <input type="text" class="form-control" name="destinatario_nome" id="destinatario_nome">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="valor_total" class="form-label">Valor Total (R$) *</label>
+                                    <input type="number" class="form-control" name="valor_total" id="valor_total" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="data_emissao" class="form-label">Data de Emissão</label>
+                                    <input type="date" class="form-control" name="data_emissao" id="data_emissao">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="veiculo_placa" class="form-label">Placa do Veículo</label>
+                                    <input type="text" class="form-control" name="veiculo_placa" id="veiculo_placa">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="numero_fatura" class="form-label">Número da Fatura</label>
+                                    <input type="text" class="form-control" name="numero_fatura" id="numero_fatura">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datas do Processo -->
+                    <div class="form-section">
+                        <h6><i class="fas fa-calendar-alt"></i> Datas do Processo</h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="data_inclusao_fatura" class="form-label">Data Inclusão Fatura</label>
+                                    <input type="date" class="form-control" name="data_inclusao_fatura" id="data_inclusao_fatura">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="data_envio_processo" class="form-label">Data Envio Processo</label>
+                                    <input type="date" class="form-control" name="data_envio_processo" id="data_envio_processo">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="primeiro_envio" class="form-label">1º Envio</label>
+                                    <input type="date" class="form-control" name="primeiro_envio" id="primeiro_envio">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="data_rq_tmc" class="form-label">Data RQ/TMC</label>
+                                    <input type="date" class="form-control" name="data_rq_tmc" id="data_rq_tmc">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="data_atesto" class="form-label">Data do Atesto</label>
+                                    <input type="date" class="form-control" name="data_atesto" id="data_atesto">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="envio_final" class="form-label">Envio Final</label>
+                                    <input type="date" class="form-control" name="envio_final" id="envio_final">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="form-section">
+                        <h6><i class="fas fa-comment"></i> Observações</h6>
+                        <div class="mb-3">
+                            <label for="observacao_novo" class="form-label">Observações</label>
+                            <textarea class="form-control" name="observacao" id="observacao_novo" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Inserir CTE
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buscar e Editar -->
+    <div class="tab-pane fade" id="buscar" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-search"></i> Buscar e Editar CTE</h5>
+                
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <input type="number" class="form-control" id="numero_cte_busca" placeholder="Digite o número do CTE">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100" onclick="buscarCTEParaEdicao()">
+                            <i class="fas fa-search"></i> Buscar CTE
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="areaEdicao" style="display: none;">
+                    <hr>
+                    <h6>Editando CTE <span id="numeroCteEdicao" class="badge bg-primary"></span></h6>
+                    
+                    <form id="formEditarCTE">
+                        <!-- Dados Principais -->
+                        <div class="form-section">
+                            <h6><i class="fas fa-file-alt"></i> Dados Principais</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="destinatario_nome_edit" class="form-label">Nome do Destinatário</label>
+                                        <input type="text" class="form-control" name="destinatario_nome" id="destinatario_nome_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="valor_total_edit" class="form-label">Valor Total (R$)</label>
+                                        <input type="number" class="form-control" name="valor_total" id="valor_total_edit" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="data_emissao_edit" class="form-label">Data de Emissão</label>
+                                        <input type="date" class="form-control" name="data_emissao" id="data_emissao_edit">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="veiculo_placa_edit" class="form-label">Placa do Veículo</label>
+                                        <input type="text" class="form-control" name="veiculo_placa" id="veiculo_placa_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="numero_fatura_edit" class="form-label">Número da Fatura</label>
+                                        <input type="text" class="form-control" name="numero_fatura" id="numero_fatura_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="data_baixa_edit" class="form-label">Data de Baixa</label>
+                                        <input type="date" class="form-control" name="data_baixa" id="data_baixa_edit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Datas do Processo -->
+                        <div class="form-section">
+                            <h6><i class="fas fa-calendar-alt"></i> Datas do Processo</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="data_inclusao_fatura_edit" class="form-label">Data Inclusão Fatura</label>
+                                        <input type="date" class="form-control" name="data_inclusao_fatura" id="data_inclusao_fatura_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="data_envio_processo_edit" class="form-label">Data Envio Processo</label>
+                                        <input type="date" class="form-control" name="data_envio_processo" id="data_envio_processo_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="primeiro_envio_edit" class="form-label">1º Envio</label>
+                                        <input type="date" class="form-control" name="primeiro_envio" id="primeiro_envio_edit">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="data_rq_tmc_edit" class="form-label">Data RQ/TMC</label>
+                                        <input type="date" class="form-control" name="data_rq_tmc" id="data_rq_tmc_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="data_atesto_edit" class="form-label">Data do Atesto</label>
+                                        <input type="date" class="form-control" name="data_atesto" id="data_atesto_edit">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="envio_final_edit" class="form-label">Envio Final</label>
+                                        <input type="date" class="form-control" name="envio_final" id="envio_final_edit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Observações -->
+                        <div class="form-section">
+                            <h6><i class="fas fa-comment"></i> Observações</h6>
+                            <div class="mb-3">
+                                <label for="observacao_edit" class="form-label">Observações</label>
+                                <textarea class="form-control" name="observacao" id="observacao_edit" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Salvar Alterações
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelarEdicao()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ctes.js') }}"></script>
+{% endblock %}
+
+<!-- ============================================================================ -->
+<!-- ADICIONAR ESTA SEÇÃO AO ARQUIVO app/templates/ctes/index.html -->
+<!-- Inserir entre as abas existentes ou como uma nova aba -->
+<!-- ============================================================================ -->
+
+<!-- Nova aba para Importação (adicionar no nav-tabs existente) -->
+<li class="nav-item" role="presentation">
+    <button class="nav-link" id="importar-tab" data-bs-toggle="tab" data-bs-target="#importar" type="button">
+        <i class="fas fa-upload"></i> Importar CTEs
+    </button>
+</li>
+
+<!-- Conteúdo da aba de Importação (adicionar no tab-content existente) -->
+<div class="tab-pane fade" id="importar" role="tabpanel">
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="row">
+                <!-- Seção Principal de Importação -->
+                <div class="col-md-8">
+                    <div class="import-section mb-4">
+                        <h5 class="card-title">
+                            <i class="fas fa-upload text-success"></i> Sistema de Importação de CTEs
+                        </h5>
+                        <p class="text-muted">Importação em lote com detecção automática de duplicatas</p>
+                        
+                        <!-- Formato do CSV -->
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle"></i> Formato do CSV:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="mb-0 small">
+                                        <li><strong>numero_cte</strong>: Número do CTE (obrigatório)</li>
+                                        <li><strong>destinatario_nome</strong>: Nome do cliente (obrigatório)</li>
+                                        <li><strong>valor_total</strong>: Valor em R$ (obrigatório)</li>
+                                        <li><strong>data_emissao</strong>: Data DD/MM/AAAA (opcional)</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="mb-0 small">
+                                        <li><strong>veiculo_placa</strong>: Placa do veículo (opcional)</li>
+                                        <li><strong>numero_fatura</strong>: Número da fatura (opcional)</li>
+                                        <li><strong>data_baixa</strong>: Data da baixa (opcional)</li>
+                                        <li><strong>observacao</strong>: Observações (opcional)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Área de Upload -->
+                        <div class="upload-area border rounded p-4 text-center mb-3" 
+                             style="border-style: dashed !important; border-color: #28a745 !important; background: #f8fff9;"
+                             id="dropAreaLote">
+                            <div class="mb-3">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-success"></i>
+                            </div>
+                            <h6>Clique ou arraste o arquivo CSV aqui</h6>
+                            <p class="text-muted mb-3">
+                                Máximo 50MB • Apenas arquivos .CSV<br>
+                                <small>Sistema detecta automaticamente CTEs existentes</small>
+                            </p>
+                            
+                            <div class="d-flex justify-content-center gap-2">
+                                <button class="btn btn-success" onclick="document.getElementById('fileInputLote').click()">
+                                    <i class="fas fa-folder-open"></i> Selecionar Arquivo
+                                </button>
+                                <button class="btn btn-outline-info" onclick="baixarTemplateCTE()">
+                                    <i class="fas fa-download"></i> Template CSV
+                                </button>
+                                <a href="/ctes/importar" class="btn btn-outline-primary">
+                                    <i class="fas fa-external-link-alt"></i> Página Completa
+                                </a>
+                            </div>
+                            
+                            <input type="file" id="fileInputLote" accept=".csv" style="display: none;">
+                        </div>
+                        
+                        <!-- Prévia do Arquivo -->
+                        <div id="previaArquivo" style="display: none;"></div>
+                        
+                        <!-- Botão de Processamento -->
+                        <div class="text-center mb-3">
+                            <button class="btn btn-primary btn-lg" onclick="processarArquivoLote()" id="btnProcessarLote">
+                                <i class="fas fa-cogs"></i> Processar Importação
+                            </button>
+                        </div>
+                        
+                        <!-- Resultados da Importação -->
+                        <div id="resultadosLote" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar com Instruções e Estatísticas -->
+                <div class="col-md-4">
+                    <!-- Estatísticas Rápidas -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Estatísticas do Sistema</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <h4 class="text-primary mb-0" id="totalCTEs">-</h4>
+                                        <small class="text-muted">CTEs Total</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="text-success mb-0" id="importacoesRecentes">-</h4>
+                                    <small class="text-muted">Importações (30d)</small>
+                                </div>
+                            </div>
+                            <hr class="my-2">
+                            <div class="text-center">
+                                <strong class="text-info" id="valorTotal">R$ -</strong><br>
+                                <small class="text-muted">Valor Total</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Como Importar -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="fas fa-question-circle"></i> Como Importar</h6>
+                        </div>
+                        <div class="card-body">
+                            <ol class="small mb-3">
+                                <li>Baixe o template CSV</li>
+                                <li>Preencha com seus dados</li>
+                                <li>Mantenha as colunas obrigatórias</li>
+                                <li>Use formato DD/MM/AAAA para datas</li>
+                                <li>Valores monetários sem R$ ou pontos</li>
+                                <li>Arraste o arquivo ou clique para selecionar</li>
+                                <li>Aguarde o processamento</li>
+                            </ol>
+                            
+                            <div class="alert alert-warning alert-sm p-2">
+                                <small>
+                                    <strong>Atenção:</strong> CTEs com números duplicados serão ignorados automaticamente.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Validações Automáticas -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0"><i class="fas fa-shield-alt"></i> Validações Automáticas</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="small mb-0">
+                                <li>✓ Detecção de CTEs duplicados</li>
+                                <li>✓ Validação de valores monetários</li>
+                                <li>✓ Verificação de datas</li>
+                                <li>✓ Limpeza de dados automática</li>
+                                <li>✓ Relatório detalhado de erros</li>
+                                <li>✓ Backup automático</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Ações Rápidas -->
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0"><i class="fas fa-bolt"></i> Ações Rápidas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-info btn-sm" onclick="baixarTemplateCTE()">
+                                    <i class="fas fa-download"></i> Template CSV
+                                </button>
+                                <a href="/ctes/historico-importacoes" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-history"></i> Histórico
+                                </a>
+                                <button class="btn btn-outline-warning btn-sm" onclick="carregarEstatisticasImportacao()">
+                                    <i class="fas fa-sync"></i> Atualizar Stats
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================================ -->
+<!-- ESTILOS CSS ADICIONAIS (adicionar no bloco extra_css) -->
+<!-- ============================================================================ -->
+
+<style>
+.import-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    border-left: 5px solid #28a745;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.upload-area {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #20c997 !important;
+    background: #e8fff9 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+
+.upload-area.dragover {
+    border-color: #20c997 !important;
+    background: #e8fff9 !important;
+    transform: scale(1.02);
+}
+
+.stats-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-left: 4px solid #007bff;
+}
+
+.alert-sm {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Animação para loading */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Cards responsivos */
+@media (max-width: 768px) {
+    .import-section {
+        padding: 1rem;
+    }
+    
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+    
+    .upload-area i {
+        font-size: 2rem !important;
+    }
+}
+
+/* CONTRASTE MÁXIMO PARA ABAS CTEs */
+.nav-tabs .nav-link {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    font-weight: 800 !important;
+    border: 2px solid #dee2e6 !important;
+    font-size: 1rem !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: #ffffff !important;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    font-weight: 800 !important;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    color: #000000 !important;
+    background-color: #f8f9fa !important;
+    border-color: #007bff !important;
+}
+
+/* Força adicional para textos */
+#listar-tab, #inserir-tab, #buscar-tab {
+    color: #000000 !important;
+}
+
+#listar-tab.active, #inserir-tab.active, #buscar-tab.active {
+    color: #ffffff !important;
+}
+</style>
+
+<!-- ============================================================================ -->
+<!-- SCRIPT PARA INICIALIZAÇÃO (adicionar no final do bloco extra_js) -->
+<!-- ============================================================================ -->
+
+<script>
+// Inicializar estatísticas quando a aba de importação for ativada
+$('#importar-tab').on('shown.bs.tab', function() {
+    carregarEstatisticasImportacao();
+});
+
+// Configurar eventos de drag and drop
+$(document).ready(function() {
+    // Prevenir comportamento padrão do navegador para drag and drop
+    $(document).on('dragover drop', function(e) {
+        e.preventDefault();
+    });
+    
+    // Carregar estatísticas iniciais
+    if (typeof carregarEstatisticasImportacao === 'function') {
+        carregarEstatisticasImportacao();
+    }
+});
+</script>
+
+<!-- No template principal dos CTEs, adicionar botão -->
+<div class="d-flex gap-2 mb-3">
+    <a href="{{ url_for('ctes.importar_lote') }}" class="btn btn-success">
+        <i class="fas fa-upload"></i> Importar Lote
+    </a>
+    <button class="btn btn-outline-info" onclick="baixarTemplateCTE()">
+        <i class="fas fa-download"></i> Template CSV
+    </button>
+</div>

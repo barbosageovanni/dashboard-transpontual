@@ -1,0 +1,469 @@
+// ============================================================================
+// SISTEMA DE CTEs - JAVASCRIPT CORRIGIDO COMPLETO
+// Arquivo: app/static/js/ctes.js
+// Correção do erro: "Unexpected token '<', "<!doctype "... is not valid JSON"
+// ============================================================================
+
+$(document).ready(function() {
+    console.log('🚀 Inicializando sistema de CTEs...');
+    configurarEventosCTEs();
+    configurarInterceptadorErros(); // ← CORREÇÃO CRÍTICA
+    carregarListaCTEs();
+});
+
+// Variáveis globais para filtros
+let filtrosAtuais = {};
+let paginaAtual = 1;
+
+// ============================================================================
+// 🚨 CORREÇÃO PRINCIPAL: INTERCEPTADOR GLOBAL DE ERROS AJAX
+// ============================================================================
+
+function configurarInterceptadorErros() {
+    $(document).ajaxError(function(event, xhr, settings, thrownError) {
+        console.error('🚨 ERRO AJAX INTERCEPTADO:', {
+            url: settings.url,
+            status: xhr.status,
+            statusText: xhr.statusText,
+            responseType: typeof xhr.responseText,
+            responseStart: xhr.responseText ? xhr.responseText.substring(0, 100) : 'Vazio',
+            error: thrownError,
+            timestamp: new Date().toISOString()
+        });
+        
+        // ✅ DETECTAR SE RECEBEU HTML EM VEZ DE JSON
+        if (xhr.responseText && 
+            (xhr.responseText.includes('<!DOCTYPE') || 
+             xhr.responseText.includes('<html>') ||
+             xhr.responseText.includes('<!doctype') ||
+             xhr.responseText.trim().startsWith('<'))) {
+            
+            console.error('❌ PROBLEMA IDENTIFICADO: Servidor retornou HTML em vez de JSON');
+            console.error('Primeira linha da resposta:', xhr.responseText.split('\n')[0]);
+            
+            // Verificar se é problema de autenticação
+            if (xhr.status === 401 || 
+                xhr.status === 403 ||
+                xhr.responseText.toLowerCase().includes('login') ||
+                xhr.responseText.toLowerCase().includes('auth') ||
+                xhr.responseText.toLowerCase().includes('faça login')) {
+                
+                console.error('🔒 Problema de autenticação detectado');
+                alert('⚠️ Sua sessão expirou. Você será redirecionado para o login.');
+                setTimeout(() => {
+                    window.location.href = '/auth/login';
+                }, 1000);
+                return;
+            }
+            
+            // Verificar se é erro 404/500
+            if (xhr.status === 404) {
+                console.error('🔍 Rota não encontrada:', settings.url);
+                alert(`❌ Erro 404: A funcionalidade "${settings.url}" não foi encontrada. Verifique se o sistema está atualizado.`);
+                return;
+            }
+            
+            if (xhr.status >= 500) {
+                console.error('🔥 Erro interno do servidor');
+                alert('❌ Erro interno do servidor. Tente novamente em alguns instantes.');
+                return;
+            }
+            
+            // Outros erros HTML
+            alert('❌ Erro de comunicação com o servidor. A página será recarregada.');
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+    });
+}
+
+// ============================================================================
+// CONFIGURAÇÃO DE EVENTOS
+// ============================================================================
+
+function configurarEventosCTEs() {
+    // Form de inserção
+    $('#formInserirCTE').on('submit', function(e) {
+        e.preventDefault();
+        inserirCTE();
+    });
+
+    // Form de edição
+    $('#formEditarCTE').on('submit', function(e) {
+        e.preventDefault();
+        salvarEdicaoCTE();
+    });
+
+    // Filtros
+    $('#filtroTexto').on('keypress', function(e) {
+        if (e.which === 13) aplicarFiltros();
+    });
+
+    $('#filtroStatusBaixa, #filtroStatusProcesso').on('change', aplicarFiltros);
+    $('#dataInicio, #dataFim').on('change', aplicarFiltros);
+}
+
+// ============================================================================
+// 🔧 FUNÇÃO PRINCIPAL DE CARREGAMENTO - VERSÃO CORRIGIDA
+// ============================================================================
+
+function carregarListaCTEs() {
+    console.log('🔄 Carregando lista de CTEs com filtros:', filtrosAtuais);
+    
+    $.ajax({
+        url: '/ctes/api/listar',
+        method: 'GET',
+        timeout: 15000, // 15 segundos timeout
+        dataType: 'json', // ← FORÇA INTERPRETAÇÃO COMO JSON
+        data: filtrosAtuais,
+        beforeSend: function(xhr) {
+            console.log('📤 Enviando requisição para listar CTEs...');
+            $('#listaCTEs').html(`
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Carregando CTEs...</p>
+                </div>
+            `);
+        },
+        success: function(response, textStatus, xhr) {
+            console.log('✅ Resposta recebida com sucesso:', {
+                type: typeof response,
+                success: response.success,
+                totalCtes: response.ctes ? response.ctes.length : 'N/A',
+                status: xhr.status
+            });
+            
+            // ✅ VALIDAÇÃO RIGOROSA DA RESPOSTA
+            if (typeof response === 'string') {
+                console.error('❌ ERRO: Resposta é string, não objeto:', response.substring(0, 200));
+                throw new Error('Servidor retornou string em vez de JSON');
+            }
+            
+            if (!response.hasOwnProperty('success')) {
+                console.error('❌ ERRO: Resposta não possui campo "success":', response);
+                throw new Error('Formato de resposta inválido');
+            }
+            
+            if (!response.success) {
+                console.error('❌ API retornou erro:', response.error);
+                throw new Error(response.error || 'API retornou success: false');
+            }
+            
+            if (!Array.isArray(response.ctes)) {
+                console.error('❌ ERRO: Campo "ctes" não é array:', response.ctes);
+                throw new Error('Lista de CTEs inválida');
+            }
+            
+            // Tudo OK - exibir dados
+            exibirListaCTEs(response.ctes, response.total || response.ctes.length);
+            atualizarEstatisticas(response);
+            
+        },
+        error: function(xhr, status, error) {
+            console.error('❌ ERRO DETALHADO na requisição de listagem:');
+            console.error('XHR Status:', xhr.status);
+            console.error('XHR Status Text:', xhr.statusText);
+            console.error('AJAX Status:', status);
+            console.error('Error Message:', error);
+            console.error('Response Text (100 chars):', xhr.responseText ? xhr.responseText.substring(0, 100) : 'Vazio');
+            console.error('Content-Type:', xhr.getResponseHeader('Content-Type'));
+            
+            let mensagemErro = 'Erro desconhecido';
+            let detalhes = '';
+            
+            // Identificar tipo específico de erro
+            if (status === 'timeout') {
+                mensagemErro = 'Tempo limite excedido';
+                detalhes = 'O servidor demorou muito para responder';
+            } else if (status === 'parsererror') {
+                mensagemErro = 'Erro ao interpretar resposta do servidor';
+                detalhes = 'Servidor pode ter retornado HTML em vez de JSON';
+            } else if (xhr.status === 0) {
+                mensagemErro = 'Sem conexão com servidor';
+                detalhes = 'Verifique sua conexão de internet';
+            } else if (xhr.status === 404) {
+                mensagemErro = 'Funcionalidade não encontrada';
+                detalhes = 'A rota /ctes/api/listar não existe';
+            } else if (xhr.status >= 500) {
+                mensagemErro = 'Erro interno do servidor';
+                detalhes = `Código ${xhr.status}`;
+            } else {
+                mensagemErro = error;
+                detalhes = `Status: ${xhr.status}`;
+            }
+            
+            // Exibir erro na interface
+            $('#listaCTEs').html(`
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-exclamation-triangle"></i> ${mensagemErro}</h5>
+                    <p class="mb-2">${detalhes}</p>
+                    <div class="mt-3">
+                        <button class="btn btn-outline-danger btn-sm" onclick="carregarListaCTEs()">
+                            <i class="fas fa-redo"></i> Tentar Novamente
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
+                            <i class="fas fa-refresh"></i> Recarregar Página
+                        </button>
+                    </div>
+                    <details class="mt-2">
+                        <summary>Detalhes técnicos</summary>
+                        <pre style="font-size: 0.8em; margin-top: 10px;">${JSON.stringify({
+                            status: xhr.status,
+                            statusText: xhr.statusText,
+                            ajaxStatus: status,
+                            error: error,
+                            url: '/ctes/api/listar'
+                        }, null, 2)}</pre>
+                    </details>
+                </div>
+            `);
+        }
+    });
+}
+
+// ============================================================================
+// 🔧 INSERÇÃO DE CTE - VERSÃO CORRIGIDA
+// ============================================================================
+
+function inserirCTE() {
+    const formData = obterDadosFormulario('#formInserirCTE');
+    
+    console.log('➕ Inserindo novo CTE:', formData);
+
+    // Validações básicas
+    if (!formData.numero_cte) {
+        alert('❌ Número do CTE é obrigatório');
+        return;
+    }
+
+    if (!formData.valor_total || parseFloat(formData.valor_total) <= 0) {
+        alert('❌ Valor total deve ser maior que zero');
+        return;
+    }
+
+    $.ajax({
+        url: '/ctes/api/inserir',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(formData),
+        timeout: 10000,
+        beforeSend: function() {
+            console.log('📤 Enviando dados para inserção...');
+        },
+        success: function(response) {
+            console.log('✅ CTE inserido com sucesso:', response);
+            
+            if (response.success) {
+                alert('✅ ' + response.message);
+                $('#formInserirCTE')[0].reset();
+                carregarListaCTEs(); // Recarregar lista
+            } else {
+                alert('❌ ' + (response.message || response.error || 'Erro desconhecido'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('❌ Erro ao inserir CTE:', {xhr, status, error});
+            
+            let mensagem = 'Erro ao inserir CTE';
+            
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                mensagem = xhr.responseJSON.error;
+            } else if (error) {
+                mensagem = error;
+            }
+            
+            alert('❌ ' + mensagem);
+        }
+    });
+}
+
+// ============================================================================
+// 🔧 BUSCA DE CTE PARA EDIÇÃO - VERSÃO CORRIGIDA
+// ============================================================================
+
+function buscarCTEParaEdicao() {
+    const numeroCte = $('#numero_cte_busca').val().trim();
+    
+    if (!numeroCte) {
+        alert('❌ Digite o número do CTE');
+        return;
+    }
+
+    console.log('🔍 Buscando CTE para edição:', numeroCte);
+
+    $.ajax({
+        url: `/ctes/api/buscar/${numeroCte}`,
+        method: 'GET',
+        dataType: 'json',
+        timeout: 10000,
+        beforeSend: function() {
+            console.log('📤 Buscando CTE...');
+            $('#areaEdicao').hide();
+        },
+        success: function(response) {
+            console.log('✅ CTE encontrado:', response);
+            
+            if (response.success && response.cte) {
+                preencherFormularioEdicao(response.cte);
+                $('#areaEdicao').show();
+                $('#numeroCteEdicao').text(numeroCte);
+            } else {
+                alert('❌ ' + (response.message || response.error || 'CTE não encontrado'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('❌ Erro ao buscar CTE:', {xhr, status, error});
+            
+            let mensagem = 'CTE não encontrado';
+            
+            if (xhr.status === 404) {
+                mensagem = `CTE ${numeroCte} não existe`;
+            } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            } else if (error) {
+                mensagem = error;
+            }
+            
+            alert('❌ ' + mensagem);
+        }
+    });
+}
+
+// ============================================================================
+// FUNÇÕES AUXILIARES
+// ============================================================================
+
+function obterDadosFormulario(seletor) {
+    const form = $(seletor);
+    const formData = {};
+    
+    form.find('input, select, textarea').each(function() {
+        const $el = $(this);
+        const name = $el.attr('name');
+        const type = $el.attr('type');
+        
+        if (name) {
+            if (type === 'checkbox') {
+                formData[name] = $el.is(':checked');
+            } else if (type === 'number') {
+                const val = $el.val();
+                formData[name] = val ? parseFloat(val) : null;
+            } else {
+                formData[name] = $el.val() || null;
+            }
+        }
+    });
+    
+    return formData;
+}
+
+function exibirListaCTEs(ctes, total) {
+    console.log('📊 Exibindo', ctes.length, 'CTEs de um total de', total);
+    
+    if (!Array.isArray(ctes) || ctes.length === 0) {
+        $('#listaCTEs').html(`
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle"></i>
+                <p class="mb-0">Nenhum CTE encontrado com os filtros aplicados</p>
+            </div>
+        `);
+        return;
+    }
+    
+    let html = '<div class="table-responsive"><table class="table table-striped">';
+    html += '<thead><tr>';
+    html += '<th>CTE</th><th>Cliente</th><th>Veículo</th><th>Valor</th>';
+    html += '<th>Status</th><th>Ações</th>';
+    html += '</tr></thead><tbody>';
+    
+    ctes.forEach(cte => {
+        html += `<tr>`;
+        html += `<td>${cte.numero_cte}</td>`;
+        html += `<td>${cte.destinatario_nome || '-'}</td>`;
+        html += `<td>${cte.veiculo_placa || '-'}</td>`;
+        html += `<td>R$ ${(cte.valor_total || 0).toFixed(2)}</td>`;
+        html += `<td><span class="badge bg-${cte.has_baixa ? 'success' : 'warning'}">${cte.has_baixa ? 'Pago' : 'Pendente'}</span></td>`;
+        html += `<td>
+            <button class="btn btn-sm btn-outline-primary" onclick="editarCTE(${cte.numero_cte})">
+                <i class="fas fa-edit"></i>
+            </button>
+        </td>`;
+        html += `</tr>`;
+    });
+    
+    html += '</tbody></table></div>';
+    $('#listaCTEs').html(html);
+}
+
+// ============================================================================
+// FUNÇÕES DE TESTE E DEBUG
+// ============================================================================
+
+function testarConexaoAPI() {
+    console.log('🧪 Testando conexão com APIs...');
+    
+    // Teste 1: Rota de debug
+    $.ajax({
+        url: '/dashboard/api/debug',
+        method: 'GET',
+        timeout: 5000,
+        success: function(response) {
+            console.log('✅ API de debug funcionando:', response);
+        },
+        error: function(xhr) {
+            console.error('❌ API de debug falhou:', xhr.status, xhr.responseText);
+        }
+    });
+    
+    // Teste 2: Rota de CTEs
+    $.ajax({
+        url: '/ctes/api/listar?limit=1',
+        method: 'GET',
+        timeout: 5000,
+        success: function(response) {
+            console.log('✅ API de CTEs funcionando:', typeof response, response.success);
+        },
+        error: function(xhr) {
+            console.error('❌ API de CTEs falhou:', xhr.status, xhr.responseText);
+        }
+    });
+}
+
+// Função para executar no console do navegador
+function debugSistema() {
+    console.log('🔧 INICIANDO DEBUG DO SISTEMA');
+    console.log('==========================================');
+    
+    testarConexaoAPI();
+    
+    setTimeout(() => {
+        console.log('🔍 Estado atual das variáveis:');
+        console.log('Filtros atuais:', filtrosAtuais);
+        console.log('Página atual:', paginaAtual);
+        console.log('jQuery carregado:', typeof $ !== 'undefined');
+        
+        console.log('🌐 Informações da página:');
+        console.log('URL atual:', window.location.href);
+        console.log('User-agent:', navigator.userAgent);
+        
+        console.log('==========================================');
+        console.log('✅ DEBUG CONCLUÍDO - Verifique os logs acima');
+    }, 2000);
+}
+
+// ============================================================================
+// EXPOR FUNÇÃO DE DEBUG GLOBALMENTE
+// ============================================================================
+window.debugSistema = debugSistema;
+
+// ============================================================================
+// LOG DE INICIALIZAÇÃO
+// ============================================================================
+console.log('✅ Script ctes.js carregado com sucesso - Versão corrigida 2.0');
+console.log('🧪 Para debug completo, execute: debugSistema()');
