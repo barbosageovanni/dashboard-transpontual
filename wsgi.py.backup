@@ -1,0 +1,156 @@
+@'
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+WSGI - Dashboard Baker CORRIGIDO PARA WINDOWS
+"""
+
+import os
+import sys
+import threading
+from app import create_app, db
+from sqlalchemy import text
+
+def get_safe_port():
+    try:
+        port_str = os.environ.get('PORT', '5000')
+        port_clean = ''.join(c for c in str(port_str) if c.isdigit())
+        if port_clean and port_clean.isdigit():
+            port_num = int(port_clean)
+            if 1000 <= port_num <= 65535:
+                return port_num
+        return 5000
+    except:
+        return 5000
+
+PORT = get_safe_port()
+print(f"🌐 Porta definida: {PORT}")
+
+os.environ.setdefault('FLASK_ENV', 'development')
+
+_init_lock = threading.Lock()
+_init_done = False
+
+def safe_initialize():
+    global _init_done
+    if _init_done:
+        return True
+        
+    with _init_lock:
+        if _init_done:
+            return True
+            
+        try:
+            print("🚀 Inicializando Dashboard Baker...")
+            db.create_all()
+            
+            from app.models.user import User
+            admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
+            
+            if admin_count == 0:
+                print("👤 Criando admin inicial...")
+                success, result = User.criar_admin_inicial()
+                if success:
+                    print("✅ Admin criado")
+                else:
+                    print(f"⚠️ Aviso: {result}")
+            else:
+                print(f"✅ {admin_count} admin(s) encontrado(s)")
+            
+            _init_done = True
+            print("✅ Inicialização OK")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Erro: {e}")
+            return False
+
+application = create_app()
+
+@application.before_request
+def ensure_app_initialized():
+    if not _init_done:
+        try:
+            with application.app_context():
+                safe_initialize()
+        except Exception as e:
+            print(f"Erro: {e}")
+
+@application.route('/health')
+def health_check():
+    try:
+        with application.app_context():
+            db.session.execute(text('SELECT 1'))
+            db.session.commit()
+        return {'status': 'healthy', 'service': 'dashboard-baker', 'port': PORT}, 200
+    except Exception as e:
+        return {'status': 'unhealthy', 'error': str(e), 'port': PORT}, 500
+
+@application.route('/ping')
+def ping():
+    from datetime import datetime
+    return {'status': 'pong', 'timestamp': datetime.now().isoformat(), 'port': PORT}, 200
+
+@application.route('/info')
+def system_info():
+    try:
+        with application.app_context():
+            from app.models.cte import CTE
+            from app.models.user import User
+            return {
+                'service': 'Dashboard Baker',
+                'version': '3.0',
+                'port': PORT,
+                'stats': {
+                    'ctes': CTE.query.count(),
+                    'users': User.query.count(),
+                    'admins': User.query.filter_by(tipo_usuario='admin', ativo=True).count()
+                }
+            }, 200
+    except Exception as e:
+        return {'service': 'Dashboard Baker', 'status': 'error', 'error': str(e)}, 500
+
+if __name__ == "__main__":
+    print("🎯" + "="*50 + "🎯")
+    print("🚀 DASHBOARD BAKER - WINDOWS")
+    print("🎯" + "="*50 + "🎯")
+    
+    print(f"🌐 Porta: {PORT}")
+    print(f"🔧 PORT env: {os.environ.get('PORT', 'NÃO DEFINIDO')}")
+    print(f"💻 Sistema: Windows")
+    
+    try:
+        import pandas
+        print("✅ Pandas disponível")
+    except ImportError:
+        print("⚠️ Pandas não disponível")
+    
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    
+    if debug_mode:
+        try:
+            with application.app_context():
+                safe_initialize()
+        except Exception as e:
+            print(f"⚠️ Erro: {e}")
+    
+    print(f"\n🌐 Servidor: http://localhost:{PORT}")
+    print("👤 Login: admin / admin123")
+    print("🎯" + "="*50 + "🎯")
+    
+    try:
+        application.run(host='0.0.0.0', port=PORT, debug=debug_mode, use_reloader=False, threaded=True)
+    except OSError as e:
+        if "Only one usage of each socket address" in str(e):
+            print(f"\n❌ Porta {PORT} em uso!")
+            print("💡 Use: $env:PORT='5001'; python wsgi.py")
+        else:
+            print(f"❌ Erro: {e}")
+        input("Pressione Enter...")
+        sys.exit(1)
+    except KeyboardInterrupt:
+        print("\n👋 Servidor parado")
+        sys.exit(0)
+'@ | Out-File -FilePath "wsgi.py" -Encoding UTF8
+
+Write-Host "✅ wsgi.py corrigido criado!" -ForegroundColor Green

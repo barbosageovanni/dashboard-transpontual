@@ -1,212 +1,41 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-WSGI Entry Point - Dashboard Baker Flask CORRIGIDO
-Arquivo principal para deploy em produção
-SOLUÇÃO: before_first_request substituído por inicialização adequada
-"""
-
 import os
 import sys
-import threading
 from app import create_app, db
 from sqlalchemy import text
 
-# Configurar environment para produção
-os.environ.setdefault('FLASK_ENV', 'production')
+def get_port():
+    try:
+        p = os.environ.get('PORT', '5000')
+        return int(''.join(c for c in str(p) if c.isdigit())) if p else 5000
+    except:
+        return 5000
 
-# Flag para controlar inicialização única
-_initialized = threading.Lock()
-_init_done = False
+PORT = get_port()
+print('Porta:', PORT)
 
-def initialize_app_once():
-    """Inicialização única da aplicação"""
-    global _init_done
-    
-    if _init_done:
-        return
-        
-    with _initialized:
-        if _init_done:  # Double-check locking
-            return
-            
-        try:
-            print("🚀 Inicializando Dashboard Baker...")
-            
-            # Criar tabelas se não existirem
-            db.create_all()
-            
-            # Criar admin inicial se não existir
-            from app.models.user import User
-            admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
-            
-            if admin_count == 0:
-                print("👤 Criando usuário admin inicial...")
-                sucesso, resultado = User.criar_admin_inicial()
-                
-                if sucesso:
-                    print("✅ Admin inicial criado com sucesso")
-                else:
-                    print(f"❌ Erro ao criar admin: {resultado}")
-            else:
-                print(f"✅ {admin_count} admin(s) encontrado(s)")
-            
-            _init_done = True
-            print("✅ Dashboard Baker inicializado com sucesso")
-            
-        except Exception as e:
-            print(f"❌ Erro na inicialização: {str(e)}")
-
-# Criar aplicação
 application = create_app()
 
-# ===== MIDDLEWARE DE INICIALIZAÇÃO (Substitui before_first_request) =====
-
-@application.before_request
-def ensure_initialized():
-    """Garantir que a aplicação seja inicializada antes da primeira requisição"""
-    if not _init_done and os.environ.get('FLASK_ENV') == 'production':
-        try:
-            with application.app_context():
-                initialize_app_once()
-        except Exception as e:
-            print(f"Erro na inicialização via middleware: {e}")
-
-# ===== ENDPOINTS DE MONITORAMENTO =====
-
 @application.route('/health')
-def health_check():
-    """Endpoint de healthcheck para monitoramento"""
+def health():
     try:
-        # Testar conexão com banco
         with application.app_context():
             db.session.execute(text('SELECT 1'))
-            db.session.commit()
-            
-        return {
-            'status': 'healthy', 
-            'service': 'dashboard-baker', 
-            'version': '3.0',
-            'database': 'connected'
-        }, 200
-        
-    except Exception as e:
-        application.logger.error(f"Health check failed: {str(e)}")
-        return {
-            'status': 'unhealthy', 
-            'error': str(e),
-            'service': 'dashboard-baker'
-        }, 500
-
-@application.route('/ping')
-def ping():
-    """Endpoint simples de ping"""
-    from datetime import datetime
-    return {
-        'status': 'pong', 
-        'timestamp': datetime.now().isoformat(),
-        'service': 'dashboard-baker'
-    }, 200
+        return {'status': 'ok', 'port': PORT}
+    except:
+        return {'status': 'error', 'port': PORT}
 
 @application.route('/info')
 def info():
-    """Informações do sistema para debug"""
+    return {'service': 'Dashboard Baker', 'port': PORT, 'status': 'running'}
+
+if __name__ == '__main__':
+    print('Iniciando Dashboard Baker...')
+    print('Porta:', PORT)
+    print('Acesse: http://localhost:' + str(PORT))
     try:
-        with application.app_context():
-            # Importar modelos
-            from app.models.cte import CTE
-            from app.models.user import User
-            
-            # Contar registros
-            total_ctes = CTE.query.count()
-            total_users = User.query.count()
-            
-            # Verificar admin
-            admin_users = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
-            
-        return {
-            'service': 'Dashboard Baker',
-            'version': '3.0',
-            'status': 'operational',
-            'database': 'connected',
-            'environment': os.environ.get('FLASK_ENV', 'unknown'),
-            'stats': {
-                'total_ctes': total_ctes,
-                'total_users': total_users,
-                'admin_users': admin_users
-            },
-            'system': {
-                'python_version': sys.version,
-                'flask_env': os.environ.get('FLASK_ENV'),
-                'database_url_set': bool(os.environ.get('DATABASE_URL') or os.environ.get('SQLALCHEMY_DATABASE_URI'))
-            }
-        }, 200
-        
+        application.run(host='0.0.0.0', port=PORT, debug=True)
     except Exception as e:
-        application.logger.error(f"Info endpoint failed: {str(e)}")
-        return {
-            'service': 'Dashboard Baker',
-            'status': 'error',
-            'error': str(e)
-        }, 500
-
-@application.route('/ready')
-def readiness_check():
-    """Verifica se a aplicação está pronta para receber tráfego"""
-    try:
-        with application.app_context():
-            # Verificar se há pelo menos um usuário admin
-            from app.models.user import User
-            admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
-            
-            if admin_count == 0:
-                return {
-                    'status': 'not_ready',
-                    'reason': 'No admin user found'
-                }, 503
-            
-        return {
-            'status': 'ready',
-            'service': 'dashboard-baker',
-            'checks': {
-                'database': 'ok',
-                'tables': 'ok', 
-                'admin_user': 'ok'
-            }
-        }, 200
-        
-    except Exception as e:
-        application.logger.error(f"Readiness check failed: {str(e)}")
-        return {
-            'status': 'not_ready',
-            'error': str(e)
-        }, 503
-
-# ===== EXECUÇÃO LOCAL =====
-
-if __name__ == "__main__":
-    # Para desenvolvimento local apenas
-    port = int(os.environ.get('PORT', 5000))
-    debug = os.environ.get('FLASK_ENV') != 'production'
-    
-    print("🔍 Verificando dependências...")
-    try:
-        import pandas
-        print("✅ Pandas disponível - funcionalidades completas")
-    except ImportError:
-        print("⚠️ Pandas não disponível - funcionalidades limitadas")
-    
-    print(f"🚀 Iniciando Dashboard Baker na porta {port}")
-    print(f"📝 Debug: {'Ativado' if debug else 'Desativado'}")
-    print(f"🌍 Ambiente: {os.environ.get('FLASK_ENV', 'development')}")
-    
-    # Inicializar para desenvolvimento local
-    if debug:
-        with application.app_context():
-            initialize_app_once()
-    
-    application.run(
-        host='0.0.0.0', 
-        port=port, 
-        debug=debug
-    )
+        print('Erro:', e)
+        if 'Address already in use' in str(e):
+            print('Porta em uso! Tente: PORT=5001 python wsgi.py')
+        input('Pressione Enter...')
