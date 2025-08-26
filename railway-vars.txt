@@ -8,16 +8,17 @@ VARIÁVEIS QUE DEVEM SER CONFIGURADAS NO RAILWAY:
 
 SECRET_KEY=164832c3a000a7273d51bac4f710e8aa384efd8289549da4e367877d4a24901b
 FLASK_ENV=production
-DATABASE_URL=postgresql+psycopg2://postgres:Mariaana953%407334@db.lijtncazuwnbydeqtoyz.supabase.co:5432/postgres?sslmode=require
+DATABASE_URL=postgresql+psycopg2://postgres.lijtncazuwnbydeqtoyz:Mariaana953%407334@aws-0-sa-east-1.pooler.supabase.com:6543/postgres
+
 
 # Opção 1: URL completa
-DATABASE_URL=postgresql+psycopg2://postgres:Mariaana953@7334@db.lijtncazuwnbydeqtoyz.supabase.co:5432/postgres?sslmode=require&sslcert=&sslkey=&sslrootcert=
+DATABASE_URL=postgresql+psycopg2://postgres.lijtncazuwnbydeqtoyz:Mariaana953%407334@aws-0-sa-east-1.pooler.supabase.com:6543/postgres
 
 # Opção 2: Componentes separados
 SECRET_KEY=164832c3a000a7273d51bac4f710e8aa384efd8289549da4e367877d4a24901b
 FLASK_ENV=production  
 DB_HOST=db.lijtncazuwnbydeqtoyz.supabase.co
-DB_PORT=5432
+DB_PORT=6543
 DB_NAME=postgres
 DB_USER=postgres
 DB_PASSWORD=Mariaana953@7334
