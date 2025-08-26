@@ -691,6 +691,26 @@ function testarFiltros() {
     }
 }
 
+// Adicionar função de teste no ctes.js
+function testarConexaoAPI() {
+    console.log('🧪 Testando conectividade da API...');
+    
+    $.ajax({
+        url: '/ctes/api/test-basic',
+        method: 'GET',
+        success: function(response) {
+            console.log('✅ Teste básico:', response);
+            if (response.success) {
+                alert(`✅ Conectividade OK!\nTotal registros: ${response.total_registros}`);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('❌ Erro no teste básico:', error);
+            alert('❌ Erro de conectividade: ' + error);
+        }
+    });
+}
+
 // ===================================
 // FUNÇÕES AUXILIARES E UTILITÁRIOS
 // ===================================

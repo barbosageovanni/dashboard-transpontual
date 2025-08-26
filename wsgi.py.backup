@@ -1,8 +1,8 @@
-@'
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-WSGI - Dashboard Baker CORRIGIDO PARA WINDOWS
+WSGI - Dashboard Baker - PORTA FIXA
+SOLUÇÃO DEFINITIVA: Remove TODA dependência de variáveis $PORT
 """
 
 import os
@@ -11,28 +11,26 @@ import threading
 from app import create_app, db
 from sqlalchemy import text
 
-def get_safe_port():
-    try:
-        port_str = os.environ.get('PORT', '5000')
-        port_clean = ''.join(c for c in str(port_str) if c.isdigit())
-        if port_clean and port_clean.isdigit():
-            port_num = int(port_clean)
-            if 1000 <= port_num <= 65535:
-                return port_num
-        return 5000
-    except:
-        return 5000
+# ===== PORTA FIXA - SEM VARIÁVEIS DE AMBIENTE =====
+# Elimina COMPLETAMENTE o problema de $PORT
+PORTA_FIXA = 5000
 
-PORT = get_safe_port()
-print(f"🌐 Porta definida: {PORT}")
+print(f"🌐 Porta definida como FIXA: {PORTA_FIXA}")
 
+# Forçar definição de PORT para compatibilidade
+os.environ['PORT'] = str(PORTA_FIXA)
+
+# Configuração de ambiente
 os.environ.setdefault('FLASK_ENV', 'development')
 
+# Controle de inicialização thread-safe
 _init_lock = threading.Lock()
 _init_done = False
 
-def safe_initialize():
+def inicializar_app():
+    """Inicialização única e segura da aplicação"""
     global _init_done
+    
     if _init_done:
         return True
         
@@ -42,115 +40,233 @@ def safe_initialize():
             
         try:
             print("🚀 Inicializando Dashboard Baker...")
+            
+            # Criar tabelas
             db.create_all()
             
+            # Verificar/criar admin
             from app.models.user import User
             admin_count = User.query.filter_by(tipo_usuario='admin', ativo=True).count()
             
             if admin_count == 0:
-                print("👤 Criando admin inicial...")
-                success, result = User.criar_admin_inicial()
-                if success:
-                    print("✅ Admin criado")
+                print("👤 Criando usuário admin inicial...")
+                sucesso, resultado = User.criar_admin_inicial()
+                if sucesso:
+                    print("✅ Admin criado com sucesso")
                 else:
-                    print(f"⚠️ Aviso: {result}")
+                    print(f"⚠️ Problema ao criar admin: {resultado}")
             else:
                 print(f"✅ {admin_count} admin(s) encontrado(s)")
             
             _init_done = True
-            print("✅ Inicialização OK")
+            print("✅ Inicialização concluída")
             return True
             
         except Exception as e:
-            print(f"❌ Erro: {e}")
+            print(f"❌ Erro na inicialização: {e}")
             return False
 
+# Criar aplicação Flask
 application = create_app()
 
+# Middleware de inicialização
 @application.before_request
-def ensure_app_initialized():
+def garantir_inicializacao():
+    """Garantir que app seja inicializada antes de qualquer request"""
     if not _init_done:
         try:
             with application.app_context():
-                safe_initialize()
+                inicializar_app()
         except Exception as e:
-            print(f"Erro: {e}")
+            print(f"Erro no middleware: {e}")
 
+# ===== ENDPOINTS DE MONITORAMENTO =====
 @application.route('/health')
 def health_check():
+    """Health check simples"""
     try:
         with application.app_context():
             db.session.execute(text('SELECT 1'))
             db.session.commit()
-        return {'status': 'healthy', 'service': 'dashboard-baker', 'port': PORT}, 200
+            
+        return {
+            'status': 'healthy',
+            'service': 'dashboard-baker',
+            'version': '3.0',
+            'porta': PORTA_FIXA,
+            'database': 'connected'
+        }, 200
+        
     except Exception as e:
-        return {'status': 'unhealthy', 'error': str(e), 'port': PORT}, 500
+        return {
+            'status': 'unhealthy',
+            'error': str(e),
+            'porta': PORTA_FIXA
+        }, 500
 
 @application.route('/ping')
 def ping():
+    """Ping básico"""
     from datetime import datetime
-    return {'status': 'pong', 'timestamp': datetime.now().isoformat(), 'port': PORT}, 200
+    return {
+        'status': 'pong',
+        'timestamp': datetime.now().isoformat(),
+        'porta': PORTA_FIXA
+    }, 200
 
 @application.route('/info')
-def system_info():
+def info_sistema():
+    """Informações do sistema"""
     try:
         with application.app_context():
             from app.models.cte import CTE
             from app.models.user import User
+            
             return {
                 'service': 'Dashboard Baker',
                 'version': '3.0',
-                'port': PORT,
+                'status': 'operacional',
+                'porta': PORTA_FIXA,
+                'ambiente': os.environ.get('FLASK_ENV'),
                 'stats': {
                     'ctes': CTE.query.count(),
-                    'users': User.query.count(),
+                    'usuarios': User.query.count(),
                     'admins': User.query.filter_by(tipo_usuario='admin', ativo=True).count()
+                },
+                'config': {
+                    'porta_fixa': PORTA_FIXA,
+                    'python_version': sys.version.split()[0],
+                    'porta_env_forçada': os.environ.get('PORT')
                 }
             }, 200
+            
     except Exception as e:
-        return {'service': 'Dashboard Baker', 'status': 'error', 'error': str(e)}, 500
+        return {
+            'service': 'Dashboard Baker',
+            'status': 'error',
+            'error': str(e),
+            'porta': PORTA_FIXA
+        }, 500
 
+# ===== EXECUÇÃO PRINCIPAL =====
 if __name__ == "__main__":
-    print("🎯" + "="*50 + "🎯")
-    print("🚀 DASHBOARD BAKER - WINDOWS")
-    print("🎯" + "="*50 + "🎯")
     
-    print(f"🌐 Porta: {PORT}")
-    print(f"🔧 PORT env: {os.environ.get('PORT', 'NÃO DEFINIDO')}")
-    print(f"💻 Sistema: Windows")
+    print("🎯" + "="*60 + "🎯")
+    print("🚀 DASHBOARD BAKER - PORTA FIXA (SEM $PORT)")
+    print("🎯" + "="*60 + "🎯")
+    
+    print(f"🌐 Porta FIXA utilizada: {PORTA_FIXA}")
+    print(f"🔧 PORT forçado no ambiente: {os.environ.get('PORT')}")
+    print(f"🌍 Ambiente: {os.environ.get('FLASK_ENV')}")
+    print(f"🐍 Python: {sys.version.split()[0]}")
+    
+    # Verificar dependências básicas
+    print("\n🔍 Verificando dependências...")
+    deps_ok = True
+    
+    try:
+        import flask
+        print(f"   ✅ Flask {flask.__version__}")
+    except ImportError:
+        print("   ❌ Flask não encontrado")
+        deps_ok = False
     
     try:
         import pandas
-        print("✅ Pandas disponível")
+        print(f"   ✅ Pandas {pandas.__version__} - Funcionalidades completas")
     except ImportError:
-        print("⚠️ Pandas não disponível")
-    
-    debug_mode = os.environ.get('FLASK_ENV') != 'production'
-    
-    if debug_mode:
-        try:
-            with application.app_context():
-                safe_initialize()
-        except Exception as e:
-            print(f"⚠️ Erro: {e}")
-    
-    print(f"\n🌐 Servidor: http://localhost:{PORT}")
-    print("👤 Login: admin / admin123")
-    print("🎯" + "="*50 + "🎯")
+        print("   ⚠️ Pandas não disponível - Funcionalidades limitadas")
     
     try:
-        application.run(host='0.0.0.0', port=PORT, debug=debug_mode, use_reloader=False, threaded=True)
-    except OSError as e:
-        if "Only one usage of each socket address" in str(e):
-            print(f"\n❌ Porta {PORT} em uso!")
-            print("💡 Use: $env:PORT='5001'; python wsgi.py")
-        else:
-            print(f"❌ Erro: {e}")
-        input("Pressione Enter...")
+        from app import create_app
+        print("   ✅ Módulo app OK")
+    except ImportError as e:
+        print(f"   ❌ Erro no módulo app: {e}")
+        deps_ok = False
+    
+    if not deps_ok:
+        print("\n❌ Dependências críticas em falta!")
+        print("💡 Execute: pip install -r requirements.txt")
+        input("Pressione Enter para sair...")
         sys.exit(1)
+    
+    # Determinar modo debug
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    print(f"\n📝 Modo Debug: {'✅ ATIVADO' if debug_mode else '❌ DESATIVADO'}")
+    
+    # Inicializar para desenvolvimento
+    if debug_mode:
+        print("\n🔧 Executando inicialização de desenvolvimento...")
+        try:
+            with application.app_context():
+                sucesso = inicializar_app()
+                if sucesso:
+                    print("✅ Inicialização de desenvolvimento OK")
+                else:
+                    print("⚠️ Problemas na inicialização - continuando mesmo assim")
+        except Exception as e:
+            print(f"⚠️ Erro na inicialização de dev: {e}")
+    
+    # Mostrar informações de acesso
+    print(f"\n🌐 URLs de acesso:")
+    print(f"   • Aplicação principal: http://localhost:{PORTA_FIXA}")
+    print(f"   • Health check:        http://localhost:{PORTA_FIXA}/health")
+    print(f"   • Informações:         http://localhost:{PORTA_FIXA}/info")
+    print(f"   • Ping:                http://localhost:{PORTA_FIXA}/ping")
+    
+    print("\n👤 Credenciais padrão:")
+    print("   • Usuário: admin")
+    print("   • Senha:   admin123")
+    
+    print("\n🎯" + "="*60 + "🎯")
+    print("🚀 INICIANDO SERVIDOR COM PORTA FIXA...")
+    print("   Pressione Ctrl+C para parar o servidor")
+    print("🎯" + "="*60 + "🎯")
+    
+    # Iniciar servidor Flask
+    try:
+        application.run(
+            host='0.0.0.0',
+            port=PORTA_FIXA,  # Usa porta fixa, não variável
+            debug=debug_mode,
+            use_reloader=False,  # Evita problemas com reloader
+            threaded=True
+        )
+        
+    except OSError as e:
+        if "Address already in use" in str(e) or "Only one usage" in str(e):
+            print(f"\n❌ ERRO: Porta {PORTA_FIXA} já está sendo utilizada!")
+            print("\n💡 SOLUÇÕES RÁPIDAS:")
+            
+            # Tentar encontrar processo na porta
+            try:
+                import subprocess
+                result = subprocess.run(['netstat', '-ano', '-p', 'tcp'], 
+                                     capture_output=True, text=True)
+                lines = result.stdout.split('\n')
+                for line in lines:
+                    if f':{PORTA_FIXA}' in line and 'LISTENING' in line:
+                        print(f"   📍 Processo encontrado: {line.strip()}")
+                        break
+            except:
+                pass
+                
+            print(f"   1. Feche outros servidores Python")
+            print(f"   2. Edite este arquivo e mude PORTA_FIXA para 5001")
+            print(f"   3. Reinicie o computador se necessário")
+            
+        else:
+            print(f"\n❌ Erro ao iniciar servidor: {e}")
+            
+        input("Pressione Enter para sair...")
+        sys.exit(1)
+        
     except KeyboardInterrupt:
-        print("\n👋 Servidor parado")
+        print("\n\n👋 Servidor interrompido pelo usuário")
+        print("✅ Dashboard Baker finalizado corretamente")
         sys.exit(0)
-'@ | Out-File -FilePath "wsgi.py" -Encoding UTF8
-
-Write-Host "✅ wsgi.py corrigido criado!" -ForegroundColor Green
+        
+    except Exception as e:
+        print(f"\n❌ Erro inesperado: {e}")
+        input("Pressione Enter para sair...")
+        sys.exit(1)

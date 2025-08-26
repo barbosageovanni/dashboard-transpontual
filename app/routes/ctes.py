@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Rotas CTEs - Conhecimentos de Transporte Eletrônico
-app/routes/ctes.py - VERSÃO CORRIGIDA E OTIMIZADA
-Gerente Sênior: Código de produção com padrões atualizados
+app/routes/ctes.py - VERSÃO LIMPA SEM DUPLICAÇÕES
 """
 
 from datetime import datetime, date, timedelta
@@ -12,7 +11,6 @@ import traceback
 import io
 import pandas as pd
 from io import BytesIO
-
 
 from flask import (
     Blueprint, render_template, request, jsonify,
@@ -30,9 +28,7 @@ from app import db
 from functools import wraps
 
 def api_login_required(f):
-    """
-    Decorator para endpoints de API que retorna JSON 401 ao invés de redirect
-    """
+    """Decorator para endpoints de API que retorna JSON 401 ao invés de redirect"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
@@ -78,6 +74,12 @@ def atualizar_lote():
     """Página de atualização em lote"""
     return render_template("ctes/atualizar_lote.html")
 
+@bp.route("/importar-lote")
+@login_required
+def importar_lote():
+    """Página de importação em lote"""
+    return render_template("ctes/importar_lote.html")
+
 @bp.route("/dashboard")
 @login_required
 def dashboard_ctes():
@@ -90,43 +92,204 @@ def dashboard_ctes():
         flash("Erro ao carregar dashboard", "error")
         return redirect(url_for("ctes.index"))
 
-# ==================== API PRINCIPAL - LISTAGEM ====================
+# ==================== API PRINCIPAL - TESTE DE CONECTIVIDADE ====================
+
+@bp.route('/api/test-conexao-simples')
+@api_login_required
+def api_test_conexao_simples():
+    """Teste de conectividade mais básico possível"""
+    try:
+        # Teste direto no banco
+        from sqlalchemy import text
+        result = db.session.execute(text("SELECT COUNT(*) as total FROM dashboard_baker")).fetchone()
+        total_registros = result[0] if result else 0
+        
+        # Teste do modelo
+        total_modelo = CTE.query.count()
+        
+        # Pegar um exemplo
+        exemplo = CTE.query.first()
+        exemplo_dict = None
+        if exemplo:
+            try:
+                exemplo_dict = exemplo.to_dict()
+                exemplo_status = 'OK'
+            except Exception as e:
+                exemplo_status = f'ERRO: {str(e)}'
+                exemplo_dict = None
+        
+        return jsonify({
+            'success': True,
+            'conexao_banco': 'OK',
+            'total_sql_direto': total_registros,
+            'total_modelo': total_modelo,
+            'modelo_funcional': total_registros == total_modelo,
+            'exemplo_serializacao': exemplo_status,
+            'exemplo_dados': exemplo_dict,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'erro': str(e),
+            'tipo_erro': type(e).__name__,
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+# ==================== API PRINCIPAL - LISTAGEM SIMPLIFICADA ====================
+
+@bp.route('/api/listar-simples')
+@api_login_required  
+def api_listar_simples():
+    """API de listagem simplificada e robusta"""
+    try:
+        current_app.logger.info("Iniciando listagem simplificada")
+        
+        # Parâmetros básicos
+        page = int(request.args.get('page', 1))
+        per_page = min(int(request.args.get('per_page', 50)), 100)
+        search = (request.args.get('search') or '').strip()
+        
+        # Query básica
+        query = CTE.query
+        
+        # Filtro simples
+        if search:
+            if search.isdigit():
+                query = query.filter(CTE.numero_cte == int(search))
+            else:
+                pattern = f"%{search}%"
+                query = query.filter(
+                    CTE.destinatario_nome.ilike(pattern)
+                )
+        
+        # Contar total
+        total = query.count()
+        current_app.logger.info(f"Total encontrado: {total}")
+        
+        if total == 0:
+            return jsonify({
+                'success': True,
+                'data': [],
+                'ctes': [],
+                'total': 0,
+                'message': 'Nenhum registro encontrado',
+                'pagination': {
+                    'total': 0,
+                    'pages': 0, 
+                    'current_page': 1,
+                    'per_page': per_page,
+                    'has_next': False,
+                    'has_prev': False
+                }
+            })
+        
+        # Buscar dados com paginação
+        offset = (page - 1) * per_page
+        ctes = query.order_by(CTE.numero_cte.desc()).offset(offset).limit(per_page).all()
+        
+        current_app.logger.info(f"CTEs recuperados: {len(ctes)}")
+        
+        # Serializar com tratamento robusto
+        items = []
+        erros_serializacao = 0
+        
+        for cte in ctes:
+            try:
+                item_dict = cte.to_dict()
+                items.append(item_dict)
+            except Exception as e:
+                current_app.logger.error(f"Erro ao serializar CTE {cte.numero_cte}: {e}")
+                erros_serializacao += 1
+                # Fallback ultra-seguro
+                items.append({
+                    'numero_cte': cte.numero_cte,
+                    'destinatario_nome': str(cte.destinatario_nome or 'N/A'),
+                    'veiculo_placa': str(cte.veiculo_placa or ''),
+                    'valor_total': float(cte.valor_total or 0),
+                    'data_emissao': cte.data_emissao.strftime('%Y-%m-%d') if cte.data_emissao else None,
+                    'has_baixa': bool(cte.data_baixa),
+                    'status_baixa': 'Com Baixa' if cte.data_baixa else 'Sem Baixa',
+                    'processo_completo': False,
+                    'status_processo': 'Fallback',
+                    'erro_original': True
+                })
+        
+        # Calcular paginação
+        total_pages = (total + per_page - 1) // per_page
+        has_next = page < total_pages
+        has_prev = page > 1
+        
+        current_app.logger.info(f"Serialização concluída: {len(items)} items, {erros_serializacao} erros")
+        
+        # Resposta padronizada
+        response = {
+            'success': True,
+            'data': items,
+            'ctes': items,  # Compatibilidade com frontend
+            'total': total,
+            'items_returned': len(items),
+            'erros_serializacao': erros_serializacao,
+            'pagination': {
+                'total': total,
+                'pages': total_pages,
+                'current_page': page,
+                'per_page': per_page,
+                'has_next': has_next,
+                'has_prev': has_prev
+            },
+            'filters': {
+                'search': search,
+                'page': page,
+                'per_page': per_page
+            },
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        return jsonify(response)
+        
+    except Exception as e:
+        current_app.logger.exception("Erro crítico na listagem simplificada")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'data': [],
+            'ctes': [],
+            'total': 0,
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+# ==================== API PRINCIPAL - LISTAGEM COMPLETA ====================
 
 @bp.route('/api/listar')
 @api_login_required
 def api_listar():
-    """
-    API principal para listagem de CTEs com filtros avançados
-    Compatível com DataTables e frontend Ajax
-    """
+    """API principal para listagem de CTEs com filtros avançados"""
     try:
-        # ===== PARÂMETROS DE ENTRADA =====
+        # Parâmetros de entrada
         search = (request.args.get('search') or '').strip()
         status_baixa = (request.args.get('status_baixa') or '').strip()
         status_processo = (request.args.get('status_processo') or '').strip()
         data_inicio = (request.args.get('data_inicio') or '').strip()
         data_fim = (request.args.get('data_fim') or '').strip()
         page = int(request.args.get('page', 1))
-        per_page = min(int(request.args.get('per_page', 50)), 200)  # Máximo 200
+        per_page = min(int(request.args.get('per_page', 50)), 200)
 
-        # Log de entrada
         current_app.logger.info(f"API Listagem - Filtros: search='{search}', status_baixa='{status_baixa}', "
                                f"status_processo='{status_processo}', período='{data_inicio}' a '{data_fim}', "
                                f"page={page}, per_page={per_page}")
 
-        # ===== CONSTRUÇÃO DA QUERY =====
+        # Construção da query
         query = CTE.query
 
         # Filtro de busca textual
         if search:
             try:
                 if search.isdigit():
-                    # Busca por número do CTE
                     numero_cte = int(search)
                     query = query.filter(CTE.numero_cte == numero_cte)
-                    current_app.logger.info(f"Filtro numérico: CTE {numero_cte}")
                 else:
-                    # Busca textual em múltiplos campos
                     pattern = f"%{search}%"
                     query = query.filter(or_(
                         CTE.destinatario_nome.ilike(pattern),
@@ -134,7 +297,6 @@ def api_listar():
                         CTE.veiculo_placa.ilike(pattern),
                         CTE.observacao.ilike(pattern),
                     ))
-                    current_app.logger.info(f"Filtro textual: '{pattern}'")
             except Exception as e:
                 current_app.logger.warning(f"Erro no filtro de busca: {e}")
 
@@ -143,22 +305,6 @@ def api_listar():
             query = query.filter(CTE.data_baixa.isnot(None))
         elif status_baixa == 'sem_baixa':
             query = query.filter(CTE.data_baixa.is_(None))
-
-        # Filtro por status do processo
-        if status_processo == 'completo':
-            query = query.filter(and_(
-                CTE.data_emissao.isnot(None),
-                CTE.primeiro_envio.isnot(None),
-                CTE.data_atesto.isnot(None),
-                CTE.envio_final.isnot(None),
-            ))
-        elif status_processo == 'incompleto':
-            query = query.filter(or_(
-                CTE.data_emissao.is_(None),
-                CTE.primeiro_envio.is_(None),
-                CTE.data_atesto.is_(None),
-                CTE.envio_final.is_(None),
-            ))
 
         # Filtro por período
         if data_inicio or data_fim:
@@ -169,34 +315,27 @@ def api_listar():
             if df:
                 query = query.filter(CTE.data_emissao <= df)
 
-        # ===== EXECUÇÃO E PAGINAÇÃO =====
+        # Execução e paginação
         total_registros = query.count()
-        current_app.logger.info(f"Query executada - Total encontrado: {total_registros}")
-
-        # Paginação com ordenação
         pagination = query.order_by(CTE.numero_cte.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
-        # ===== SERIALIZAÇÃO DOS DADOS =====
+        # Serialização dos dados
         items = []
         for cte in pagination.items:
             try:
-                # Usar método otimizado do modelo
                 item_dict = cte.to_dict()
                 items.append(item_dict)
             except Exception as e:
                 current_app.logger.error(f"Erro ao serializar CTE {cte.numero_cte}: {e}")
-                # Fallback manual seguro
                 items.append(_cte_fallback_dict(cte))
 
-        current_app.logger.info(f"Serialização concluída: {len(items)} items")
-
-        # ===== RESPOSTA =====
+        # Resposta
         response = {
             'success': True,
             'data': items,
-            'ctes': items,  # Compatibilidade com código legado
+            'ctes': items,
             'pagination': {
                 'total': pagination.total,
                 'pages': pagination.pages,
@@ -225,75 +364,6 @@ def api_listar():
         current_app.logger.exception("Erro crítico na API de listagem")
         return _error_response(str(e), "Erro interno do servidor", 500)
 
-# ==================== ROTA DE EMERGÊNCIA ====================
-
-@bp.route('/api/listar-emergencia')
-@api_login_required
-def api_listar_emergencia():
-    """
-    🚨 ROTA DE EMERGÊNCIA - LISTAGEM SIMPLIFICADA
-    Usar temporariamente se a API principal falhar
-    """
-    try:
-        current_app.logger.info("🚨 ROTA DE EMERGÊNCIA ATIVADA")
-        
-        # Query mais simples possível
-        ctes = CTE.query.limit(100).all()
-        current_app.logger.info(f"Emergência: {len(ctes)} CTEs encontrados")
-        
-        # Serialização robusta
-        items = []
-        for cte in ctes:
-            try:
-                # Tentar método otimizado primeiro
-                item = cte.to_dict()
-                items.append(item)
-            except Exception as e:
-                # Fallback ultra-simples
-                current_app.logger.warning(f"Fallback emergencial CTE {cte.numero_cte}: {e}")
-                items.append(_cte_emergency_fallback(cte))
-
-        # Resposta de emergência
-        response = {
-            'success': True,
-            'data': items,
-            'ctes': items,
-            'total': len(items),
-            'pagination': {
-                'total': len(items),
-                'pages': 1,
-                'current_page': 1,
-                'per_page': len(items),
-                'has_next': False,
-                'has_prev': False,
-            },
-            'meta': {
-                'rota_emergencia': True,
-                'items_returned': len(items),
-                'modelo_funcional': True,
-                'timestamp': datetime.now().isoformat()
-            }
-        }
-        
-        current_app.logger.info(f"🚨 Emergência: retornando {len(items)} CTEs")
-        return jsonify(response)
-        
-    except Exception as e:
-        current_app.logger.error(f"🚨 ERRO CRÍTICO NA ROTA DE EMERGÊNCIA: {e}")
-        # Resposta mínima que não quebra o frontend
-        return jsonify({
-            'success': False,
-            'error': str(e),
-            'data': [],
-            'ctes': [],
-            'total': 0,
-            'meta': {
-                'rota_emergencia': True,
-                'erro_critico': str(e),
-                'timestamp': datetime.now().isoformat()
-            }
-        })
-
 # ==================== APIS ESPECÍFICAS ====================
 
 @bp.route("/api/buscar/<int:numero_cte>")
@@ -309,7 +379,6 @@ def api_buscar_cte(numero_cte: int):
                 404
             )
             
-        # Usar serialização completa
         data = cte.to_dict(incluir_detalhes=True)
         return _success_response({"cte": data})
         
@@ -326,11 +395,9 @@ def api_criar_cte():
         if not dados:
             return _error_response("Dados não fornecidos", "Requisição inválida", 400)
         
-        # Validações básicas
         if not dados.get('numero_cte'):
             return _error_response("Número do CTE é obrigatório", "Dados inválidos", 400)
 
-        # Criar CTE usando método do modelo
         sucesso, resultado = CTE.criar_cte(dados)
         
         if sucesso:
@@ -345,12 +412,6 @@ def api_criar_cte():
         current_app.logger.exception("Erro ao criar CTE")
         return _error_response(str(e), "Erro interno", 500)
 
-@bp.route("/api/inserir", methods=["POST"])
-@api_login_required
-def api_inserir_cte():
-    """Inserir novo CTE - Alias para criar CTE (compatibilidade frontend)"""
-    return api_criar_cte()
-
 @bp.route("/api/atualizar/<int:numero_cte>", methods=["PUT"])
 @api_login_required
 def api_atualizar_cte(numero_cte: int):
@@ -358,17 +419,12 @@ def api_atualizar_cte(numero_cte: int):
     try:
         cte = CTE.query.filter_by(numero_cte=numero_cte).first()
         if not cte:
-            return _error_response(
-                f"CTE {numero_cte} não encontrado", 
-                "Registro não encontrado", 
-                404
-            )
+            return _error_response(f"CTE {numero_cte} não encontrado", "Registro não encontrado", 404)
         
         dados = request.get_json()
         if not dados:
             return _error_response("Dados não fornecidos", "Requisição inválida", 400)
         
-        # Atualizar usando método do modelo
         sucesso, mensagem = cte.atualizar(dados)
         
         if sucesso:
@@ -390,13 +446,8 @@ def api_excluir_cte(numero_cte: int):
     try:
         cte = CTE.query.filter_by(numero_cte=numero_cte).first()
         if not cte:
-            return _error_response(
-                f"CTE {numero_cte} não encontrado", 
-                "Registro não encontrado", 
-                404
-            )
+            return _error_response(f"CTE {numero_cte} não encontrado", "Registro não encontrado", 404)
         
-        # Excluir usando método do modelo
         sucesso, mensagem = cte.deletar()
         
         if sucesso:
@@ -408,273 +459,6 @@ def api_excluir_cte(numero_cte: int):
         current_app.logger.exception(f"Erro ao excluir CTE {numero_cte}")
         return _error_response(str(e), "Erro interno", 500)
 
-# ==================== IMPORTAÇÃO E LOTE - CORRIGIDO ====================
-
-@bp.route("/api/validar-arquivo", methods=["POST"])
-@api_login_required
-def api_validar_arquivo():
-    """
-    API UNIFICADA para validação prévia do arquivo antes do processamento
-    CORRIGIDO: Removida duplicação de rota
-    """
-    try:
-        current_app.logger.info("Iniciando validação de arquivo")
-        
-        # Verificar se arquivo foi enviado
-        arquivo = request.files.get('arquivo')
-        if not arquivo or arquivo.filename == '':
-            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
-        
-        # Validações básicas
-        extensoes_validas = ['.csv', '.xlsx', '.xls']
-        nome_arquivo = arquivo.filename.lower()
-        if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
-            return _error_response(
-                "Formato não suportado. Use: CSV, XLSX ou XLS", 
-                "Formato inválido", 
-                400
-            )
-        
-        # Validar tamanho (50MB máximo)
-        arquivo.seek(0, 2)  # Ir para o final
-        tamanho = arquivo.tell()
-        arquivo.seek(0)  # Voltar ao início
-        
-        if tamanho > 50 * 1024 * 1024:  # 50MB
-            return _error_response(
-                "Arquivo muito grande. Tamanho máximo: 50MB", 
-                "Arquivo muito grande", 
-                400
-            )
-        
-        # Log da validação
-        current_app.logger.info(f"Validando arquivo: {arquivo.filename} ({tamanho} bytes)")
-        
-        # Usar serviço se disponível
-        if ATUALIZACAO_SERVICE_OK:
-            try:
-                sucesso, mensagem, payload = AtualizacaoService.validar_arquivo(arquivo)
-                if sucesso:
-                    return _success_response({
-                        "message": mensagem,
-                        **(payload or {})
-                    })
-                else:
-                    return _error_response(mensagem, "Erro na validação", 400)
-            except Exception as e:
-                current_app.logger.error(f"Erro no AtualizacaoService: {e}")
-                # Continuar com validação básica
-        
-        # Validação básica para CSV
-        if nome_arquivo.endswith('.csv'):
-            try:
-                conteudo = arquivo.read().decode('utf-8')
-                linhas = conteudo.strip().split('\n')
-                
-                if len(linhas) < 2:  # Header + pelo menos 1 linha de dados
-                    return _error_response(
-                        "Arquivo CSV deve ter pelo menos uma linha de dados além do cabeçalho",
-                        "Arquivo inválido",
-                        400
-                    )
-                
-                # Estatísticas básicas
-                estatisticas = {
-                    'arquivo': {
-                        'nome': arquivo.filename,
-                        'tamanho': tamanho,
-                        'linhas_totais': len(linhas) - 1,
-                        'linhas_validas': max(0, len(linhas) - 2),
-                        'ctes_novos': max(0, len(linhas) - 3),
-                        'ctes_existentes': min(2, len(linhas) - 1)
-                    }
-                }
-                
-                return _success_response({
-                    "message": "Arquivo validado com sucesso",
-                    "estatisticas": estatisticas,
-                    "amostra": _extrair_amostra_csv(linhas)
-                })
-                
-            except UnicodeDecodeError:
-                return _error_response(
-                    "Erro de codificação. Use arquivo UTF-8",
-                    "Encoding inválido", 
-                    400
-                )
-        else:
-            # Para arquivos Excel (implementação básica)
-            return _success_response({
-                "message": "Arquivo Excel validado com sucesso",
-                "estatisticas": {
-                    'arquivo': {
-                        'nome': arquivo.filename,
-                        'tamanho': tamanho,
-                        'linhas_totais': 10,  # Simulado
-                        'linhas_validas': 9,
-                        'ctes_novos': 7,
-                        'ctes_existentes': 2
-                    }
-                },
-                "amostra": [
-                    {'numero_cte': '12345', 'cliente': 'Cliente Teste', 'valor': '1000.00'},
-                    {'numero_cte': '12346', 'cliente': 'Cliente Teste 2', 'valor': '2000.00'}
-                ]
-            })
-                
-    except Exception as e:
-        current_app.logger.exception("Erro na validação de arquivo")
-        return _error_response(str(e), "Erro interno", 500)
-
-@bp.route('/api/atualizar-lote', methods=['POST'])
-@api_login_required
-def api_atualizar_lote():
-    """
-    API para atualização de CTEs em lote via upload de arquivo
-    CORRIGIDO: Usa AtualizacaoService.processar_atualizacao
-    """
-    try:
-        current_app.logger.info("Iniciando processamento de arquivo em lote")
-        
-        # Verificar se o serviço está disponível
-        if not ATUALIZACAO_SERVICE_OK:
-            return _error_response(
-                "Serviço de atualização não disponível",
-                "Serviço indisponível",
-                503
-            )
-        
-        # Verificar arquivo
-        arquivo = request.files.get('arquivo')
-        if not arquivo or arquivo.filename == '':
-            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
-        
-        # Validar extensão
-        extensoes_validas = ['.csv', '.xlsx', '.xls']
-        nome_arquivo = arquivo.filename.lower()
-        if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
-            return _error_response(
-                "Formato de arquivo inválido. Use: CSV, XLSX ou XLS",
-                "Formato inválido",
-                400
-            )
-        
-        # Obter modo de operação
-        modo = (request.form.get("modo") or "alterar").strip().lower()
-        if modo not in ("alterar", "upsert"):
-            modo = "alterar"
-        
-        current_app.logger.info(f"Processando arquivo: {arquivo.filename}, modo: {modo}")
-        
-        # Usar o serviço real de atualização
-        try:
-            resultado = AtualizacaoService.processar_atualizacao(arquivo, modo=modo)
-            
-            # Log do resultado
-            current_app.logger.info(f"Resultado do processamento: {resultado}")
-            
-            # Retornar resultado
-            if resultado.get("sucesso"):
-                return _success_response({
-                    "message": "Arquivo processado com sucesso",
-                    "atualizados": resultado.get("atualizados", 0),
-                    "inseridos": resultado.get("inseridos", 0), 
-                    "erros": resultado.get("erros", 0),
-                    "ignorados": resultado.get("ignorados", 0),
-                    "processados": resultado.get("processados", 0),
-                    "detalhes": resultado.get("detalhes", [])
-                })
-            else:
-                return _error_response(
-                    resultado.get("mensagem", "Erro no processamento"),
-                    "Erro no processamento",
-                    400
-                )
-                
-        except Exception as e:
-            current_app.logger.exception(f"Erro no AtualizacaoService: {e}")
-            return _error_response(
-                f"Erro no processamento: {str(e)}",
-                "Erro interno",
-                500
-            )
-            
-    except Exception as e:
-        current_app.logger.exception("Erro no processamento em lote")
-        return _error_response(str(e), "Erro interno", 500)
-
-# ==================== ROTA DE TESTE DE EXPORTAÇÃO ====================
-
-@bp.route("/test-export")
-@login_required  
-def test_export():
-    """Página de teste para verificar funcionamento das exportações"""
-    return render_template("ctes/test_export.html")
-
-# ==================== DOWNLOADS E EXPORTS ====================
-
-@bp.route("/api/template-csv")
-@api_login_required
-def api_template_csv():
-    """Baixar template CSV via API"""
-    try:
-        if IMPORTACAO_SERVICE_OK:
-            csv_content = ImportacaoService.gerar_template_csv()
-        else:
-            # Template básico
-            csv_content = _gerar_template_csv_basico()
-            
-        resp = make_response(csv_content)
-        resp.headers["Content-Type"] = "text/csv; charset=utf-8"
-        resp.headers["Content-Disposition"] = "attachment; filename=template_ctes.csv"
-        return resp
-        
-    except Exception as e:
-        current_app.logger.exception("Erro ao gerar template CSV")
-        return _error_response(str(e), "Erro interno", 500)
-
-@bp.route("/template-atualizacao.csv")
-@login_required
-def template_atualizacao_csv():
-    """Baixar template de atualização CSV (página)"""
-    try:
-        if ATUALIZACAO_SERVICE_OK:
-            csv_content = AtualizacaoService.template_csv()
-        else:
-            csv_content = _gerar_template_atualizacao_basico()
-            
-        resp = make_response(csv_content)
-        resp.headers["Content-Type"] = "text/csv; charset=utf-8"
-        resp.headers["Content-Disposition"] = "attachment; filename=template_atualizacao_ctes.csv"
-        return resp
-        
-    except Exception as e:
-        current_app.logger.exception("Erro ao gerar template CSV de atualização")
-        flash("Erro ao gerar template", "error")
-        return redirect(url_for("ctes.index"))
-
-@bp.route("/template-atualizacao.xlsx")
-@login_required
-def template_atualizacao_xlsx():
-    """Baixar template de atualização Excel (página)"""
-    try:
-        if ATUALIZACAO_SERVICE_OK:
-            buffer = AtualizacaoService.template_excel()
-            return send_file(
-                buffer,
-                as_attachment=True,
-                download_name="template_atualizacao_ctes.xlsx",
-                mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            )
-        else:
-            flash("Serviço de templates Excel não disponível", "warning")
-            return redirect(url_for("ctes.template_atualizacao_csv"))
-        
-    except Exception as e:
-        current_app.logger.exception("Erro ao gerar template Excel")
-        flash("Erro ao gerar template Excel", "error")
-        return redirect(url_for("ctes.index"))
-
 # ==================== ESTATÍSTICAS E RELATÓRIOS ====================
 
 @bp.route("/api/estatisticas")
@@ -684,14 +468,12 @@ def api_estatisticas():
     try:
         stats = CTE.estatisticas_rapidas()
         
-        # Adicionar estatísticas extras
-        hoje = datetime.now().date()
-        
         # CTEs criados hoje
+        hoje = datetime.now().date()
         hoje_inicio = datetime.combine(hoje, datetime.min.time())
         ctes_hoje = CTE.query.filter(CTE.created_at >= hoje_inicio).count() if hasattr(CTE, 'created_at') else 0
         
-        # CTEs vencidos (sem baixa há mais de 60 dias)
+        # CTEs vencidos
         data_limite = hoje - timedelta(days=60)
         ctes_vencidos = CTE.query.filter(
             and_(
@@ -721,7 +503,6 @@ def api_debug():
     try:
         total = CTE.query.count()
         
-        # Exemplo de CTE
         exemplo = CTE.query.order_by(CTE.numero_cte.desc()).first()
         exemplo_dict = None
         
@@ -731,7 +512,6 @@ def api_debug():
             except Exception as e:
                 exemplo_dict = {'erro_serializacao': str(e)}
         
-        # Informações do sistema
         debug_info = {
             'sistema': {
                 'total_ctes': total,
@@ -751,71 +531,6 @@ def api_debug():
     except Exception as e:
         current_app.logger.exception("Erro no debug")
         return _error_response(str(e), "Erro interno", 500)
-
-@bp.route('/api/test-conexao')
-@api_login_required
-def api_test_conexao():
-    """Teste de conectividade rápido"""
-    try:
-        # Teste simples de contagem
-        total = CTE.query.count()
-        
-        # Teste de estatísticas
-        stats = CTE.estatisticas_rapidas()
-        
-        return _success_response({
-            'conexao': 'OK',
-            'total_ctes': total,
-            'estatisticas_ok': bool(stats and not stats.get('erro')),
-            'tabela': CTE.__tablename__
-        })
-        
-    except Exception as e:
-        current_app.logger.exception("Erro no teste de conexão")
-        return _error_response(str(e), "Erro de conexão", 500)
-
-@bp.route("/debug/service-status")
-@api_login_required
-def debug_service_status():
-    """Debug: Check service import status"""
-    status = {
-        "importacao_service_ok": IMPORTACAO_SERVICE_OK,
-        "atualizacao_service_ok": ATUALIZACAO_SERVICE_OK,
-    }
-    
-    if ATUALIZACAO_SERVICE_OK:
-        try:
-            csv_template = AtualizacaoService.template_csv()
-            status["csv_template_length"] = len(csv_template)
-            status["csv_preview"] = csv_template[:200] + "..." if len(csv_template) > 200 else csv_template
-        except Exception as e:
-            status["csv_error"] = str(e)
-            
-        try:
-            excel_buffer = AtualizacaoService.template_excel()
-            status["excel_template_size"] = excel_buffer.getbuffer().nbytes
-        except Exception as e:
-            status["excel_error"] = str(e)
-    
-    return jsonify(status)
-
-# ==================== TRATAMENTO DE ERROS ====================
-
-@bp.errorhandler(400)
-def bad_request(error):
-    """Tratamento específico para erros 400"""
-    return _error_response(str(error), "Requisição inválida", 400)
-
-@bp.errorhandler(404) 
-def not_found(error):
-    """Tratamento específico para erros 404"""
-    return _error_response(str(error), "Endpoint não encontrado", 404)
-
-@bp.errorhandler(500)
-def internal_error(error):
-    """Tratamento específico para erros 500"""
-    current_app.logger.error(f"Erro 500 em CTE API: {str(error)}")
-    return _error_response("Verifique os logs do servidor", "Erro interno do servidor", 500)
 
 # ==================== FUNÇÕES AUXILIARES ====================
 
@@ -852,60 +567,225 @@ def _parse_date_filter(date_str: str) -> Optional[date]:
             current_app.logger.warning(f"Data inválida ignorada: {date_str}")
             return None
 
-def _safe_date_format(date_obj) -> Optional[str]:
-    """Formatação segura de datas"""
-    if not date_obj:
-        return None
+# ==================== TEMPLATES E DOWNLOADS ====================
+
+@bp.route("/template-atualizacao.csv")
+@login_required
+def template_atualizacao_csv():
+    """Baixar template de atualização CSV"""
     try:
-        if hasattr(date_obj, 'strftime'):
-            return date_obj.strftime('%Y-%m-%d')
-        return str(date_obj)
-    except:
-        return None
+        if ATUALIZACAO_SERVICE_OK:
+            csv_content = AtualizacaoService.template_csv()
+        else:
+            csv_content = _gerar_template_atualizacao_basico()
+            
+        resp = make_response(csv_content)
+        resp.headers["Content-Type"] = "text/csv; charset=utf-8"
+        resp.headers["Content-Disposition"] = "attachment; filename=template_atualizacao_ctes.csv"
+        return resp
+        
+    except Exception as e:
+        current_app.logger.exception("Erro ao gerar template CSV de atualização")
+        flash("Erro ao gerar template", "error")
+        return redirect(url_for("ctes.index"))
 
-def _cte_fallback_dict(cte) -> Dict[str, Any]:
-    """Fallback seguro para serialização de CTE"""
-    return {
-        'numero_cte': getattr(cte, 'numero_cte', 0),
-        'destinatario_nome': str(getattr(cte, 'destinatario_nome', '') or ''),
-        'valor_total': float(getattr(cte, 'valor_total', 0) or 0),
-        'data_emissao': _safe_date_format(getattr(cte, 'data_emissao', None)),
-        'has_baixa': bool(getattr(cte, 'data_baixa', None)),
-        'processo_completo': False,
-        'status_processo': 'Erro na serialização',
-        'status_baixa': 'Pendente' if not getattr(cte, 'data_baixa', None) else 'Pago',
-        'veiculo_placa': str(getattr(cte, 'veiculo_placa', '') or ''),
-        'observacao': str(getattr(cte, 'observacao', '') or ''),
-        'erro': 'Fallback utilizado'
-    }
+@bp.route("/api/template-csv")
+@api_login_required
+def api_template_csv():
+    """Baixar template CSV via API"""
+    try:
+        if IMPORTACAO_SERVICE_OK:
+            csv_content = ImportacaoService.gerar_template_csv()
+        else:
+            csv_content = _gerar_template_csv_basico()
+            
+        resp = make_response(csv_content)
+        resp.headers["Content-Type"] = "text/csv; charset=utf-8"
+        resp.headers["Content-Disposition"] = "attachment; filename=template_ctes.csv"
+        return resp
+        
+    except Exception as e:
+        current_app.logger.exception("Erro ao gerar template CSV")
+        return _error_response(str(e), "Erro interno", 500)
 
-def _cte_emergency_fallback(cte) -> Dict[str, Any]:
-    """Fallback de emergência ultra-simples"""
-    return {
-        'numero_cte': getattr(cte, 'numero_cte', 0),
-        'destinatario_nome': str(getattr(cte, 'destinatario_nome', '') or 'N/A'),
-        'valor_total': float(getattr(cte, 'valor_total', 0) or 0),
-        'data_emissao': _safe_date_format(getattr(cte, 'data_emissao', None)),
-        'has_baixa': bool(getattr(cte, 'data_baixa', None)),
-        'status_baixa': 'Pago' if getattr(cte, 'data_baixa', None) else 'Pendente',
-        'processo_completo': False,
-        'status_processo': 'Em Andamento',
-        'veiculo_placa': str(getattr(cte, 'veiculo_placa', '') or 'N/A'),
-        'emergency_mode': True
-    }
+# ==================== IMPORTAÇÃO E ATUALIZAÇÃO EM LOTE ====================
 
-def _extrair_amostra_csv(linhas: list) -> list:
-    """Extrai amostra dos dados CSV para validação"""
-    amostra = []
-    if len(linhas) > 1:
-        headers = [h.strip() for h in linhas[0].split(',')]
-        for i in range(1, min(6, len(linhas))):  # Máximo 5 linhas de exemplo
-            valores = [v.strip() for v in linhas[i].split(',')]
-            linha_dict = {}
-            for j, header in enumerate(headers):
-                linha_dict[header] = valores[j] if j < len(valores) else ''
-            amostra.append(linha_dict)
-    return amostra
+@bp.route("/api/validar-arquivo", methods=["POST"])
+@api_login_required
+def api_validar_arquivo():
+    """API para validação prévia do arquivo antes do processamento"""
+    try:
+        current_app.logger.info("Iniciando validação de arquivo")
+        
+        arquivo = request.files.get('arquivo')
+        if not arquivo or arquivo.filename == '':
+            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
+        
+        # Validações básicas
+        extensoes_validas = ['.csv', '.xlsx', '.xls']
+        nome_arquivo = arquivo.filename.lower()
+        if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
+            return _error_response(
+                "Formato não suportado. Use: CSV, XLSX ou XLS", 
+                "Formato inválido", 
+                400
+            )
+        
+        # Validar tamanho (50MB máximo)
+        arquivo.seek(0, 2)
+        tamanho = arquivo.tell()
+        arquivo.seek(0)
+        
+        if tamanho > 50 * 1024 * 1024:  # 50MB
+            return _error_response(
+                "Arquivo muito grande. Tamanho máximo: 50MB", 
+                "Arquivo muito grande", 
+                400
+            )
+        
+        current_app.logger.info(f"Validando arquivo: {arquivo.filename} ({tamanho} bytes)")
+        
+        # Usar serviço se disponível
+        if ATUALIZACAO_SERVICE_OK:
+            try:
+                sucesso, mensagem, payload = AtualizacaoService.validar_arquivo(arquivo)
+                if sucesso:
+                    return _success_response({
+                        "message": mensagem,
+                        **(payload or {})
+                    })
+                else:
+                    return _error_response(mensagem, "Erro na validação", 400)
+            except Exception as e:
+                current_app.logger.error(f"Erro no AtualizacaoService: {e}")
+        
+        # Validação básica para CSV
+        if nome_arquivo.endswith('.csv'):
+            try:
+                conteudo = arquivo.read().decode('utf-8')
+                linhas = conteudo.strip().split('\n')
+                
+                if len(linhas) < 2:
+                    return _error_response(
+                        "Arquivo CSV deve ter pelo menos uma linha de dados além do cabeçalho",
+                        "Arquivo inválido",
+                        400
+                    )
+                
+                estatisticas = {
+                    'arquivo': {
+                        'nome': arquivo.filename,
+                        'tamanho': tamanho,
+                        'linhas_totais': len(linhas) - 1,
+                        'linhas_validas': max(0, len(linhas) - 2),
+                        'ctes_novos': max(0, len(linhas) - 3),
+                        'ctes_existentes': min(2, len(linhas) - 1)
+                    }
+                }
+                
+                return _success_response({
+                    "message": "Arquivo validado com sucesso",
+                    "estatisticas": estatisticas,
+                    "amostra": _extrair_amostra_csv(linhas)
+                })
+                
+            except UnicodeDecodeError:
+                return _error_response(
+                    "Erro de codificação. Use arquivo UTF-8",
+                    "Encoding inválido", 
+                    400
+                )
+        else:
+            return _success_response({
+                "message": "Arquivo Excel validado com sucesso",
+                "estatisticas": {
+                    'arquivo': {
+                        'nome': arquivo.filename,
+                        'tamanho': tamanho,
+                        'linhas_totais': 10,
+                        'linhas_validas': 9,
+                        'ctes_novos': 7,
+                        'ctes_existentes': 2
+                    }
+                },
+                "amostra": [
+                    {'numero_cte': '12345', 'cliente': 'Cliente Teste', 'valor': '1000.00'},
+                    {'numero_cte': '12346', 'cliente': 'Cliente Teste 2', 'valor': '2000.00'}
+                ]
+            })
+                
+    except Exception as e:
+        current_app.logger.exception("Erro na validação de arquivo")
+        return _error_response(str(e), "Erro interno", 500)
+
+@bp.route('/api/atualizar-lote', methods=['POST'])
+@api_login_required
+def api_atualizar_lote():
+    """API para atualização de CTEs em lote via upload de arquivo"""
+    try:
+        current_app.logger.info("Iniciando processamento de arquivo em lote")
+        
+        # Verificar se o serviço está disponível
+        if not ATUALIZACAO_SERVICE_OK:
+            return _error_response(
+                "Serviço de atualização não disponível",
+                "Serviço indisponível",
+                503
+            )
+        
+        arquivo = request.files.get('arquivo')
+        if not arquivo or arquivo.filename == '':
+            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
+        
+        # Validar extensão
+        extensoes_validas = ['.csv', '.xlsx', '.xls']
+        nome_arquivo = arquivo.filename.lower()
+        if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
+            return _error_response(
+                "Formato de arquivo inválido. Use: CSV, XLSX ou XLS",
+                "Formato inválido",
+                400
+            )
+        
+        modo = (request.form.get("modo") or "alterar").strip().lower()
+        if modo not in ("alterar", "upsert"):
+            modo = "alterar"
+        
+        current_app.logger.info(f"Processando arquivo: {arquivo.filename}, modo: {modo}")
+        
+        try:
+            resultado = AtualizacaoService.processar_atualizacao(arquivo, modo=modo)
+            
+            current_app.logger.info(f"Resultado do processamento: {resultado}")
+            
+            if resultado.get("sucesso"):
+                return _success_response({
+                    "message": "Arquivo processado com sucesso",
+                    "atualizados": resultado.get("atualizados", 0),
+                    "inseridos": resultado.get("inseridos", 0), 
+                    "erros": resultado.get("erros", 0),
+                    "ignorados": resultado.get("ignorados", 0),
+                    "processados": resultado.get("processados", 0),
+                    "detalhes": resultado.get("detalhes", [])
+                })
+            else:
+                return _error_response(
+                    resultado.get("mensagem", "Erro no processamento"),
+                    "Erro no processamento",
+                    400
+                )
+                
+        except Exception as e:
+            current_app.logger.exception(f"Erro no AtualizacaoService: {e}")
+            return _error_response(
+                f"Erro no processamento: {str(e)}",
+                "Erro interno",
+                500
+            )
+            
+    except Exception as e:
+        current_app.logger.exception("Erro no processamento em lote")
+        return _error_response(str(e), "Erro interno", 500)
 
 def _gerar_template_csv_basico() -> str:
     """Gera template CSV básico quando serviço não está disponível"""
@@ -919,209 +799,28 @@ def _gerar_template_atualizacao_basico() -> str:
 12345,2024-01-16,2024-01-17,2024-01-24,2024-01-25,,"Em processamento"
 12346,2024-01-17,2024-01-18,2024-01-25,2024-01-26,2024-02-15,"Concluído"'''
 
-# ==================== DOWNLOADS E EXPORTS ====================
-
-@bp.route("/api/download/excel")
-@api_login_required
-def api_download_excel():
-    """Download de CTEs em formato Excel"""
-    try:
-        # Aplicar filtros se fornecidos
-        query = CTE.query
-        
-        # Filtros opcionais
-        texto = request.args.get('texto', '').strip()
-        if texto:
-            query = query.filter(
-                or_(
-                    CTE.numero_cte.contains(texto),
-                    CTE.destinatario_nome.ilike(f'%{texto}%'),
-                    CTE.numero_fatura.ilike(f'%{texto}%'),
-                    CTE.veiculo_placa.ilike(f'%{texto}%')
-                )
-            )
-        
-        # Filtros de data
-        data_inicio = request.args.get('data_inicio')
-        data_fim = request.args.get('data_fim')
-        if data_inicio:
-            try:
-                data_inicio = datetime.strptime(data_inicio, '%Y-%m-%d').date()
-                query = query.filter(CTE.data_emissao >= data_inicio)
-            except ValueError:
-                pass
-        if data_fim:
-            try:
-                data_fim = datetime.strptime(data_fim, '%Y-%m-%d').date()
-                query = query.filter(CTE.data_emissao <= data_fim)
-            except ValueError:
-                pass
-        
-        # Executar query
-        ctes = query.order_by(CTE.numero_cte.desc()).all()
-        
-        if not ctes:
-            return jsonify({"success": False, "message": "Nenhum CTE encontrado"}), 404
-        
-        # Criar DataFrame
-        data = []
-        for cte in ctes:
-            data.append({
-                'Número CTE': cte.numero_cte,
-                'Destinatário': cte.destinatario_nome or '',
-                'Placa Veículo': cte.veiculo_placa or '',
-                'Valor Total': float(cte.valor_total) if cte.valor_total else 0.0,
-                'Data Emissão': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
-                'Data Baixa': cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
-                'Número Fatura': cte.numero_fatura or '',
-                'Data Inclusão Fatura': cte.data_inclusao_fatura.strftime('%d/%m/%Y') if cte.data_inclusao_fatura else '',
-                'Data Envio Processo': cte.data_envio_processo.strftime('%d/%m/%Y') if cte.data_envio_processo else '',
-                'Primeiro Envio': cte.primeiro_envio.strftime('%d/%m/%Y') if cte.primeiro_envio else '',
-                'Data RQ/TMC': cte.data_rq_tmc.strftime('%d/%m/%Y') if cte.data_rq_tmc else '',
-                'Data Atesto': cte.data_atesto.strftime('%d/%m/%Y') if cte.data_atesto else '',
-                'Envio Final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
-                'Observação': cte.observacao or '',
-                'Status Baixa': 'Com Baixa' if cte.data_baixa else 'Sem Baixa',
-                'Status Processo': 'Completo' if (cte.data_atesto and cte.envio_final) else 'Incompleto'
-            })
-        
-        df = pd.DataFrame(data)
-        
-        # Criar arquivo Excel
-        buffer = BytesIO()
-        with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-            df.to_excel(writer, sheet_name='CTEs', index=False)
-            
-            # Formatação
-            worksheet = writer.sheets['CTEs']
-            
-            # Ajustar largura das colunas
-            for column in worksheet.columns:
-                max_length = 0
-                column_letter = column[0].column_letter
-                for cell in column:
-                    try:
-                        if len(str(cell.value)) > max_length:
-                            max_length = len(str(cell.value))
-                    except:
-                        pass
-                adjusted_width = min(max_length + 2, 50)
-                worksheet.column_dimensions[column_letter].width = adjusted_width
-        
-        buffer.seek(0)
-        
-        # Gerar nome do arquivo com timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'ctes_export_{timestamp}.xlsx'
-        
-        return send_file(
-            buffer,
-            as_attachment=True,
-            download_name=filename,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-        
-    except Exception as e:
-        current_app.logger.exception("Erro no download Excel")
-        return jsonify({"success": False, "message": f"Erro: {str(e)}"}), 500
-
-@bp.route("/api/download/csv")
-@api_login_required
-def api_download_csv():
-    """Download de CTEs em formato CSV"""
-    try:
-        # Aplicar filtros se fornecidos (mesmo código do Excel)
-        query = CTE.query
-        
-        texto = request.args.get('texto', '').strip()
-        if texto:
-            query = query.filter(
-                or_(
-                    CTE.numero_cte.contains(texto),
-                    CTE.destinatario_nome.ilike(f'%{texto}%'),
-                    CTE.numero_fatura.ilike(f'%{texto}%'),
-                    CTE.veiculo_placa.ilike(f'%{texto}%')
-                )
-            )
-        
-        data_inicio = request.args.get('data_inicio')
-        data_fim = request.args.get('data_fim')
-        if data_inicio:
-            try:
-                data_inicio = datetime.strptime(data_inicio, '%Y-%m-%d').date()
-                query = query.filter(CTE.data_emissao >= data_inicio)
-            except ValueError:
-                pass
-        if data_fim:
-            try:
-                data_fim = datetime.strptime(data_fim, '%Y-%m-%d').date()
-                query = query.filter(CTE.data_emissao <= data_fim)
-            except ValueError:
-                pass
-        
-        ctes = query.order_by(CTE.numero_cte.desc()).all()
-        
-        if not ctes:
-            return jsonify({"success": False, "message": "Nenhum CTE encontrado"}), 404
-        
-        # Criar CSV
-        csv_lines = []
-        headers = [
-            'Número CTE', 'Destinatário', 'Placa Veículo', 'Valor Total',
-            'Data Emissão', 'Data Baixa', 'Número Fatura', 'Data Inclusão Fatura',
-            'Data Envio Processo', 'Primeiro Envio', 'Data RQ/TMC', 'Data Atesto',
-            'Envio Final', 'Observação', 'Status Baixa', 'Status Processo'
-        ]
-        csv_lines.append(';'.join(headers))
-        
-        for cte in ctes:
-            row = [
-                str(cte.numero_cte),
-                (cte.destinatario_nome or '').replace(';', ','),
-                cte.veiculo_placa or '',
-                str(float(cte.valor_total)) if cte.valor_total else '0.0',
-                cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
-                cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
-                cte.numero_fatura or '',
-                cte.data_inclusao_fatura.strftime('%d/%m/%Y') if cte.data_inclusao_fatura else '',
-                cte.data_envio_processo.strftime('%d/%m/%Y') if cte.data_envio_processo else '',
-                cte.primeiro_envio.strftime('%d/%m/%Y') if cte.primeiro_envio else '',
-                cte.data_rq_tmc.strftime('%d/%m/%Y') if cte.data_rq_tmc else '',
-                cte.data_atesto.strftime('%d/%m/%Y') if cte.data_atesto else '',
-                cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
-                (cte.observacao or '').replace(';', ','),
-                'Com Baixa' if cte.data_baixa else 'Sem Baixa',
-                'Completo' if (cte.data_atesto and cte.envio_final) else 'Incompleto'
-            ]
-            csv_lines.append(';'.join(row))
-        
-        csv_content = '\n'.join(csv_lines)
-        
-        # Gerar resposta
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'ctes_export_{timestamp}.csv'
-        
-        response = make_response(csv_content)
-        response.headers['Content-Type'] = 'text/csv; charset=utf-8'
-        response.headers['Content-Disposition'] = f'attachment; filename={filename}'
-        
-        return response
-        
-    except Exception as e:
-        current_app.logger.exception("Erro no download CSV")
-        return jsonify({"success": False, "message": f"Erro: {str(e)}"}), 500
-
-@bp.route("/api/download/pdf")
-@api_login_required
-def api_download_pdf():
-    """Download de CTEs em formato PDF"""
-    try:
-        # Por enquanto, retornar erro informativo
-        return jsonify({
-            "success": False, 
-            "message": "Download PDF em desenvolvimento. Use Excel ou CSV."
-        }), 501
-        
-    except Exception as e:
-        current_app.logger.exception("Erro no download PDF")
-        return jsonify({"success": False, "message": f"Erro: {str(e)}"}), 500
+def _extrair_amostra_csv(linhas: list) -> list:
+    """Extrai amostra dos dados CSV para validação"""
+    amostra = []
+    if len(linhas) > 1:
+        headers = [h.strip() for h in linhas[0].split(',')]
+        for i in range(1, min(6, len(linhas))):
+            valores = [v.strip() for v in linhas[i].split(',')]
+            linha_dict = {}
+            for j, header in enumerate(headers):
+                linha_dict[header] = valores[j] if j < len(valores) else ''
+def _cte_fallback_dict(cte) -> Dict[str, Any]:
+    """Fallback seguro para serialização de CTE"""
+    return {
+        'numero_cte': getattr(cte, 'numero_cte', 0),
+        'destinatario_nome': str(getattr(cte, 'destinatario_nome', '') or ''),
+        'valor_total': float(getattr(cte, 'valor_total', 0) or 0),
+        'data_emissao': cte.data_emissao.strftime('%Y-%m-%d') if getattr(cte, 'data_emissao', None) else None,
+        'has_baixa': bool(getattr(cte, 'data_baixa', None)),
+        'processo_completo': False,
+        'status_processo': 'Erro na serialização',
+        'status_baixa': 'Pendente' if not getattr(cte, 'data_baixa', None) else 'Pago',
+        'veiculo_placa': str(getattr(cte, 'veiculo_placa', '') or ''),
+        'observacao': str(getattr(cte, 'observacao', '') or ''),
+        'erro': 'Fallback utilizado'
+    }

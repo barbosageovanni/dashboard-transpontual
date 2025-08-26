@@ -1,0 +1,55 @@
+﻿import os
+import sys
+
+# FORÇAR SQLite LOCAL
+os.environ['DATABASE_URL'] = 'sqlite:///dashboard_baker.db'
+os.environ['FLASK_ENV'] = 'development'
+
+PORTA = 5000
+print('🗃️ Banco: SQLite Local')
+print('📁 Arquivo: dashboard_baker.db')
+print('🌐 Porta:', PORTA)
+
+from app import create_app, db
+from sqlalchemy import text
+
+application = create_app()
+
+@application.before_request
+def init_sqlite():
+    if not hasattr(init_sqlite, 'done'):
+        try:
+            with application.app_context():
+                db.create_all()
+                from app.models.user import User
+                if User.query.filter_by(tipo_usuario='admin', ativo=True).count() == 0:
+                    User.criar_admin_inicial()
+                print('✅ SQLite inicializado')
+            init_sqlite.done = True
+        except Exception as e:
+            print('⚠️ Erro SQLite:', e)
+
+@application.route('/health')
+def health():
+    try:
+        with application.app_context():
+            db.session.execute(text('SELECT 1'))
+        return {'status': 'healthy', 'database': 'sqlite-local', 'porta': PORTA}
+    except Exception as e:
+        return {'status': 'error', 'database': 'sqlite-local', 'error': str(e)}
+
+if __name__ == '__main__':
+    print('=' * 50)
+    print('DASHBOARD BAKER - SQLITE LOCAL')  
+    print('SEM NECESSIDADE DE SERVIDOR EXTERNO')
+    print('=' * 50)
+    print('URL: http://localhost:' + str(PORTA))
+    print('Login: admin / admin123')
+    print('=' * 50)
+    
+    try:
+        application.run(host='0.0.0.0', port=PORTA, debug=True, use_reloader=False)
+    except OSError as e:
+        if 'Address already in use' in str(e):
+            print('Porta em uso! Mude PORTA = 5001')
+        input('Enter...')
