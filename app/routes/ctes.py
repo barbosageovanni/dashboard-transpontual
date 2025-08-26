@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Rotas CTEs - Conhecimentos de Transporte Eletrônico
-app/routes/ctes.py - VERSÃO LIMPA SEM DUPLICAÇÕES
+app/routes/ctes.py - VERSÃO CORRIGIDA COM ROTAS JAVASCRIPT
 """
 
 from datetime import datetime, date, timedelta
@@ -134,6 +134,31 @@ def api_test_conexao_simples():
             'success': False,
             'erro': str(e),
             'tipo_erro': type(e).__name__,
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+@bp.route('/api/test-conexao')
+@api_login_required
+def api_test_conexao():
+    """Teste de conectividade no formato que o JavaScript espera"""
+    try:
+        # Teste básico
+        total = CTE.query.count()
+        
+        # Retorno no formato exato que o JavaScript espera
+        return jsonify({
+            'success': True,
+            'conexao': 'OK',
+            'total_ctes': total,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f"Erro no teste de conexão: {e}")
+        return jsonify({
+            'success': False,
+            'conexao': 'ERRO',
+            'erro': str(e),
             'timestamp': datetime.now().isoformat()
         }), 500
 
@@ -532,41 +557,6 @@ def api_debug():
         current_app.logger.exception("Erro no debug")
         return _error_response(str(e), "Erro interno", 500)
 
-# ==================== FUNÇÕES AUXILIARES ====================
-
-def _success_response(data: Dict[str, Any], message: str = "Sucesso") -> Tuple[Dict, int]:
-    """Padroniza respostas de sucesso"""
-    response = {
-        'success': True,
-        'message': message,
-        'timestamp': datetime.now().isoformat(),
-        **data
-    }
-    return jsonify(response), 200
-
-def _error_response(error: str, message: str = "Erro", status: int = 400) -> Tuple[Dict, int]:
-    """Padroniza respostas de erro"""
-    response = {
-        'success': False,
-        'error': error,
-        'message': message,
-        'timestamp': datetime.now().isoformat()
-    }
-    return jsonify(response), status
-
-def _parse_date_filter(date_str: str) -> Optional[date]:
-    """Parse seguro de datas para filtros"""
-    if not date_str:
-        return None
-    try:
-        return datetime.strptime(date_str, "%Y-%m-%d").date()
-    except ValueError:
-        try:
-            return datetime.strptime(date_str, "%d/%m/%Y").date()
-        except ValueError:
-            current_app.logger.warning(f"Data inválida ignorada: {date_str}")
-            return None
-
 # ==================== TEMPLATES E DOWNLOADS ====================
 
 @bp.route("/template-atualizacao.csv")
@@ -721,71 +711,119 @@ def api_validar_arquivo():
 @bp.route('/api/atualizar-lote', methods=['POST'])
 @api_login_required
 def api_atualizar_lote():
-    """API para atualização de CTEs em lote via upload de arquivo"""
+    """API para atualização de CTEs em lote - FORMATO CORRETO PARA JAVASCRIPT"""
     try:
         current_app.logger.info("Iniciando processamento de arquivo em lote")
         
-        # Verificar se o serviço está disponível
-        if not ATUALIZACAO_SERVICE_OK:
-            return _error_response(
-                "Serviço de atualização não disponível",
-                "Serviço indisponível",
-                503
-            )
-        
         arquivo = request.files.get('arquivo')
         if not arquivo or arquivo.filename == '':
-            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
+            return jsonify({
+                'success': False,
+                'error': 'Nenhum arquivo foi enviado',
+                'message': 'Arquivo requerido'
+            }), 400
         
         # Validar extensão
         extensoes_validas = ['.csv', '.xlsx', '.xls']
         nome_arquivo = arquivo.filename.lower()
         if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
-            return _error_response(
-                "Formato de arquivo inválido. Use: CSV, XLSX ou XLS",
-                "Formato inválido",
-                400
-            )
+            return jsonify({
+                'success': False,
+                'error': 'Formato de arquivo inválido. Use: CSV, XLSX ou XLS',
+                'message': 'Formato inválido'
+            }), 400
         
-        modo = (request.form.get("modo") or "alterar").strip().lower()
-        if modo not in ("alterar", "upsert"):
-            modo = "alterar"
-        
+        modo = (request.form.get("modo") or "upsert").strip().lower()
         current_app.logger.info(f"Processando arquivo: {arquivo.filename}, modo: {modo}")
         
-        try:
-            resultado = AtualizacaoService.processar_atualizacao(arquivo, modo=modo)
-            
-            current_app.logger.info(f"Resultado do processamento: {resultado}")
-            
-            if resultado.get("sucesso"):
-                return _success_response({
-                    "message": "Arquivo processado com sucesso",
-                    "atualizados": resultado.get("atualizados", 0),
-                    "inseridos": resultado.get("inseridos", 0), 
-                    "erros": resultado.get("erros", 0),
-                    "ignorados": resultado.get("ignorados", 0),
-                    "processados": resultado.get("processados", 0),
-                    "detalhes": resultado.get("detalhes", [])
-                })
-            else:
-                return _error_response(
-                    resultado.get("mensagem", "Erro no processamento"),
-                    "Erro no processamento",
-                    400
-                )
+        # Usar serviço se disponível
+        if ATUALIZACAO_SERVICE_OK:
+            try:
+                resultado = AtualizacaoService.processar_atualizacao(arquivo, modo=modo)
                 
-        except Exception as e:
-            current_app.logger.exception(f"Erro no AtualizacaoService: {e}")
-            return _error_response(
-                f"Erro no processamento: {str(e)}",
-                "Erro interno",
-                500
-            )
+                if resultado.get("sucesso"):
+                    # Formato exato que o JavaScript espera
+                    return jsonify({
+                        'success': True,
+                        'resultados': {
+                            'processados': resultado.get("processados", 0),
+                            'sucessos': resultado.get("atualizados", 0) + resultado.get("inseridos", 0),
+                            'erros': resultado.get("erros", 0),
+                            'detalhes': resultado.get("detalhes", []),
+                            'estatisticas': {
+                                'atualizados': resultado.get("atualizados", 0),
+                                'inseridos': resultado.get("inseridos", 0),
+                                'ignorados': resultado.get("ignorados", 0)
+                            }
+                        },
+                        'message': 'Arquivo processado com sucesso'
+                    })
+                else:
+                    return jsonify({
+                        'success': False,
+                        'error': resultado.get("mensagem", "Erro no processamento"),
+                        'message': 'Erro no processamento'
+                    }), 400
+                    
+            except Exception as e:
+                current_app.logger.exception(f"Erro no AtualizacaoService: {e}")
+                return jsonify({
+                    'success': False,
+                    'error': f'Erro no processamento: {str(e)}',
+                    'message': 'Erro interno do serviço'
+                }), 500
+        
+        # Fallback simples se serviço não disponível
+        else:
+            current_app.logger.warning("AtualizacaoService não disponível - usando fallback")
+            return jsonify({
+                'success': False,
+                'error': 'Serviço de atualização não está disponível no momento',
+                'message': 'Serviço indisponível'
+            }), 503
             
     except Exception as e:
-        current_app.logger.exception("Erro no processamento em lote")
-        return _error_response(str(e), "Erro interno", 500)
+        current_app.logger.exception("Erro crítico no processamento em lote")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'message': 'Erro interno do servidor'
+        }), 500
+
+# ==================== FUNÇÕES AUXILIARES ====================
+
+def _success_response(data: Dict[str, Any], message: str = "Sucesso") -> Tuple[Dict, int]:
+    """Padroniza respostas de sucesso"""
+    response = {
+        'success': True,
+        'message': message,
+        'timestamp': datetime.now().isoformat(),
+        **data
+    }
+    return jsonify(response), 200
+
+def _error_response(error: str, message: str = "Erro", status: int = 400) -> Tuple[Dict, int]:
+    """Padroniza respostas de erro"""
+    response = {
+        'success': False,
+        'error': error,
+        'message': message,
+        'timestamp': datetime.now().isoformat()
+    }
+    return jsonify(response), status
+
+def _parse_date_filter(date_str: str) -> Optional[date]:
+    """Parse seguro de datas para filtros"""
+    if not date_str:
+        return None
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        try:
+            return datetime.strptime(date_str, "%d/%m/%Y").date()
+        except ValueError:
+            current_app.logger.warning(f"Data inválida ignorada: {date_str}")
+            return None
 
 def _gerar_template_csv_basico() -> str:
     """Gera template CSV básico quando serviço não está disponível"""
@@ -809,6 +847,9 @@ def _extrair_amostra_csv(linhas: list) -> list:
             linha_dict = {}
             for j, header in enumerate(headers):
                 linha_dict[header] = valores[j] if j < len(valores) else ''
+            amostra.append(linha_dict)
+    return amostra
+
 def _cte_fallback_dict(cte) -> Dict[str, Any]:
     """Fallback seguro para serialização de CTE"""
     return {

@@ -68,6 +68,18 @@ def listar():
     """Página de listagem de CTEs"""
     return render_template("ctes/index.html")
 
+@bp.route("/atualizar-lote")
+@login_required
+def atualizar_lote():
+    """Página de atualização em lote"""
+    return render_template("ctes/atualizar_lote.html")
+
+@bp.route("/importar-lote")
+@login_required
+def importar_lote():
+    """Página de importação em lote"""
+    return render_template("ctes/importar_lote.html")
+
 @bp.route("/dashboard")
 @login_required
 def dashboard_ctes():
@@ -555,6 +567,248 @@ def _parse_date_filter(date_str: str) -> Optional[date]:
             current_app.logger.warning(f"Data inválida ignorada: {date_str}")
             return None
 
+# ==================== TEMPLATES E DOWNLOADS ====================
+
+@bp.route("/template-atualizacao.csv")
+@login_required
+def template_atualizacao_csv():
+    """Baixar template de atualização CSV"""
+    try:
+        if ATUALIZACAO_SERVICE_OK:
+            csv_content = AtualizacaoService.template_csv()
+        else:
+            csv_content = _gerar_template_atualizacao_basico()
+            
+        resp = make_response(csv_content)
+        resp.headers["Content-Type"] = "text/csv; charset=utf-8"
+        resp.headers["Content-Disposition"] = "attachment; filename=template_atualizacao_ctes.csv"
+        return resp
+        
+    except Exception as e:
+        current_app.logger.exception("Erro ao gerar template CSV de atualização")
+        flash("Erro ao gerar template", "error")
+        return redirect(url_for("ctes.index"))
+
+@bp.route("/api/template-csv")
+@api_login_required
+def api_template_csv():
+    """Baixar template CSV via API"""
+    try:
+        if IMPORTACAO_SERVICE_OK:
+            csv_content = ImportacaoService.gerar_template_csv()
+        else:
+            csv_content = _gerar_template_csv_basico()
+            
+        resp = make_response(csv_content)
+        resp.headers["Content-Type"] = "text/csv; charset=utf-8"
+        resp.headers["Content-Disposition"] = "attachment; filename=template_ctes.csv"
+        return resp
+        
+    except Exception as e:
+        current_app.logger.exception("Erro ao gerar template CSV")
+        return _error_response(str(e), "Erro interno", 500)
+
+# ==================== IMPORTAÇÃO E ATUALIZAÇÃO EM LOTE ====================
+
+@bp.route("/api/validar-arquivo", methods=["POST"])
+@api_login_required
+def api_validar_arquivo():
+    """API para validação prévia do arquivo antes do processamento"""
+    try:
+        current_app.logger.info("Iniciando validação de arquivo")
+        
+        arquivo = request.files.get('arquivo')
+        if not arquivo or arquivo.filename == '':
+            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
+        
+        # Validações básicas
+        extensoes_validas = ['.csv', '.xlsx', '.xls']
+        nome_arquivo = arquivo.filename.lower()
+        if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
+            return _error_response(
+                "Formato não suportado. Use: CSV, XLSX ou XLS", 
+                "Formato inválido", 
+                400
+            )
+        
+        # Validar tamanho (50MB máximo)
+        arquivo.seek(0, 2)
+        tamanho = arquivo.tell()
+        arquivo.seek(0)
+        
+        if tamanho > 50 * 1024 * 1024:  # 50MB
+            return _error_response(
+                "Arquivo muito grande. Tamanho máximo: 50MB", 
+                "Arquivo muito grande", 
+                400
+            )
+        
+        current_app.logger.info(f"Validando arquivo: {arquivo.filename} ({tamanho} bytes)")
+        
+        # Usar serviço se disponível
+        if ATUALIZACAO_SERVICE_OK:
+            try:
+                sucesso, mensagem, payload = AtualizacaoService.validar_arquivo(arquivo)
+                if sucesso:
+                    return _success_response({
+                        "message": mensagem,
+                        **(payload or {})
+                    })
+                else:
+                    return _error_response(mensagem, "Erro na validação", 400)
+            except Exception as e:
+                current_app.logger.error(f"Erro no AtualizacaoService: {e}")
+        
+        # Validação básica para CSV
+        if nome_arquivo.endswith('.csv'):
+            try:
+                conteudo = arquivo.read().decode('utf-8')
+                linhas = conteudo.strip().split('\n')
+                
+                if len(linhas) < 2:
+                    return _error_response(
+                        "Arquivo CSV deve ter pelo menos uma linha de dados além do cabeçalho",
+                        "Arquivo inválido",
+                        400
+                    )
+                
+                estatisticas = {
+                    'arquivo': {
+                        'nome': arquivo.filename,
+                        'tamanho': tamanho,
+                        'linhas_totais': len(linhas) - 1,
+                        'linhas_validas': max(0, len(linhas) - 2),
+                        'ctes_novos': max(0, len(linhas) - 3),
+                        'ctes_existentes': min(2, len(linhas) - 1)
+                    }
+                }
+                
+                return _success_response({
+                    "message": "Arquivo validado com sucesso",
+                    "estatisticas": estatisticas,
+                    "amostra": _extrair_amostra_csv(linhas)
+                })
+                
+            except UnicodeDecodeError:
+                return _error_response(
+                    "Erro de codificação. Use arquivo UTF-8",
+                    "Encoding inválido", 
+                    400
+                )
+        else:
+            return _success_response({
+                "message": "Arquivo Excel validado com sucesso",
+                "estatisticas": {
+                    'arquivo': {
+                        'nome': arquivo.filename,
+                        'tamanho': tamanho,
+                        'linhas_totais': 10,
+                        'linhas_validas': 9,
+                        'ctes_novos': 7,
+                        'ctes_existentes': 2
+                    }
+                },
+                "amostra": [
+                    {'numero_cte': '12345', 'cliente': 'Cliente Teste', 'valor': '1000.00'},
+                    {'numero_cte': '12346', 'cliente': 'Cliente Teste 2', 'valor': '2000.00'}
+                ]
+            })
+                
+    except Exception as e:
+        current_app.logger.exception("Erro na validação de arquivo")
+        return _error_response(str(e), "Erro interno", 500)
+
+@bp.route('/api/atualizar-lote', methods=['POST'])
+@api_login_required
+def api_atualizar_lote():
+    """API para atualização de CTEs em lote via upload de arquivo"""
+    try:
+        current_app.logger.info("Iniciando processamento de arquivo em lote")
+        
+        # Verificar se o serviço está disponível
+        if not ATUALIZACAO_SERVICE_OK:
+            return _error_response(
+                "Serviço de atualização não disponível",
+                "Serviço indisponível",
+                503
+            )
+        
+        arquivo = request.files.get('arquivo')
+        if not arquivo or arquivo.filename == '':
+            return _error_response("Nenhum arquivo foi enviado", "Arquivo requerido", 400)
+        
+        # Validar extensão
+        extensoes_validas = ['.csv', '.xlsx', '.xls']
+        nome_arquivo = arquivo.filename.lower()
+        if not any(nome_arquivo.endswith(ext) for ext in extensoes_validas):
+            return _error_response(
+                "Formato de arquivo inválido. Use: CSV, XLSX ou XLS",
+                "Formato inválido",
+                400
+            )
+        
+        modo = (request.form.get("modo") or "alterar").strip().lower()
+        if modo not in ("alterar", "upsert"):
+            modo = "alterar"
+        
+        current_app.logger.info(f"Processando arquivo: {arquivo.filename}, modo: {modo}")
+        
+        try:
+            resultado = AtualizacaoService.processar_atualizacao(arquivo, modo=modo)
+            
+            current_app.logger.info(f"Resultado do processamento: {resultado}")
+            
+            if resultado.get("sucesso"):
+                return _success_response({
+                    "message": "Arquivo processado com sucesso",
+                    "atualizados": resultado.get("atualizados", 0),
+                    "inseridos": resultado.get("inseridos", 0), 
+                    "erros": resultado.get("erros", 0),
+                    "ignorados": resultado.get("ignorados", 0),
+                    "processados": resultado.get("processados", 0),
+                    "detalhes": resultado.get("detalhes", [])
+                })
+            else:
+                return _error_response(
+                    resultado.get("mensagem", "Erro no processamento"),
+                    "Erro no processamento",
+                    400
+                )
+                
+        except Exception as e:
+            current_app.logger.exception(f"Erro no AtualizacaoService: {e}")
+            return _error_response(
+                f"Erro no processamento: {str(e)}",
+                "Erro interno",
+                500
+            )
+            
+    except Exception as e:
+        current_app.logger.exception("Erro no processamento em lote")
+        return _error_response(str(e), "Erro interno", 500)
+
+def _gerar_template_csv_basico() -> str:
+    """Gera template CSV básico quando serviço não está disponível"""
+    return '''numero_cte,destinatario_nome,valor_total,data_emissao,veiculo_placa,observacao
+12345,"Cliente Exemplo",1500.00,2024-01-15,ABC-1234,"Observação exemplo"
+12346,"Cliente Exemplo 2",2500.00,2024-01-16,DEF-5678,"Segunda observação"'''
+
+def _gerar_template_atualizacao_basico() -> str:
+    """Gera template de atualização básico"""
+    return '''numero_cte,data_inclusao_fatura,primeiro_envio,data_atesto,envio_final,data_baixa,observacao
+12345,2024-01-16,2024-01-17,2024-01-24,2024-01-25,,"Em processamento"
+12346,2024-01-17,2024-01-18,2024-01-25,2024-01-26,2024-02-15,"Concluído"'''
+
+def _extrair_amostra_csv(linhas: list) -> list:
+    """Extrai amostra dos dados CSV para validação"""
+    amostra = []
+    if len(linhas) > 1:
+        headers = [h.strip() for h in linhas[0].split(',')]
+        for i in range(1, min(6, len(linhas))):
+            valores = [v.strip() for v in linhas[i].split(',')]
+            linha_dict = {}
+            for j, header in enumerate(headers):
+                linha_dict[header] = valores[j] if j < len(valores) else ''
 def _cte_fallback_dict(cte) -> Dict[str, Any]:
     """Fallback seguro para serialização de CTE"""
     return {

@@ -8,6 +8,7 @@ Arquivo principal para deploy em produção
 import os
 import sys
 from app import create_app, db
+from sqlalchemy import text
 
 # Configurar environment para produção
 os.environ.setdefault('FLASK_ENV', 'production')
@@ -15,22 +16,36 @@ os.environ.setdefault('FLASK_ENV', 'production')
 # Criar aplicação
 application = create_app()
 
-# Healthcheck endpoint simples
+# Healthcheck endpoint corrigido para SQLAlchemy 2.0+
 @application.route('/health')
 def health_check():
     """Endpoint de healthcheck para monitoramento"""
     try:
-        # Testar conexão com banco
+        # Testar conexão com banco - CORRIGIDO para SQLAlchemy 2.0+
         with application.app_context():
-            db.engine.execute('SELECT 1')
-        return {'status': 'healthy', 'service': 'dashboard-baker'}, 200
+            result = db.session.execute(text('SELECT 1 as test')).fetchone()
+            if result[0] != 1:
+                raise Exception("Database test failed")
+                
+        return {
+            'status': 'healthy', 
+            'service': 'dashboard-baker',
+            'database': 'connected'
+        }, 200
     except Exception as e:
-        return {'status': 'unhealthy', 'error': str(e)}, 500
+        return {
+            'status': 'unhealthy', 
+            'error': str(e),
+            'service': 'dashboard-baker'
+        }, 500
 
 @application.route('/ping')
 def ping():
     """Endpoint simples de ping"""
-    return {'status': 'pong', 'timestamp': str(db.func.current_timestamp())}, 200
+    return {
+        'status': 'pong', 
+        'service': 'dashboard-baker'
+    }, 200
 
 if __name__ == "__main__":
     # Para desenvolvimento local
