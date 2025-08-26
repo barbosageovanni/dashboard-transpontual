@@ -7,19 +7,10 @@ healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
-startCommand = "gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --max-requests 1000 --max-requests-jitter 100 --preload --log-level=info"
+startCommand = "gunicorn wsgi:application --workers 2 --timeout 120 --max-requests 1000 --max-requests-jitter 100 --preload --log-level=info"
 
 [env]
 PYTHONPATH = "/app"
 FLASK_ENV = "production"
-
-# Otimizações Python
 PYTHONUNBUFFERED = "1"
 PYTHONHASHSEED = "random"
-
-# Configurações de performance (reduzidas para evitar memory issues)
-WEB_CONCURRENCY = "2"
-WORKER_TIMEOUT = "120"
-
-[build.env]
-PYTHON_VERSION = "3.11"
