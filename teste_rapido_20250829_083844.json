@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-08-29T08:38:44.862453",
+  "status_geral": "🔴 SISTEMA COM PROBLEMAS CRÍTICOS",
+  "cor": "VERMELHO",
+  "sucessos": 0,
+  "total_testes": 5,
+  "testes": {
+    "servidor_respondendo": false,
+    "api_test_conexao": false,
+    "api_listar_simples": false,
+    "api_listar_completa": false,
+    "diagnostico_disponivel": false
+  },
+  "detalhes": {},
+  "arquivos": {
+    "app/__init__.py": {
+      "existe": true,
+      "tamanho": 9822,
+      "descricao": "Arquivo principal da aplicação"
+    },
+    "app/models/cte.py": {
+      "existe": true,
+      "tamanho": 21205,
+      "descricao": "Modelo CTE"
+    },
+    "app/routes/ctes.py": {
+      "existe": true,
+      "tamanho": 57898,
+      "descricao": "Rotas dos CTEs"
+    },
+    "app/utils/date_utils.py": {
+      "existe": false,
+      "descricao": "Utilitário de datas (correção)"
+    },
+    "requirements.txt": {
+      "existe": true,
+      "tamanho": 1008,
+      "descricao": "Dependências"
+    },
+    "run.py": {
+      "existe": true,
+      "tamanho": 1731,
+      "descricao": "Script de inicialização"
+    },
+    "app.py": {
+      "existe": false,
+      "descricao": "Script de inicialização alternativo"
+    }
+  }
+}

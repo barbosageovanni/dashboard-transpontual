@@ -18,6 +18,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
 from config import Config, DevelopmentConfig, ProductionConfig
 
+
 # Instâncias globais
 db = SQLAlchemy()
 migrate = Migrate()
@@ -117,6 +118,9 @@ def registrar_blueprints(app):
 
     from app.routes import analise_financeira
     app.register_blueprint(analise_financeira.bp)
+
+    from app.routes import alertas
+    app.register_blueprint(alertas.bp)
 
     # API Blueprint
     from app.routes import api

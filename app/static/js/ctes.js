@@ -711,6 +711,7 @@ function testarConexaoAPI() {
     });
 }
 
+
 // ===================================
 // FUNÇÕES AUXILIARES E UTILITÁRIOS
 // ===================================
@@ -734,6 +735,93 @@ function limparTabela() {
     $('#paginacao').hide();
 }
 
+function downloadExcel() {
+    console.log('Iniciando download Excel...');
+    baixarArquivo('/ctes/api/download/excel', 'Excel');
+}
+
+function downloadPDF() {
+    console.log('Iniciando download PDF...');
+    baixarArquivo('/ctes/api/download/pdf', 'PDF');
+}
+
+function downloadCSV() {
+    console.log('Iniciando download CSV...');
+    baixarArquivo('/ctes/api/download/csv', 'CSV');
+}
+
+function baixarArquivo(url, tipo) {
+    try {
+        // Capturar filtros atuais da página
+        const search = $('#searchInput').val() || '';
+        const statusBaixa = $('#filtroStatusBaixa').val() || '';
+        
+        // Montar URL com filtros
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (statusBaixa) params.append('status_baixa', statusBaixa);
+        
+        const urlCompleta = params.toString() ? `${url}?${params.toString()}` : url;
+        
+        console.log(`Download ${tipo}:`, urlCompleta);
+        
+        // Mostrar loading
+        mostrarToast(`Preparando download ${tipo}...`, 'info');
+        
+        // Criar link temporário para download
+        const link = document.createElement('a');
+        link.href = urlCompleta;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Feedback de sucesso
+        setTimeout(() => {
+            mostrarToast(`Download ${tipo} iniciado com sucesso!`, 'success');
+        }, 1000);
+        
+    } catch (error) {
+        console.error(`Erro no download ${tipo}:`, error);
+        mostrarToast(`Erro no download ${tipo}`, 'error');
+    }
+}
+
+function mostrarToast(mensagem, tipo = 'info') {
+    const iconMap = {
+        'success': 'fa-check-circle',
+        'error': 'fa-exclamation-circle', 
+        'info': 'fa-info-circle',
+        'warning': 'fa-exclamation-triangle'
+    };
+    
+    const colorMap = {
+        'success': 'text-success',
+        'error': 'text-danger',
+        'info': 'text-info', 
+        'warning': 'text-warning'
+    };
+    
+    const toast = `
+        <div class="toast show position-fixed top-0 end-0 m-3" role="alert" style="z-index: 9999;">
+            <div class="toast-header">
+                <i class="fas ${iconMap[tipo]} ${colorMap[tipo]} me-2"></i>
+                <strong class="me-auto">Sistema</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                ${mensagem}
+            </div>
+        </div>
+    `;
+    
+    $('body').append(toast);
+    
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+        $('.toast').fadeOut(() => $('.toast').remove());
+    }, 5000);
+}
 // ===================================
 // EXPOSIÇÃO GLOBAL PARA DEBUG
 // ===================================

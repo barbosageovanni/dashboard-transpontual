@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-08-29T08:31:17.029842",
+  "testes": {
+    "ambiente_flask": {
+      "status": "OK",
+      "flask_disponivel": true,
+      "sqlalchemy_disponivel": true,
+      "login_manager_disponivel": true
+    },
+    "banco_dados": {
+      "status": "ERRO",
+      "conexao": false,
+      "erro": "Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+    },
+    "modelo_cte": {
+      "status": "ERRO",
+      "modelo_importado": false,
+      "erro": "Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+    },
+    "qualidade_dados": {
+      "status": "ERRO",
+      "erro": "Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+    },
+    "formatacao_datas": {
+      "status": "ERRO",
+      "erro": "Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+    },
+    "serializacao": {
+      "status": "ERRO",
+      "erro": "Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+    },
+    "rotas_api": {
+      "status": "ERRO",
+      "erro": "'Blueprint' object has no attribute 'url_map'"
+    }
+  },
+  "problemas_encontrados": [
+    "Erro na conexão com banco: Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information.",
+    "Erro no modelo CTE: Working outside of application context.\n\nThis typically means that you attempted to use functionality that needed\nthe current application. To solve this, set up an application context\nwith app.app_context(). See the documentation for more information."
+  ],
+  "solucoes_sugeridas": [],
+  "resumo": {
+    "testes_realizados": 7,
+    "testes_ok": 1,
+    "testes_problema": 0,
+    "testes_erro": 6,
+    "problemas_encontrados": 2,
+    "solucoes_sugeridas": 0
+  }
+}

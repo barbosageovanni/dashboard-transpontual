@@ -850,6 +850,9 @@ def _extrair_amostra_csv(linhas: list) -> list:
             amostra.append(linha_dict)
     return amostra
 
+# ==================== CORREÇÃO FINAL DO ARQUIVO ctes.py ====================
+# SUBSTITUA todo o final do arquivo a partir da função _cte_fallback_dict()
+
 def _cte_fallback_dict(cte) -> Dict[str, Any]:
     """Fallback seguro para serialização de CTE"""
     return {
@@ -865,3 +868,595 @@ def _cte_fallback_dict(cte) -> Dict[str, Any]:
         'observacao': str(getattr(cte, 'observacao', '') or ''),
         'erro': 'Fallback utilizado'
     }
+
+# ==================== ROTAS DE EXPORT - SINTAXE CORRIGIDA ====================
+
+@bp.route("/api/download/excel")
+@api_login_required
+def api_download_excel():
+    """Download de CTEs em formato Excel"""
+    try:
+        # Aplicar filtros se fornecidos
+        query = CTE.query
+        
+        # Filtros opcionais
+        texto = request.args.get('texto', '').strip()
+        if texto:
+            query = query.filter(
+                or_(
+                    CTE.numero_cte.contains(texto),
+                    CTE.destinatario_nome.ilike(f'%{texto}%'),
+                    CTE.numero_fatura.ilike(f'%{texto}%'),
+                    CTE.veiculo_placa.ilike(f'%{texto}%')
+                )
+            )
+        
+        # Filtros de data
+        data_inicio = request.args.get('data_inicio')
+        data_fim = request.args.get('data_fim')
+        if data_inicio:
+            try:
+                data_inicio = datetime.strptime(data_inicio, '%Y-%m-%d').date()
+                query = query.filter(CTE.data_emissao >= data_inicio)
+            except ValueError:
+                pass
+        if data_fim:
+            try:
+                data_fim = datetime.strptime(data_fim, '%Y-%m-%d').date()
+                query = query.filter(CTE.data_emissao <= data_fim)
+            except ValueError:
+                pass
+        
+        # Executar query
+        ctes = query.order_by(CTE.numero_cte.desc()).all()
+        
+        if not ctes:
+            return jsonify({"success": False, "message": "Nenhum CTE encontrado"}), 404
+        
+        # Criar DataFrame
+        data = []
+        for cte in ctes:
+            data.append({
+                'Número CTE': cte.numero_cte,
+                'Destinatário': cte.destinatario_nome or '',
+                'Placa Veículo': cte.veiculo_placa or '',
+                'Valor Total': float(cte.valor_total) if cte.valor_total else 0.0,
+                'Data Emissão': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'Data Baixa': cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
+                'Número Fatura': cte.numero_fatura or '',
+                'Data Inclusão Fatura': cte.data_inclusao_fatura.strftime('%d/%m/%Y') if cte.data_inclusao_fatura else '',
+                'Data Envio Processo': cte.data_envio_processo.strftime('%d/%m/%Y') if cte.data_envio_processo else '',
+                'Primeiro Envio': cte.primeiro_envio.strftime('%d/%m/%Y') if cte.primeiro_envio else '',
+                'Data RQ/TMC': cte.data_rq_tmc.strftime('%d/%m/%Y') if cte.data_rq_tmc else '',
+                'Data Atesto': cte.data_atesto.strftime('%d/%m/%Y') if cte.data_atesto else '',
+                'Envio Final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                'Observação': cte.observacao or '',
+                'Status Baixa': 'Com Baixa' if cte.data_baixa else 'Sem Baixa',
+                'Status Processo': 'Completo' if (cte.data_atesto and cte.envio_final) else 'Incompleto'
+            })
+        
+        df = pd.DataFrame(data)
+        
+        # Criar arquivo Excel
+        buffer = BytesIO()
+        with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+            df.to_excel(writer, sheet_name='CTEs', index=False)
+            
+            # Formatação
+            worksheet = writer.sheets['CTEs']
+            
+            # Ajustar largura das colunas
+            for column in worksheet.columns:
+                max_length = 0
+                column_letter = column[0].column_letter
+                for cell in column:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(str(cell.value))
+                    except:
+                        pass
+                adjusted_width = min(max_length + 2, 50)
+                worksheet.column_dimensions[column_letter].width = adjusted_width
+        
+        buffer.seek(0)
+        
+        # Gerar nome do arquivo com timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'ctes_export_{timestamp}.xlsx'
+        
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name=filename,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        
+    except Exception as e:
+        current_app.logger.exception("Erro no download Excel")
+        return jsonify({"success": False, "message": f"Erro: {str(e)}"}), 500
+
+@bp.route("/api/download/csv")
+@api_login_required
+def api_download_csv():
+    """Download de CTEs em formato CSV"""
+    try:
+        # Aplicar filtros se fornecidos (mesmo código do Excel)
+        query = CTE.query
+        
+        texto = request.args.get('texto', '').strip()
+        if texto:
+            query = query.filter(
+                or_(
+                    CTE.numero_cte.contains(texto),
+                    CTE.destinatario_nome.ilike(f'%{texto}%'),
+                    CTE.numero_fatura.ilike(f'%{texto}%'),
+                    CTE.veiculo_placa.ilike(f'%{texto}%')
+                )
+            )
+        
+        data_inicio = request.args.get('data_inicio')
+        data_fim = request.args.get('data_fim')
+        if data_inicio:
+            try:
+                data_inicio = datetime.strptime(data_inicio, '%Y-%m-%d').date()
+                query = query.filter(CTE.data_emissao >= data_inicio)
+            except ValueError:
+                pass
+        if data_fim:
+            try:
+                data_fim = datetime.strptime(data_fim, '%Y-%m-%d').date()
+                query = query.filter(CTE.data_emissao <= data_fim)
+            except ValueError:
+                pass
+        
+        ctes = query.order_by(CTE.numero_cte.desc()).all()
+        
+        if not ctes:
+            return jsonify({"success": False, "message": "Nenhum CTE encontrado"}), 404
+        
+        # Criar CSV
+        csv_lines = []
+        headers = [
+            'Número CTE', 'Destinatário', 'Placa Veículo', 'Valor Total',
+            'Data Emissão', 'Data Baixa', 'Número Fatura', 'Data Inclusão Fatura',
+            'Data Envio Processo', 'Primeiro Envio', 'Data RQ/TMC', 'Data Atesto',
+            'Envio Final', 'Observação', 'Status Baixa', 'Status Processo'
+        ]
+        csv_lines.append(';'.join(headers))
+        
+        for cte in ctes:
+            row = [
+                str(cte.numero_cte),
+                (cte.destinatario_nome or '').replace(';', ','),
+                cte.veiculo_placa or '',
+                str(float(cte.valor_total)) if cte.valor_total else '0.0',
+                cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
+                cte.numero_fatura or '',
+                cte.data_inclusao_fatura.strftime('%d/%m/%Y') if cte.data_inclusao_fatura else '',
+                cte.data_envio_processo.strftime('%d/%m/%Y') if cte.data_envio_processo else '',
+                cte.primeiro_envio.strftime('%d/%m/%Y') if cte.primeiro_envio else '',
+                cte.data_rq_tmc.strftime('%d/%m/%Y') if cte.data_rq_tmc else '',
+                cte.data_atesto.strftime('%d/%m/%Y') if cte.data_atesto else '',
+                cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                (cte.observacao or '').replace(';', ','),
+                'Com Baixa' if cte.data_baixa else 'Sem Baixa',
+                'Completo' if (cte.data_atesto and cte.envio_final) else 'Incompleto'
+            ]
+            csv_lines.append(';'.join(row))
+        
+        csv_content = '\n'.join(csv_lines)
+        
+        # Gerar resposta
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'ctes_export_{timestamp}.csv'
+        
+        response = make_response(csv_content)
+        response.headers['Content-Type'] = 'text/csv; charset=utf-8'
+        response.headers['Content-Disposition'] = f'attachment; filename={filename}'
+        
+        return response
+        
+    except Exception as e:
+        current_app.logger.exception("Erro no download CSV")
+        return jsonify({"success": False, "message": f"Erro: {str(e)}"}), 500
+
+# ==================== ADICIONAR ÀS ROTAS DE CTEs ====================
+# Adicione este código ao arquivo app/routes/ctes.py
+
+@bp.route('/api/diagnostico')
+@api_login_required
+def api_diagnostico():
+    """
+    API de diagnóstico completo do sistema CTEs
+    Acesse via: http://localhost:5000/ctes/api/diagnostico
+    """
+    try:
+        diagnostico_resultado = {
+            'timestamp': datetime.now().isoformat(),
+            'testes': {},
+            'problemas_encontrados': [],
+            'solucoes_sugeridas': [],
+            'resumo': {}
+        }
+        
+        # ==================== TESTE 1: BANCO DE DADOS ====================
+        try:
+            from sqlalchemy import text
+            
+            # Teste conexão básica
+            result = db.session.execute(text("SELECT 1 as test")).fetchone()
+            conexao_ok = bool(result)
+            
+            # Contar registros na tabela
+            count_result = db.session.execute(
+                text("SELECT COUNT(*) as total FROM dashboard_baker")
+            ).fetchone()
+            total_registros = count_result[0] if count_result else 0
+            
+            # Verificar estrutura da tabela
+            try:
+                columns_result = db.session.execute(
+                    text("PRAGMA table_info(dashboard_baker)")
+                ).fetchall()
+                colunas = [{'name': col[1], 'type': col[2]} for col in columns_result]
+            except:
+                # Para outros bancos que não SQLite
+                colunas = ['Estrutura não disponível para este banco']
+            
+            diagnostico_resultado['testes']['banco_dados'] = {
+                'status': 'OK',
+                'conexao': conexao_ok,
+                'total_registros': total_registros,
+                'colunas_tabela': len(colunas) if isinstance(colunas, list) else 0,
+                'estrutura_ok': len(colunas) > 5 if isinstance(colunas, list) else True
+            }
+            
+            current_app.logger.info(f"✅ Banco OK - {total_registros} registros")
+            
+        except Exception as e:
+            diagnostico_resultado['testes']['banco_dados'] = {
+                'status': 'ERRO',
+                'erro': str(e)
+            }
+            diagnostico_resultado['problemas_encontrados'].append(
+                f"Erro no banco de dados: {e}"
+            )
+        
+        # ==================== TESTE 2: MODELO CTE ====================
+        try:
+            if not CTE_MODEL_OK:
+                raise Exception("Modelo CTE não foi importado corretamente")
+            
+            # Testar consulta básica
+            total_ctes = CTE.query.count()
+            
+            # Testar serialização se houver dados
+            exemplo_cte = None
+            erro_serializacao = None
+            
+            if total_ctes > 0:
+                primeiro_cte = CTE.query.first()
+                try:
+                    exemplo_cte = primeiro_cte.to_dict(safe_mode=True)
+                    serializacao_ok = True
+                except Exception as e:
+                    erro_serializacao = str(e)
+                    serializacao_ok = False
+                    
+                    # Tentar fallback
+                    try:
+                        exemplo_cte = cte_fallback_dict(primeiro_cte)
+                        serializacao_ok = True
+                        erro_serializacao += " (usado fallback)"
+                    except:
+                        serializacao_ok = False
+            else:
+                serializacao_ok = True  # OK se não há dados para testar
+            
+            # Testar estatísticas
+            try:
+                stats = CTE.estatisticas_rapidas()
+                estatisticas_ok = True
+            except Exception as e:
+                stats = {'erro': str(e)}
+                estatisticas_ok = False
+            
+            diagnostico_resultado['testes']['modelo_cte'] = {
+                'status': 'OK' if serializacao_ok and estatisticas_ok else 'PROBLEMA',
+                'modelo_importado': CTE_MODEL_OK,
+                'total_ctes': total_ctes,
+                'serializacao_ok': serializacao_ok,
+                'erro_serializacao': erro_serializacao,
+                'estatisticas_ok': estatisticas_ok,
+                'exemplo_dados': exemplo_cte,
+                'estatisticas': stats
+            }
+            
+            if not serializacao_ok:
+                diagnostico_resultado['problemas_encontrados'].append(
+                    f"Erro na serialização de CTEs: {erro_serializacao}"
+                )
+                diagnostico_resultado['solucoes_sugeridas'].append(
+                    "Aplicar modelo CTE corrigido com serialização robusta"
+                )
+            
+            current_app.logger.info(f"✅ Modelo CTE OK - {total_ctes} CTEs")
+            
+        except Exception as e:
+            diagnostico_resultado['testes']['modelo_cte'] = {
+                'status': 'ERRO',
+                'erro': str(e),
+                'modelo_importado': CTE_MODEL_OK
+            }
+            diagnostico_resultado['problemas_encontrados'].append(
+                f"Erro no modelo CTE: {e}"
+            )
+        
+        # ==================== TESTE 3: QUALIDADE DOS DADOS ====================
+        try:
+            if diagnostico_resultado['testes']['modelo_cte']['status'] != 'ERRO':
+                # Estatísticas de qualidade
+                total = CTE.query.count()
+                
+                if total > 0:
+                    com_valor = CTE.query.filter(CTE.valor_total > 0).count()
+                    com_data_emissao = CTE.query.filter(CTE.data_emissao.isnot(None)).count()
+                    com_destinatario = CTE.query.filter(CTE.destinatario_nome.isnot(None)).count()
+                    com_baixa = CTE.query.filter(CTE.data_baixa.isnot(None)).count()
+                    
+                    qualidade_percentual = (
+                        min(com_valor, com_data_emissao, com_destinatario) / total * 100
+                    ) if total > 0 else 0
+                    
+                    diagnostico_resultado['testes']['qualidade_dados'] = {
+                        'status': 'OK' if qualidade_percentual > 80 else 'AVISO',
+                        'total_ctes': total,
+                        'com_valor': com_valor,
+                        'com_data_emissao': com_data_emissao,
+                        'com_destinatario': com_destinatario,
+                        'com_baixa': com_baixa,
+                        'qualidade_percentual': round(qualidade_percentual, 1),
+                        'completude': {
+                            'valores': round(com_valor/total*100, 1),
+                            'datas': round(com_data_emissao/total*100, 1),
+                            'destinatarios': round(com_destinatario/total*100, 1),
+                            'baixas': round(com_baixa/total*100, 1)
+                        }
+                    }
+                    
+                    if qualidade_percentual < 80:
+                        diagnostico_resultado['problemas_encontrados'].append(
+                            f"Qualidade dos dados baixa: {qualidade_percentual:.1f}% completos"
+                        )
+                else:
+                    diagnostico_resultado['testes']['qualidade_dados'] = {
+                        'status': 'AVISO',
+                        'total_ctes': 0,
+                        'mensagem': 'Nenhum CTE encontrado no banco'
+                    }
+                    diagnostico_resultado['problemas_encontrados'].append(
+                        "Nenhum CTE encontrado no banco de dados"
+                    )
+            
+        except Exception as e:
+            diagnostico_resultado['testes']['qualidade_dados'] = {
+                'status': 'ERRO',
+                'erro': str(e)
+            }
+        
+        # ==================== TESTE 4: APIS FUNCIONAIS ====================
+        try:
+            # Testar se as principais APIs estão definidas
+            rotas_testadas = []
+            
+            # Lista de endpoints para testar
+            endpoints_importantes = [
+                'ctes.api_listar',
+                'ctes.api_test_conexao', 
+                'ctes.api_buscar_cte',
+                'ctes.api_listar_simples'
+            ]
+            
+            rotas_ok = []
+            rotas_nao_encontradas = []
+            
+            # Verificar se os endpoints existem na aplicação
+            for endpoint in endpoints_importantes:
+                try:
+                    url = current_app.url_for(endpoint, _external=False)
+                    rotas_ok.append({'endpoint': endpoint, 'url': url})
+                except Exception:
+                    rotas_nao_encontradas.append(endpoint)
+            
+            diagnostico_resultado['testes']['apis_funcionais'] = {
+                'status': 'OK' if len(rotas_ok) >= 2 else 'PROBLEMA',
+                'rotas_funcionais': len(rotas_ok),
+                'rotas_total': len(endpoints_importantes),
+                'rotas_ok': rotas_ok,
+                'rotas_nao_encontradas': rotas_nao_encontradas
+            }
+            
+            if rotas_nao_encontradas:
+                diagnostico_resultado['problemas_encontrados'].append(
+                    f"APIs não encontradas: {', '.join(rotas_nao_encontradas)}"
+                )
+                diagnostico_resultado['solucoes_sugeridas'].append(
+                    "Verificar se as rotas da API estão registradas corretamente"
+                )
+            
+        except Exception as e:
+            diagnostico_resultado['testes']['apis_funcionais'] = {
+                'status': 'ERRO',
+                'erro': str(e)
+            }
+        
+        # ==================== TESTE 5: FORMATAÇÃO DE DATAS ====================
+        try:
+            problemas_data = []
+            exemplos_ok = []
+            
+            if diagnostico_resultado['testes']['modelo_cte'].get('total_ctes', 0) > 0:
+                # Pegar alguns CTEs com datas para testar
+                ctes_amostra = CTE.query.filter(CTE.data_emissao.isnot(None)).limit(5).all()
+                
+                for cte in ctes_amostra:
+                    try:
+                        # Testar formatação
+                        data_iso = cte.data_emissao.strftime('%Y-%m-%d') if cte.data_emissao else None
+                        data_br = cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else None
+                        
+                        exemplos_ok.append({
+                            'cte': cte.numero_cte,
+                            'data_original': str(cte.data_emissao),
+                            'iso': data_iso,
+                            'br': data_br
+                        })
+                    except Exception as e:
+                        problemas_data.append({
+                            'cte': getattr(cte, 'numero_cte', '?'),
+                            'erro': str(e)
+                        })
+            
+            diagnostico_resultado['testes']['formatacao_datas'] = {
+                'status': 'OK' if not problemas_data else 'PROBLEMA',
+                'exemplos_ok': len(exemplos_ok),
+                'problemas': len(problemas_data),
+                'amostras': exemplos_ok[:3],
+                'detalhes_problemas': problemas_data
+            }
+            
+            if problemas_data:
+                diagnostico_resultado['problemas_encontrados'].append(
+                    f"Problemas na formatação de {len(problemas_data)} datas"
+                )
+                diagnostico_resultado['solucoes_sugeridas'].append(
+                    "Implementar parser de datas brasileiro (date_utils.py)"
+                )
+            
+        except Exception as e:
+            diagnostico_resultado['testes']['formatacao_datas'] = {
+                'status': 'ERRO',
+                'erro': str(e)
+            }
+        
+        # ==================== RESUMO FINAL ====================
+        testes_realizados = len(diagnostico_resultado['testes'])
+        testes_ok = sum(1 for t in diagnostico_resultado['testes'].values() if t.get('status') == 'OK')
+        testes_problema = sum(1 for t in diagnostico_resultado['testes'].values() if t.get('status') in ['PROBLEMA', 'AVISO'])
+        testes_erro = sum(1 for t in diagnostico_resultado['testes'].values() if t.get('status') == 'ERRO')
+        
+        diagnostico_resultado['resumo'] = {
+            'testes_realizados': testes_realizados,
+            'testes_ok': testes_ok,
+            'testes_problema': testes_problema, 
+            'testes_erro': testes_erro,
+            'problemas_encontrados': len(diagnostico_resultado['problemas_encontrados']),
+            'solucoes_sugeridas': len(diagnostico_resultado['solucoes_sugeridas']),
+            'saude_sistema': 'EXCELENTE' if testes_erro == 0 and testes_problema == 0 else 
+                            'BOA' if testes_ok > testes_problema + testes_erro else 
+                            'RUIM' if testes_ok > 0 else 'CRÍTICA'
+        }
+        
+        # Adicionar recomendações gerais
+        if diagnostico_resultado['resumo']['saude_sistema'] in ['RUIM', 'CRÍTICA']:
+            diagnostico_resultado['solucoes_sugeridas'].extend([
+                "1. Aplicar todos os artefatos de correção fornecidos",
+                "2. Reiniciar a aplicação Flask",
+                "3. Verificar logs de erro detalhadamente",
+                "4. Testar APIs individualmente"
+            ])
+        
+        return jsonify({
+            'success': True,
+            'diagnostico': diagnostico_resultado,
+            'recomendacao': f"Sistema em estado: {diagnostico_resultado['resumo']['saude_sistema']}",
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        current_app.logger.exception("Erro no diagnóstico da API")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'message': 'Erro crítico no diagnóstico',
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+# ==================== ROTA DE DIAGNÓSTICO SIMPLES ====================
+
+@bp.route('/api/diagnostico-simples')
+@api_login_required
+def api_diagnostico_simples():
+    """
+    Diagnóstico rápido e simples - para casos de emergência
+    Acesse via: http://localhost:5000/ctes/api/diagnostico-simples
+    """
+    try:
+        resultado = {
+            'timestamp': datetime.now().isoformat(),
+            'testes_basicos': {}
+        }
+        
+        # Teste 1: Banco conecta?
+        try:
+            from sqlalchemy import text
+            db.session.execute(text("SELECT 1")).fetchone()
+            resultado['testes_basicos']['banco'] = '✅ OK'
+        except Exception as e:
+            resultado['testes_basicos']['banco'] = f'❌ ERRO: {str(e)[:100]}'
+        
+        # Teste 2: Modelo CTE importa?
+        try:
+            total = CTE.query.count()
+            resultado['testes_basicos']['modelo'] = f'✅ OK - {total} CTEs'
+        except Exception as e:
+            resultado['testes_basicos']['modelo'] = f'❌ ERRO: {str(e)[:100]}'
+        
+        # Teste 3: Serialização funciona?
+        try:
+            if CTE.query.count() > 0:
+                primeiro = CTE.query.first()
+                dados = primeiro.to_dict(safe_mode=True)
+                resultado['testes_basicos']['serializacao'] = '✅ OK'
+            else:
+                resultado['testes_basicos']['serializacao'] = '⚠️ SEM DADOS PARA TESTAR'
+        except Exception as e:
+            resultado['testes_basicos']['serializacao'] = f'❌ ERRO: {str(e)[:100]}'
+        
+        # Teste 4: APIs registradas?
+        try:
+            url_listar = current_app.url_for('ctes.api_listar', _external=False)
+            resultado['testes_basicos']['apis'] = f'✅ OK - {url_listar}'
+        except Exception as e:
+            resultado['testes_basicos']['apis'] = f'❌ ERRO: {str(e)[:100]}'
+        
+        # Resumo rápido
+        erros = sum(1 for v in resultado['testes_basicos'].values() if v.startswith('❌'))
+        avisos = sum(1 for v in resultado['testes_basicos'].values() if v.startswith('⚠️'))
+        oks = sum(1 for v in resultado['testes_basicos'].values() if v.startswith('✅'))
+        
+        resultado['resumo_rapido'] = {
+            'status': 'CRÍTICO' if erros >= 3 else 'PROBLEMA' if erros > 0 or avisos > 0 else 'OK',
+            'oks': oks,
+            'erros': erros,
+            'avisos': avisos,
+            'proximos_passos': [
+                "Implementar correções dos artefatos fornecidos" if erros > 0 else "Sistema funcionando normalmente",
+                "Verificar logs detalhados" if erros > 0 else "Executar diagnóstico completo se necessário",
+                "Reiniciar aplicação" if erros >= 2 else "Continuar monitoramento"
+            ]
+        }
+        
+        return jsonify({
+            'success': True,
+            'diagnostico_simples': resultado,
+            'message': f"Diagnóstico rápido: {resultado['resumo_rapido']['status']}"
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'message': 'Erro no diagnóstico simples'
+        }), 500

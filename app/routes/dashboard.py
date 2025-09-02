@@ -134,7 +134,7 @@ def _calcular_metricas_completas():
 
     print(f"📊 Calculando métricas para {len(df)} registros")
     metricas = _metricas_basicas(df)
-    alertas = _alertas(df)
+    alertas = calcular_alertas_inteligentes(df)  # ✅ CORRIGIDO!
     variacoes = _variacoes(df)
     graficos = _graficos(df)
 
@@ -277,7 +277,7 @@ def _alertas(df: pd.DataFrame) -> dict:
                 print(f"⚠️ Erro ao criar item de alerta: {e}")
                 return {'numero_cte': 0, 'destinatario_nome': 'Erro', 'valor_total': 0.0, extra_field: None}
 
-        # 1) Primeiro envio pendente (>10 dias após emissão)
+        # 1) Primeiro envio pendente (>1 dias após emissão)
         if all(col in df.columns for col in ['data_emissao', 'primeiro_envio']):
             mask = (df['data_emissao'].notna() &
                     ((hoje - df['data_emissao']).dt.days > 10) &
@@ -290,29 +290,33 @@ def _alertas(df: pd.DataFrame) -> dict:
                     'lista': [_safe_item(r, 'data_emissao') for _, r in c.iterrows()]
                 }
 
-        # 2) Envio final pendente (>5 dias após atesto)
+        # 2) Envio final pendente (>1 dias após atesto)
         if all(col in df.columns for col in ['data_atesto', 'envio_final']):
-            mask = (df['data_atesto'].notna() &
-                    ((hoje - df['data_atesto']).dt.days > 5) &
-                    df['envio_final'].isna())
-            if mask.any():
-                c = df[mask]
+            mask_envio_final = (
+                df['data_atesto'].notna() & 
+                ((hoje - df['data_atesto']).dt.days > 1) &  # MUDAR DE 5 PARA 1
+                df['envio_final'].isna()
+            )
+            if mask_envio_final.any():
+                c = df[mask_envio_final]
                 alertas['envio_final_pendente'] = {
                     'qtd': int(len(c)),
-                    'valor': float(valores[mask].sum()),
+                    'valor': float(valores[mask_envio_final].sum()),
                     'lista': [_safe_item(r, 'data_atesto') for _, r in c.iterrows()]
                 }
 
         # 3) Faturas vencidas (>90 dias do atesto, sem baixa)
         if all(col in df.columns for col in ['data_atesto', 'data_baixa']):
-            mask = (df['data_atesto'].notna() &
-                    ((hoje - df['data_atesto']).dt.days > 90) &
-                    df['data_baixa'].isna())
-            if mask.any():
-                c = df[mask]
+            mask_vencidas = (
+                    df['envio_final'].notna() &  # MUDAR DE data_atesto PARA envio_final
+                    ((hoje - df['envio_final']).dt.days > 90) &
+                    df['data_baixa'].isna()
+                )
+            if mask_vencidas.any():
+                c = df[mask_vencidas]
                 alertas['faturas_vencidas'] = {
                     'qtd': int(len(c)),
-                    'valor': float(valores[mask].sum()),
+                    'valor': float(valores[mask_vencidas].sum()),
                     'lista': [_safe_item(r, 'data_atesto') for _, r in c.iterrows()]
                 }
 
@@ -563,3 +567,317 @@ def api_relatorio_executivo():
     except Exception as e:
         print(f"❌ Erro no relatório executivo: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+    
+    # ================================
+# ADICIONAR ESTAS FUNÇÕES no arquivo dashboard.py
+# ================================
+
+def calcular_alertas_inteligentes(df):
+    """Sistema de alertas inteligentes - VERSÃO CORRIGIDA"""
+    print(f"🚨 Iniciando cálculo de alertas para {len(df)} registros")
+    
+    alertas = {
+        'primeiro_envio_pendente': {'qtd': 0, 'valor': 0.0, 'lista': []},
+        'envio_final_pendente': {'qtd': 0, 'valor': 0.0, 'lista': []},
+        'faturas_vencidas': {'qtd': 0, 'valor': 0.0, 'lista': []},
+        'ctes_sem_faturas': {'qtd': 0, 'valor': 0.0, 'lista': []}
+    }
+
+    if df.empty:
+        print("⚠️ DataFrame vazio para alertas")
+        return alertas
+
+    hoje = pd.Timestamp.now().normalize()
+
+    try:
+        # 1. Primeiro envio pendente (10 dias após emissão) - ✅ MANTIDO
+        print("🔍 Calculando primeiro envio pendente...")
+        mask_primeiro_envio = (
+            df['data_emissao'].notna() & 
+            ((hoje - df['data_emissao']).dt.days > 10) &
+            df['primeiro_envio'].isna()
+        )
+        if mask_primeiro_envio.any():
+            ctes_problema = df[mask_primeiro_envio]
+            lista_segura = []
+            for _, row in ctes_problema.head(10).iterrows():  # Limitar a 10 por segurança
+                try:
+                    item = {
+                        'numero_cte': int(row['numero_cte']),
+                        'destinatario_nome': str(row['destinatario_nome']),
+                        'valor_total': float(row['valor_total']),
+                        'data_emissao': row['data_emissao'].isoformat() if pd.notna(row['data_emissao']) else None
+                    }
+                    lista_segura.append(item)
+                except Exception as e:
+                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    continue
+
+            alertas['primeiro_envio_pendente'] = {
+                'qtd': len(ctes_problema),
+                'valor': float(ctes_problema['valor_total'].sum()),
+                'lista': lista_segura
+            }
+            print(f"✅ Primeiro envio pendente: {len(ctes_problema)} CTEs")
+
+        # 2. Envio Final Pendente - 🔧 CORRIGIDO: 1 dia após atesto (era 5)
+        print("🔍 Calculando envio final pendente...")
+        mask_envio_final = (
+            df['data_atesto'].notna() & 
+            ((hoje - df['data_atesto']).dt.days > 1) &  # MUDANÇA: 5 → 1
+            df['envio_final'].isna()
+        )
+        if mask_envio_final.any():
+            ctes_problema = df[mask_envio_final]
+            lista_segura = []
+            for _, row in ctes_problema.head(10).iterrows():
+                try:
+                    item = {
+                        'numero_cte': int(row['numero_cte']),
+                        'destinatario_nome': str(row['destinatario_nome']),
+                        'valor_total': float(row['valor_total']),
+                        'data_atesto': row['data_atesto'].isoformat() if pd.notna(row['data_atesto']) else None
+                    }
+                    lista_segura.append(item)
+                except Exception as e:
+                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    continue
+
+            alertas['envio_final_pendente'] = {
+                'qtd': len(ctes_problema),
+                'valor': float(ctes_problema['valor_total'].sum()),
+                'lista': lista_segura
+            }
+            print(f"✅ Envio final pendente: {len(ctes_problema)} CTEs")
+
+        # 3. Faturas vencidas - 🔧 CORRIGIDO: 90 dias após ENVIO FINAL (era após atesto)
+        print("🔍 Calculando faturas vencidas...")
+        mask_vencidas = (
+            df['envio_final'].notna() &  # MUDANÇA: data_atesto → envio_final
+            ((hoje - df['envio_final']).dt.days > 90) &  # MUDANÇA: data_atesto → envio_final
+            df['data_baixa'].isna()
+        )
+        if mask_vencidas.any():
+            ctes_problema = df[mask_vencidas]
+            lista_segura = []
+            for _, row in ctes_problema.head(10).iterrows():
+                try:
+                    item = {
+                        'numero_cte': int(row['numero_cte']),
+                        'destinatario_nome': str(row['destinatario_nome']),
+                        'valor_total': float(row['valor_total']),
+                        'envio_final': row['envio_final'].isoformat() if pd.notna(row['envio_final']) else None  # MUDANÇA: data_atesto → envio_final
+                    }
+                    lista_segura.append(item)
+                except Exception as e:
+                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    continue
+
+            alertas['faturas_vencidas'] = {
+                'qtd': len(ctes_problema),
+                'valor': float(ctes_problema['valor_total'].sum()),
+                'lista': lista_segura
+            }
+            print(f"✅ Faturas vencidas: {len(ctes_problema)} CTEs")
+
+        # 4. CTEs sem faturas (3 dias após atesto) - ✅ MANTIDO
+        print("🔍 Calculando CTEs sem faturas...")
+        mask_sem_faturas = (
+            df['data_atesto'].notna() & 
+            ((hoje - df['data_atesto']).dt.days > 3) &
+            (df['numero_fatura'].isna() | (df['numero_fatura'] == ''))
+        )
+        if mask_sem_faturas.any():
+            ctes_problema = df[mask_sem_faturas]
+            lista_segura = []
+            for _, row in ctes_problema.head(10).iterrows():
+                try:
+                    item = {
+                        'numero_cte': int(row['numero_cte']),
+                        'destinatario_nome': str(row['destinatario_nome']),
+                        'valor_total': float(row['valor_total']),
+                        'data_atesto': row['data_atesto'].isoformat() if pd.notna(row['data_atesto']) else None
+                    }
+                    lista_segura.append(item)
+                except Exception as e:
+                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    continue
+
+            alertas['ctes_sem_faturas'] = {
+                'qtd': len(ctes_problema),
+                'valor': float(ctes_problema['valor_total'].sum()),
+                'lista': lista_segura
+            }
+            print(f"✅ CTEs sem faturas: {len(ctes_problema)} CTEs")
+
+        print("✅ Todos os alertas calculados com sucesso!")
+
+    except Exception as e:
+        print(f"⚠️ Erro no cálculo de alertas: {str(e)}")
+        import traceback
+        traceback.print_exc()
+
+    return alertas
+
+
+def _variacoes(df):
+    """Calcula variações de tempo entre processos"""
+    print(f"⏱️ Calculando variações para {len(df)} registros")
+    
+    configs = [
+        ('rq_tmc_primeiro_envio', 'RQ/TMC → 1º Envio', 'data_rq_tmc', 'primeiro_envio', 3),
+        ('primeiro_envio_atesto', '1º Envio → Atesto', 'primeiro_envio', 'data_atesto', 7),
+        ('atesto_envio_final', 'Atesto → Envio Final', 'data_atesto', 'envio_final', 2),
+        ('cte_inclusao_fatura', 'CTE → Inclusão Fatura', 'data_emissao', 'data_inclusao_fatura', 2),
+        ('cte_baixa', 'CTE → Baixa', 'data_emissao', 'data_baixa', 30),
+    ]
+    
+    out = {}
+    if df.empty:
+        return out
+
+    try:
+        for code, nome, inicio, fim, meta in configs:
+            if inicio in df.columns and fim in df.columns:
+                m = df[inicio].notna() & df[fim].notna()
+                if not m.any():
+                    continue
+                
+                _dif = (df.loc[m, fim] - df.loc[m, inicio]).dt.days
+                _dif = _dif[_dif >= 0]  # Apenas diferenças positivas
+                
+                if len(_dif) == 0:
+                    continue
+                
+                media = float(_dif.mean())
+                mediana = float(_dif.median())
+                
+                # Determinar performance
+                if media <= meta:
+                    perf = 'excelente'
+                elif media <= meta * 1.5:
+                    perf = 'bom'
+                elif media <= meta * 2:
+                    perf = 'atencao'
+                else:
+                    perf = 'critico'
+                
+                out[code] = {
+                    'nome': nome,
+                    'media': round(media, 1),
+                    'mediana': round(mediana, 1),
+                    'qtd': int(len(_dif)),
+                    'meta_dias': int(meta),
+                    'performance': perf,
+                    'min': int(_dif.min()),
+                    'max': int(_dif.max())
+                }
+                print(f"✅ {nome}: {len(_dif)} registros, média {media:.1f} dias")
+                
+    except Exception as e:
+        print(f"⚠️ Erro no cálculo de variações: {e}")
+
+    return out
+
+
+def _graficos(df):
+    """Gera dados para gráficos do dashboard"""
+    print(f"📈 Gerando gráficos para {len(df)} registros")
+    
+    graficos = {
+        'evolucao_mensal': {'labels': [], 'valores': [], 'quantidades': []},
+        'top_clientes': {'labels': [], 'valores': []},
+        'distribuicao_status': {
+            'baixas': {'labels': [], 'valores': []},
+            'processos': {'labels': [], 'valores': []}
+        },
+        'performance_veiculos': {'labels': [], 'valores': [], 'quantidades': []}
+    }
+    
+    if df.empty:
+        return graficos
+
+    try:
+        valores = pd.to_numeric(df['valor_total'], errors='coerce').fillna(0)
+
+        # Evolução mensal
+        if 'data_emissao' in df.columns and df['data_emissao'].notna().any():
+            try:
+                tmp = df[df['data_emissao'].notna() & valores.notna()].copy()
+                if not tmp.empty:
+                    tmp['mes_ano'] = tmp['data_emissao'].dt.to_period('M')
+                    receita = tmp.groupby('mes_ano').agg(
+                        valor_total=('valor_total', lambda x: pd.to_numeric(x, errors='coerce').sum()),
+                        qtd=('numero_cte', 'count')
+                    ).reset_index().tail(12)
+                    
+                    if not receita.empty:
+                        graficos['evolucao_mensal'] = {
+                            'labels': [str(p) for p in receita['mes_ano']],
+                            'valores': [float(v) for v in receita['valor_total']],
+                            'quantidades': [int(q) for q in receita['qtd']]
+                        }
+                        print(f"✅ Evolução mensal: {len(receita)} períodos")
+            except Exception as e:
+                print(f"⚠️ Erro na evolução mensal: {e}")
+
+        # Top clientes
+        if 'destinatario_nome' in df.columns:
+            try:
+                tmp_df = df.copy()
+                tmp_df['valor_total'] = valores
+                top = tmp_df.groupby('destinatario_nome')['valor_total'].sum().sort_values(ascending=False).head(5)
+                if not top.empty:
+                    graficos['top_clientes'] = {
+                        'labels': [str(i) for i in top.index],
+                        'valores': [float(v) for v in top.values]
+                    }
+                    print(f"✅ Top clientes: {len(top)} clientes")
+            except Exception as e:
+                print(f"⚠️ Erro no top clientes: {e}")
+
+        # Distribuição de status
+        try:
+            com_baixa = int(df['data_baixa'].notna().sum()) if 'data_baixa' in df.columns else 0
+            sem_baixa = int(len(df) - com_baixa)
+            
+            proc_compl = 0
+            if all(col in df.columns for col in ['data_emissao', 'primeiro_envio', 'data_atesto', 'envio_final']):
+                proc_compl = int((df['data_emissao'].notna() & df['primeiro_envio'].notna() &
+                                  df['data_atesto'].notna() & df['envio_final'].notna()).sum())
+            proc_incompl = int(len(df) - proc_compl)
+            
+            graficos['distribuicao_status'] = {
+                'baixas': {'labels': ['Com Baixa', 'Sem Baixa'], 'valores': [com_baixa, sem_baixa]},
+                'processos': {'labels': ['Completos', 'Incompletos'], 'valores': [proc_compl, proc_incompl]}
+            }
+            print(f"✅ Distribuição: {com_baixa} com baixa, {proc_compl} completos")
+        except Exception as e:
+            print(f"⚠️ Erro na distribuição de status: {e}")
+
+        # Performance de veículos
+        if 'veiculo_placa' in df.columns:
+            try:
+                tmp_df = df.copy()
+                tmp_df['valor_total'] = valores
+                v = tmp_df.groupby('veiculo_placa').agg(
+                    valor_total=('valor_total', 'sum'),
+                    qtd=('numero_cte', 'count')
+                ).sort_values('valor_total', ascending=False).head(10)
+                
+                if not v.empty:
+                    graficos['performance_veiculos'] = {
+                        'labels': [str(i) for i in v.index],
+                        'valores': [float(x) for x in v['valor_total']],
+                        'quantidades': [int(x) for x in v['qtd']]
+                    }
+                    print(f"✅ Performance veículos: {len(v)} veículos")
+            except Exception as e:
+                print(f"⚠️ Erro na performance de veículos: {e}")
+
+        print("✅ Gráficos gerados com sucesso!")
+
+    except Exception as e:
+        print(f"⚠️ Erro geral nos gráficos: {e}")
+
+    return graficos

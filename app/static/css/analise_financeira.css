@@ -1,0 +1,396 @@
+/* app/static/css/analise_financeira.css - MOBILE FIXES */
+/* CORREÇÃO ESPECÍFICA PARA PROBLEMAS DE ALINHAMENTO MOBILE */
+
+/* ==================== RESET E BASE ==================== */
+* {
+    box-sizing: border-box;
+}
+
+/* ==================== CONTAINERS PRINCIPAIS ==================== */
+.analysis-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 10px;
+    padding: 20px;
+}
+
+/* ==================== CARDS - CORREÇÃO MOBILE ==================== */
+.metric-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    border-radius: 16px;
+    padding: 16px !important; /* Reduzido para mobile */
+    margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: center; /* Centralizar conteúdo */
+    min-height: 120px;
+    max-height: 160px; /* Limitar altura */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==================== NÚMEROS - CORREÇÃO PRINCIPAL ==================== */
+.metric-number {
+    font-size: 1.2rem !important; /* Tamanho fixo base */
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1 !important;
+    margin-bottom: 4px !important;
+    text-align: center !important;
+    word-break: break-word !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* ==================== LABELS E TEXTO SECUNDÁRIO ==================== */
+.metric-label {
+    font-size: 0.7rem !important; /* Reduzido para mobile */
+    color: #6c757d !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 2px 0 !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+    font-weight: 600 !important;
+}
+
+.text-muted, .metric-subtitle {
+    font-size: 0.65rem !important; /* Menor ainda */
+    color: #6c757d !important;
+    margin-top: 2px !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+    line-height: 1.1 !important;
+}
+
+/* ==================== RESPONSIVIDADE ESPECÍFICA ==================== */
+
+/* Mobile Pequeno (até 576px) */
+@media (max-width: 576px) {
+    .analysis-container {
+        margin: 5px;
+        padding: 15px;
+    }
+    
+    .metric-card {
+        padding: 12px !important;
+        min-height: 100px;
+        max-height: 130px;
+        margin: 6px 0;
+    }
+    
+    .metric-number {
+        font-size: 0.9rem !important; /* Muito menor para mobile pequeno */
+    }
+    
+    .metric-label {
+        font-size: 0.6rem !important;
+        letter-spacing: 0.3px;
+    }
+    
+    .text-muted {
+        font-size: 0.55rem !important;
+    }
+    
+    .header-gradient h1 {
+        font-size: 1.8rem !important; /* Reduzir título */
+    }
+    
+    .header-gradient p {
+        font-size: 0.9rem !important; /* Reduzir subtítulo */
+    }
+}
+
+/* Mobile Médio (577px - 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+    .metric-card {
+        padding: 14px !important;
+        min-height: 110px;
+        max-height: 140px;
+    }
+    
+    .metric-number {
+        font-size: 1.0rem !important;
+    }
+    
+    .metric-label {
+        font-size: 0.65rem !important;
+    }
+    
+    .text-muted {
+        font-size: 0.6rem !important;
+    }
+}
+
+/* Tablet (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .metric-number {
+        font-size: 1.1rem !important;
+    }
+    
+    .metric-label {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Desktop (1025px+) */
+@media (min-width: 1025px) {
+    .metric-number {
+        font-size: 1.4rem !important; /* Tamanho normal para desktop */
+    }
+    
+    .metric-label {
+        font-size: 0.8rem !important;
+    }
+    
+    .text-muted {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* ==================== GRID RESPONSIVO ==================== */
+@media (max-width: 576px) {
+    .row .col-md-3,
+    .row .col-md-4,
+    .row .col-md-6 {
+        margin-bottom: 10px;
+    }
+}
+
+/* ==================== FILTROS RESPONSIVOS ==================== */
+.filter-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .filter-card .row .col-md-4 {
+        margin-bottom: 10px;
+    }
+    
+    .form-label {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+    
+    .form-select, .btn {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}
+
+/* ==================== GRÁFICOS RESPONSIVOS ==================== */
+.chart-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px; /* Reduzido para mobile */
+    padding: 15px;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 250px; /* Ainda menor para mobile */
+        padding: 10px;
+    }
+    
+    .chart-card h5 {
+        font-size: 0.9rem;
+        padding: 15px;
+    }
+}
+
+/* ==================== TABELA RESPONSIVA ==================== */
+.table {
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.7rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 4px;
+        text-align: center;
+    }
+}
+
+/* ==================== BOTÕES RESPONSIVOS ==================== */
+@media (max-width: 576px) {
+    .btn {
+        font-size: 0.75rem;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        width: 100%;
+    }
+    
+    .btn.me-2 {
+        margin-right: 0 !important;
+        margin-bottom: 8px;
+    }
+}
+
+/* ==================== HEADER RESPONSIVO ==================== */
+.header-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .header-gradient {
+        padding: 20px 15px;
+        border-radius: 15px;
+    }
+    
+    .header-gradient h1 {
+        font-size: 2rem !important;
+        margin-bottom: 10px;
+    }
+    
+    .header-gradient p {
+        font-size: 1rem !important;
+        line-height: 1.3;
+    }
+}
+
+/* ==================== CORREÇÕES ESPECÍFICAS PARA DASHBOARD ==================== */
+
+/* Cards de alertas */
+.alert-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #dc3545;
+}
+
+@media (max-width: 768px) {
+    .alert-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .alert-card .metric-number {
+        font-size: 1.0rem !important;
+        color: #dc3545 !important;
+        background: none !important;
+        -webkit-text-fill-color: #dc3545 !important;
+    }
+}
+
+/* Sistema de alertas responsivo */
+.sistema-alertas {
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .sistema-alertas {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .sistema-alertas h5 {
+        font-size: 1rem;
+    }
+    
+    .sistema-alertas .alert-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ==================== LOADING STATES ==================== */
+.loading-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* ==================== ANIMAÇÕES SUAVES ==================== */
+.metric-card {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== CORREÇÃO FINAL PARA QUEBRA DE LINHA ==================== */
+.metric-number {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Se o número for muito longo, quebrar de forma inteligente */
+@media (max-width: 576px) {
+    .metric-number {
+        white-space: normal !important; /* Permitir quebra em mobile muito pequeno */
+        word-break: break-word !important;
+        line-height: 1.0 !important;
+    }
+}
+
+/* ==================== DEBUGGING - REMOVER EM PRODUÇÃO ==================== */
+/*
+.metric-card {
+    border: 2px dashed red !important;
+}
+.metric-number {
+    border: 1px solid blue !important;
+}
+*/

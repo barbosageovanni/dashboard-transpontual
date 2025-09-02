@@ -1,0 +1,1054 @@
+{% extends "base.html" %}
+
+{% block title %}Sistema Administrativo Completo - Dashboard Transpontual{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Sistema Administrativo Moderno */
+.admin-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.admin-header .user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.main-content {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.content-header {
+    background: #f8f9fa;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-body {
+    padding: 0;
+}
+
+.user-item {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.user-item:hover {
+    background: #f8f9fa;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-info strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    color: #333;
+}
+
+.user-meta {
+    color: #666;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-admin {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.badge-user {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.badge-active {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.badge-inactive {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    background: #f8f9fa;
+    border-radius: 0 0 15px 15px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.permission-item:hover {
+    background: #e9ecef;
+}
+
+.permission-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #667eea;
+}
+
+.permission-item.checked {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: #667eea;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.loading, .empty {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.loading i {
+    font-size: 2rem;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.search-filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+    .search-filters {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .user-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .user-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .admin-header .user-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Sistema Administrativo Completo</h1>
+    <p>Gerenciamento avançado de usuários, permissões e configurações</p>
+    <div class="user-info">
+        <div>
+            <strong>Usuário logado:</strong> {{ current_user.nome_completo }} ({{ current_user.username }})
+        </div>
+        <div>
+            <button class="btn btn-secondary" onclick="openChangePasswordModal()">
+                <i class="fas fa-key"></i> Alterar Minha Senha
+            </button>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Estatísticas -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number" id="totalUsers">0</div>
+        <div class="stat-label">Total de Usuários</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" id="activeUsers">0</div>
+        <div class="stat-label">Usuários Ativos</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" id="adminUsers">0</div>
+        <div class="stat-label">Administradores</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" id="recentLogins">0</div>
+        <div class="stat-label">Logins Recentes</div>
+    </div>
+</div>
+
+<!-- Filtros de Busca -->
+<div class="search-filters">
+    <div class="form-group">
+        <label>Buscar usuários</label>
+        <input type="text" id="searchInput" class="form-control" placeholder="Nome, email ou username...">
+    </div>
+    <div class="form-group">
+        <label>Tipo</label>
+        <select id="roleFilter" class="form-select" onchange="filterUsers()">
+            <option value="">Todos</option>
+            <option value="admin">Admin</option>
+            <option value="user">Usuário</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Status</label>
+        <select id="statusFilter" class="form-select" onchange="filterUsers()">
+            <option value="">Todos</option>
+            <option value="active">Ativo</option>
+            <option value="inactive">Inativo</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-secondary" onclick="clearFilters()" style="margin-top: 1.8rem;">
+            <i class="fas fa-times"></i> Limpar
+        </button>
+    </div>
+</div>
+
+<!-- Lista de Usuários -->
+<div class="main-content">
+    <div class="content-header">
+        <h3><i class="fas fa-users"></i> Gerenciamento de Usuários</h3>
+        <button class="btn btn-primary" onclick="openCreateUserModal()">
+            <i class="fas fa-user-plus"></i> Novo Usuário
+        </button>
+    </div>
+    <div class="content-body">
+        <div id="usersList" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Carregando usuários...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Criar Usuário -->
+<div id="createUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Criar Novo Usuário</h4>
+            <button class="close-btn" onclick="closeModal('createUserModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="createUserForm">
+                <div class="form-group">
+                    <label>Nome Completo *</label>
+                    <input type="text" name="nome_completo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Nome de Usuário *</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha *</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Usuário</label>
+                    <select name="tipo_usuario" class="form-select">
+                        <option value="user">Usuário</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="ativo" class="form-select">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Permissões de Módulos</label>
+                    <div class="permissions-grid" id="createPermissions">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('createUserModal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="createUser()">Criar Usuário</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Usuário -->
+<div id="editUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Editar Usuário</h4>
+            <button class="close-btn" onclick="closeModal('editUserModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm">
+                <input type="hidden" name="user_id" id="editUserId">
+                <div class="form-group">
+                    <label>Nome Completo *</label>
+                    <input type="text" name="nome_completo" id="editNomeCompleto" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Nome de Usuário *</label>
+                    <input type="text" name="username" id="editUsername" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" id="editEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Usuário</label>
+                    <select name="tipo_usuario" id="editTipoUsuario" class="form-select">
+                        <option value="user">Usuário</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="ativo" id="editAtivo" class="form-select">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Permissões de Módulos</label>
+                    <div class="permissions-grid" id="editPermissions">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('editUserModal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="updateUser()">Salvar Alterações</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Alterar Minha Senha -->
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Alterar Minha Senha</h4>
+            <button class="close-btn" onclick="closeModal('changePasswordModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Senha Atual *</label>
+                    <input type="password" name="current_password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Nova Senha *</label>
+                    <input type="password" name="new_password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Nova Senha *</label>
+                    <input type="password" name="confirm_password" class="form-control" required>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('changePasswordModal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="changeMyPassword()">Alterar Senha</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Mostrar Senha Gerada -->
+<div id="showPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Senha Temporária Gerada</h4>
+            <button class="close-btn" onclick="closeModal('showPasswordModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-warning">
+                <h5>Nova senha temporária:</h5>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 1.2rem; text-align: center; border: 2px solid #ffc107; margin: 1rem 0;">
+                    <span id="generatedPassword"></span>
+                </div>
+                <p><strong>Importante:</strong> Anote esta senha em local seguro. O usuário deve alterá-la no primeiro login.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="copyPassword()">
+                <i class="fas fa-copy"></i> Copiar
+            </button>
+            <button class="btn btn-primary" onclick="closeModal('showPasswordModal')">Fechar</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Variáveis globais
+const MODULES = {{ modules|tojson }};
+let currentUsers = [];
+let currentFilters = { search: '', role: '', status: '' };
+
+// Inicialização
+$(document).ready(function() {
+    console.log('Sistema administrativo completo carregado');
+    
+    loadUsers();
+    loadStats();
+    setupEventListeners();
+    
+    // Auto-refresh a cada 60 segundos
+    setInterval(loadStats, 60000);
+});
+
+// Event listeners
+function setupEventListeners() {
+    // Busca com debounce
+    let searchTimeout;
+    $('#searchInput').on('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentFilters.search = $(this).val().trim();
+            filterUsers();
+        }, 500);
+    });
+    
+    // Fechar modais clicando fora
+    $('.modal').click(function(e) {
+        if (e.target === this) {
+            $(this).removeClass('show');
+        }
+    });
+}
+
+// Carregar usuários
+function loadUsers() {
+    $('#usersList').html('<div class="loading"><i class="fas fa-spinner"></i><p>Carregando usuários...</p></div>');
+    
+    $.ajax({
+        url: '/admin/api/users',
+        method: 'GET',
+        data: currentFilters,
+        success: function(response) {
+            if (response.success) {
+                currentUsers = response.users;
+                displayUsers(response.users);
+            } else {
+                showError('Erro ao carregar usuários: ' + response.error);
+            }
+        },
+        error: function() {
+            $('#usersList').html('<div class="empty">Erro de conexão</div>');
+        }
+    });
+}
+
+// Carregar estatísticas
+function loadStats() {
+    $.ajax({
+        url: '/admin/api/system-stats',
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                updateStats(response.stats.users);
+            }
+        },
+        error: function() {
+            console.error('Erro ao carregar estatísticas');
+        }
+    });
+}
+
+// Atualizar estatísticas
+function updateStats(stats) {
+    $('#totalUsers').text(stats.total || 0);
+    $('#activeUsers').text(stats.active || 0);
+    $('#adminUsers').text(stats.admins || 0);
+    $('#recentLogins').text(stats.recent_logins || 0);
+}
+
+// Exibir usuários
+function displayUsers(users) {
+    if (!users || users.length === 0) {
+        $('#usersList').html('<div class="empty">Nenhum usuário encontrado</div>');
+        return;
+    }
+    
+    let html = '';
+    users.forEach(user => {
+        const statusBadge = user.ativo ? 'badge-active' : 'badge-inactive';
+        const statusText = user.ativo ? 'Ativo' : 'Inativo';
+        const typeBadge = user.tipo_usuario === 'admin' ? 'badge-admin' : 'badge-user';
+        const typeText = user.tipo_usuario === 'admin' ? 'Admin' : 'Usuário';
+        
+        html += `
+            <div class="user-item">
+                <div class="user-info">
+                    <strong>${user.nome_completo || user.username}</strong>
+                    <div class="user-meta">
+                        <span>${user.email}</span>
+                        <span class="badge ${typeBadge}">${typeText}</span>
+                        <span class="badge ${statusBadge}">${statusText}</span>
+                        <span>Logins: ${user.total_logins || 0}</span>
+                        ${user.last_login_formatted ? '<span>Último: ' + user.last_login_formatted + '</span>' : ''}
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <button class="btn btn-primary" onclick="editUser(${user.id})">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-warning" onclick="resetPassword(${user.id}, '${user.username}')">
+                        <i class="fas fa-key"></i> Reset
+                    </button>
+                    <button class="btn ${user.ativo ? 'btn-danger' : 'btn-success'}" 
+                            onclick="toggleUserStatus(${user.id}, ${!user.ativo})">
+                        <i class="fas fa-${user.ativo ? 'user-slash' : 'user-check'}"></i>
+                        ${user.ativo ? 'Desativar' : 'Ativar'}
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    $('#usersList').html(html);
+}
+
+// Gerar HTML de permissões
+function generatePermissionsHTML(containerId, permissions = {}) {
+    let html = '';
+    for (const [moduleKey, moduleName] of Object.entries(MODULES)) {
+        const checked = permissions[moduleKey] ? 'checked' : '';
+        const checkedClass = permissions[moduleKey] ? 'checked' : '';
+        html += `
+            <div class="permission-item ${checkedClass}">
+                <input type="checkbox" id="${containerId}_${moduleKey}" 
+                       name="permissions[${moduleKey}]" ${checked}
+                       onchange="updatePermissionItem(this)">
+                <label for="${containerId}_${moduleKey}">${moduleName}</label>
+            </div>
+        `;
+    }
+    document.getElementById(containerId).innerHTML = html;
+}
+
+// Atualizar visual do item de permissão
+function updatePermissionItem(checkbox) {
+    const item = checkbox.closest('.permission-item');
+    if (checkbox.checked) {
+        item.classList.add('checked');
+    } else {
+        item.classList.remove('checked');
+    }
+}
+
+// Obter permissões do formulário
+function getFormPermissions(containerId) {
+    const permissions = {};
+    for (const moduleKey of Object.keys(MODULES)) {
+        const checkbox = document.getElementById(`${containerId}_${moduleKey}`);
+        permissions[moduleKey] = checkbox ? checkbox.checked : false;
+    }
+    return permissions;
+}
+
+// Abrir modal de criar usuário
+function openCreateUserModal() {
+    generatePermissionsHTML('createPermissions');
+    $('#createUserModal').addClass('show');
+}
+
+// Criar usuário
+function createUser() {
+    const formData = getFormData($('#createUserForm'));
+    const permissions = getFormPermissions('createPermissions');
+    
+    if (!$('#createUserForm')[0].checkValidity()) {
+        $('#createUserForm')[0].reportValidity();
+        return;
+    }
+    
+    const userData = {
+        nome_completo: formData.nome_completo,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        tipo_usuario: formData.tipo_usuario,
+        ativo: formData.ativo === 'true',
+        permissions: permissions
+    };
+    
+    $.ajax({
+        url: '/admin/api/users',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(userData),
+        success: function(response) {
+            if (response.success) {
+                showSuccess('Usuário criado com sucesso!');
+                closeModal('createUserModal');
+                $('#createUserForm')[0].reset();
+                loadUsers();
+            } else {
+                showError(response.error);
+            }
+        },
+        error: function(xhr) {
+            const response = xhr.responseJSON;
+            showError(response ? response.error : 'Erro ao criar usuário');
+        }
+    });
+}
+
+// Editar usuário
+function editUser(userId) {
+    $.ajax({
+        url: `/admin/api/users/${userId}`,
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                const user = response.user;
+                $('#editUserId').val(user.id);
+                $('#editNomeCompleto').val(user.nome_completo || '');
+                $('#editUsername').val(user.username);
+                $('#editEmail').val(user.email);
+                $('#editTipoUsuario').val(user.tipo_usuario);
+                $('#editAtivo').val(user.ativo.toString());
+                
+                generatePermissionsHTML('editPermissions', user.permissions || {});
+                $('#editUserModal').addClass('show');
+            } else {
+                showError(response.error);
+            }
+        },
+        error: function() {
+            showError('Erro ao carregar dados do usuário');
+        }
+    });
+}
+
+// Atualizar usuário
+function updateUser() {
+    const formData = getFormData($('#editUserForm'));
+    const permissions = getFormPermissions('editPermissions');
+    const userId = formData.user_id;
+    
+    if (!$('#editUserForm')[0].checkValidity()) {
+        $('#editUserForm')[0].reportValidity();
+        return;
+    }
+    
+    const userData = {
+        nome_completo: formData.nome_completo,
+        username: formData.username,
+        email: formData.email,
+        tipo_usuario: formData.tipo_usuario,
+        ativo: formData.ativo === 'true',
+        permissions: permissions
+    };
+    
+    $.ajax({
+        url: `/admin/api/users/${userId}`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(userData),
+        success: function(response) {
+            if (response.success) {
+                showSuccess('Usuário atualizado com sucesso!');
+                closeModal('editUserModal');
+                loadUsers();
+            } else {
+                showError(response.error);
+            }
+        },
+        error: function(xhr) {
+            const response = xhr.responseJSON;
+            showError(response ? response.error : 'Erro ao atualizar usuário');
+        }
+    });
+}
+
+// Reset de senha
+function resetPassword(userId, username) {
+    if (!confirm(`Resetar senha do usuário ${username}?`)) return;
+    
+    $.ajax({
+        url: `/admin/api/users/${userId}/reset-password`,
+        method: 'POST',
+        success: function(response) {
+            if (response.success) {
+                $('#generatedPassword').text(response.temp_password);
+                $('#showPasswordModal').addClass('show');
+                loadUsers();
+            } else {
+                showError(response.error);
+            }
+        },
+        error: function() {
+            showError('Erro ao resetar senha');
+        }
+    });
+}
+
+// Toggle status do usuário
+function toggleUserStatus(userId, newStatus) {
+    const action = newStatus ? 'ativar' : 'desativar';
+    if (!confirm(`Confirma ${action} este usuário?`)) return;
+    
+    $.ajax({
+        url: `/admin/api/users/${userId}/toggle-status`,
+        method: 'POST',
+        success: function(response) {
+            if (response.success) {
+                showSuccess(response.message);
+                loadUsers();
+            } else {
+                showError(response.error);
+            }
+        },
+        error: function() {
+            showError('Erro ao alterar status');
+        }
+    });
+}
+
+// Alterar minha senha
+function openChangePasswordModal() {
+    $('#changePasswordModal').addClass('show');
+}
+
+function changeMyPassword() {
+    const formData = getFormData($('#changePasswordForm'));
+    
+    if (formData.new_password !== formData.confirm_password) {
+        showError('As senhas não coincidem!');
+        return;
+    }
+    
+    $.ajax({
+        url: '/admin/api/change-my-password',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            current_password: formData.current_password,
+            new_password: formData.new_password
+        }),
+        success: function(response) {
+            if (response.success) {
+                showSuccess('Senha alterada com sucesso!');
+                closeModal('changePasswordModal');
+                $('#changePasswordForm')[0].reset();
+            } else {
+                showError(response.error);
+            }
+        },
+        error: function() {
+            showError('Erro ao alterar senha');
+        }
+    });
+}
+
+// Copiar senha
+function copyPassword() {
+    const password = $('#generatedPassword').text();
+    navigator.clipboard.writeText(password).then(() => {
+        showSuccess('Senha copiada para a área de transferência!');
+    }).catch(() => {
+        showError('Erro ao copiar senha');
+    });
+}
+
+// Filtros
+function filterUsers() {
+    currentFilters.role = $('#roleFilter').val();
+    currentFilters.status = $('#statusFilter').val();
+    loadUsers();
+}
+
+function clearFilters() {
+    $('#searchInput').val('');
+    $('#roleFilter').val('');
+    $('#statusFilter').val('');
+    currentFilters = { search: '', role: '', status: '' };
+    loadUsers();
+}
+
+// Funções utilitárias
+function openModal(modalId) {
+    $(`#${modalId}`).addClass('show');
+}
+
+function closeModal(modalId) {
+    $(`#${modalId}`).removeClass('show');
+}
+
+function getFormData(form) {
+    const formData = {};
+    form.find('input, select, textarea').each(function() {
+        const field = $(this);
+        const name = field.attr('name');
+        const value = field.val();
+        
+        if (name && value !== undefined) {
+            formData[name] = value;
+        }
+    });
+    return formData;
+}
+
+function showSuccess(message) {
+    // Implementação simples com alert, pode ser melhorada
+    alert('Sucesso: ' + message);
+    console.log('SUCCESS:', message);
+}
+
+function showError(message) {
+    alert('Erro: ' + message);
+    console.error('ERROR:', message);
+}
+</script>
+{% endblock %}

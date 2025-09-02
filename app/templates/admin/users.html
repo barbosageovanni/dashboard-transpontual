@@ -4,133 +4,616 @@
 
 {% block extra_css %}
 <style>
-    .admin-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 15px;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
+/* ========================================
+   SISTEMA ADMINISTRATIVO - ESTILO SUPABASE
+   Interface profissional para gerenciamento
+======================================== */
 
+:root {
+    --admin-primary: #3ecf8e;
+    --admin-secondary: #2dd4bf;
+    --admin-danger: #ef4444;
+    --admin-warning: #f59e0b;
+    --admin-dark: #1e1e2e;
+    --admin-gray: #6b7280;
+}
+
+/* Header administrativo */
+.admin-header {
+    background: linear-gradient(135deg, var(--admin-dark) 0%, #2d2d44 100%);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.admin-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.admin-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+/* Cards de estatísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--admin-primary);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--admin-dark);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--admin-gray);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* Seção principal de usuários */
+.users-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.section-header {
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+/* Controles e filtros */
+.controls-section {
+    padding: 2rem;
+    background: #f8fafa;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.search-filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--admin-gray);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.1);
+    outline: none;
+}
+
+/* Botões */
+.btn-admin {
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-admin:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(62, 207, 142, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--admin-danger), #dc2626);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--admin-warning), #d97706);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--admin-gray), #4b5563);
+}
+
+/* Tabela de usuários */
+.users-table {
+    width: 100%;
+}
+
+.users-table th {
+    background: var(--admin-dark);
+    color: white;
+    font-weight: 700;
+    padding: 1rem;
+    border: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.users-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.users-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.users-table tbody tr:hover {
+    background: rgba(62, 207, 142, 0.05);
+}
+
+/* Perfil do usuário na tabela */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--admin-dark);
+    margin-bottom: 0.25rem;
+}
+
+.user-email {
+    font-size: 0.9rem;
+    color: var(--admin-gray);
+}
+
+/* Badges */
+.role-badge, .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.role-admin {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.role-user {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+}
+
+.role-moderator {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.status-active {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+}
+
+.status-inactive {
+    background: rgba(156, 163, 175, 0.1);
+    color: #6b7280;
+}
+
+/* Dropdown de ações */
+.actions-dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: 2px solid #e5e7eb;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--admin-gray);
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-toggle:hover {
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    padding: 0.5rem;
+    min-width: 200px;
+    z-index: 1000;
+    display: none;
+    margin-top: 0.5rem;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--admin-gray);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: var(--admin-primary);
+    color: white;
+    transform: translateX(5px);
+}
+
+.dropdown-item.danger:hover {
+    background: var(--admin-danger);
+}
+
+/* Paginação */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: #f8fafa;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pagination-info {
+    color: var(--admin-gray);
+    font-weight: 500;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.page-btn {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: var(--admin-gray);
+}
+
+.page-btn:hover:not(.disabled) {
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.page-btn.active {
+    background: var(--admin-primary);
+    border-color: var(--admin-primary);
+    color: white;
+}
+
+.page-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Modais */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h5 {
+    margin: 0;
+    font-weight: 700;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    background: #f8fafa;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* Loading */
+.loading-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--admin-gray);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid var(--admin-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .search-filters {
+        grid-template-columns: 1fr;
+    }
+    
     .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
-
-    .stat-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        text-align: center;
-        transition: transform 0.3s ease;
-        border-left: 4px solid #667eea;
+    
+    .admin-header {
+        padding: 2rem 1rem;
     }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .stat-icon {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 1rem;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-    }
-
-    .stat-number {
+    
+    .admin-header h1 {
         font-size: 2rem;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 0.5rem;
     }
-
-    .stat-label {
-        color: #666;
+    
+    .users-table {
         font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
     }
+    
+    .pagination-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
 
-    .users-section {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
+    
+    .users-table th,
+    .users-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}
 
-    .section-header {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 1.5rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+/* Animações */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
 
-    .btn-add-user {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        border: none;
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    .btn-add-user:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-    }
+/* Estados especiais */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--admin-gray);
+}
 
-    .alert {
-        padding: 1.5rem;
-        margin: 1.5rem;
-        border-radius: 10px;
-        border-left: 4px solid;
-    }
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
 
-    .alert-info {
-        background: #e3f2fd;
-        color: #0d47a1;
-        border-left-color: #2196f3;
-    }
-
-    .alert-success {
-        background: #e8f5e8;
-        color: #2e7d32;
-        border-left-color: #4caf50;
-    }
+/* Password display */
+.password-display {
+    background: #f8fafa;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    border: 2px solid var(--admin-primary);
+    color: var(--admin-dark);
+    margin: 1rem 0;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <div class="admin-header">
+        <!-- Header Administrativo -->
+        <div class="admin-header fade-in">
             <h1><i class="fas fa-users-cog"></i> Gerenciamento de Usuários</h1>
-            <p class="lead">Administração completa de usuários, senhas e permissões</p>
+            <p>Administração completa de usuários, senhas e permissões do sistema</p>
         </div>
     </div>
 </div>
 
-<!-- Estatísticas -->
-<div class="stats-grid">
+<!-- Estatísticas dos Usuários -->
+<div class="stats-grid fade-in">
     <div class="stat-card">
         <div class="stat-icon">
             <i class="fas fa-users"></i>
         </div>
-        <div class="stat-number" id="totalUsers">3</div>
+        <div class="stat-number" id="totalUsers">0</div>
         <div class="stat-label">Total de Usuários</div>
     </div>
     
@@ -138,7 +621,7 @@
         <div class="stat-icon">
             <i class="fas fa-user-check"></i>
         </div>
-        <div class="stat-number" id="activeUsers">2</div>
+        <div class="stat-number" id="activeUsers">0</div>
         <div class="stat-label">Usuários Ativos</div>
     </div>
     
@@ -146,7 +629,7 @@
         <div class="stat-icon">
             <i class="fas fa-crown"></i>
         </div>
-        <div class="stat-number" id="adminUsers">1</div>
+        <div class="stat-number" id="adminUsers">0</div>
         <div class="stat-label">Administradores</div>
     </div>
     
@@ -154,69 +637,285 @@
         <div class="stat-icon">
             <i class="fas fa-clock"></i>
         </div>
-        <div class="stat-number" id="recentLogins">2</div>
+        <div class="stat-number" id="recentLogins">0</div>
         <div class="stat-label">Logins Recentes</div>
     </div>
 </div>
 
-<!-- Seção de Usuários -->
-<div class="users-section">
+<!-- Seção Principal de Usuários -->
+<div class="users-section fade-in">
+    <!-- Header da Seção -->
     <div class="section-header">
         <h3><i class="fas fa-users"></i> Sistema de Usuários</h3>
-        <button class="btn-add-user" onclick="mostrarInfo()">
-            <i class="fas fa-info"></i> Informações
+        <button class="btn-admin" onclick="openAddUserModal()">
+            <i class="fas fa-user-plus"></i> Novo Usuário
         </button>
     </div>
     
-    <div class="alert alert-info">
-        <h5><i class="fas fa-info-circle"></i> Sistema de Usuários</h5>
-        <p><strong>Status:</strong> Funcional e operacional</p>
-        <p>O sistema de usuários está funcionando corretamente. Você pode navegar por todas as outras áreas:</p>
-        
-        <div class="mt-3">
-            <div class="row">
-                <div class="col-md-3">
-                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary w-100 mb-2">
-                        <i class="fas fa-tachometer-alt"></i><br>Dashboard
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a href="{{ url_for('ctes.listar') }}" class="btn btn-success w-100 mb-2">
-                        <i class="fas fa-file-invoice"></i><br>CTEs
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a href="{{ url_for('baixas.index') }}" class="btn btn-warning w-100 mb-2">
-                        <i class="fas fa-money-check-alt"></i><br>Baixas
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a href="{{ url_for('analise_financeira.index') }}" class="btn btn-info w-100 mb-2">
-                        <i class="fas fa-chart-line"></i><br>Análise Financeira
-                    </a>
-                </div>
+    <!-- Controles e Filtros -->
+    <div class="controls-section">
+        <div class="search-filters">
+            <div class="form-group">
+                <label for="searchInput">Buscar usuários</label>
+                <input type="text" id="searchInput" class="form-control" 
+                       placeholder="Nome, email ou username...">
+            </div>
+            <div class="form-group">
+                <label for="roleFilter">Tipo de usuário</label>
+                <select id="roleFilter" class="form-select" onchange="filterUsers()">
+                    <option value="">Todos os tipos</option>
+                    <option value="admin">Administrador</option>
+                    <option value="moderator">Moderador</option>
+                    <option value="user">Usuário</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="statusFilter">Status</label>
+                <select id="statusFilter" class="form-select" onchange="filterUsers()">
+                    <option value="">Todos os status</option>
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-times"></i> Limpar
+                </button>
             </div>
         </div>
     </div>
     
-    <div class="alert alert-success">
-        <h6><i class="fas fa-check-circle"></i> Sistema Funcionando</h6>
-        <p>✅ Templates corrigidos<br>
-           ✅ Navegação completa<br>
-           ✅ Todos os módulos acessíveis<br>
-           ✅ Erro Jinja2 resolvido</p>
+    <!-- Loading -->
+    <div id="loadingContainer" class="loading-container">
+        <div class="spinner"></div>
+        <p>Carregando usuários...</p>
+    </div>
+    
+    <!-- Tabela de Usuários -->
+    <div id="usersTable" style="display: none;">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Último Login</th>
+                    <th style="width: 80px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <!-- Usuários serão carregados via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Paginação -->
+    <div id="paginationContainer" class="pagination-container" style="display: none;">
+        <div class="pagination-info" id="paginationInfo">
+            Carregando...
+        </div>
+        <div class="pagination-controls" id="paginationControls">
+            <!-- Controles de paginação serão gerados via JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Adicionar Usuário -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Adicionar Novo Usuário</h5>
+            <button class="modal-close" onclick="closeModal('addUserModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="addUserForm">
+                <div class="form-group mb-3">
+                    <label for="addNomeCompleto">Nome Completo *</label>
+                    <input type="text" id="addNomeCompleto" name="nome_completo" 
+                           class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="addUsername">Username *</label>
+                    <input type="text" id="addUsername" name="username" 
+                           class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="addEmail">Email *</label>
+                    <input type="email" id="addEmail" name="email" 
+                           class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="addTipoUsuario">Tipo de Usuário *</label>
+                    <select id="addTipoUsuario" name="tipo_usuario" class="form-select" required>
+                        <option value="user">Usuário</option>
+                        <option value="moderator">Moderador</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="passwordInput">Senha (deixe vazio para gerar automaticamente)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="password" id="passwordInput" name="password" class="form-control">
+                        <button type="button" class="btn-secondary" onclick="generatePassword()">
+                            <i class="fas fa-random"></i> Gerar
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addAtivo">Status *</label>
+                    <select id="addAtivo" name="ativo" class="form-select" required>
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('addUserModal')">Cancelar</button>
+            <button class="btn-admin" onclick="addUser()">
+                <i class="fas fa-user-plus"></i> Criar Usuário
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Usuário -->
+<div id="editUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Editar Usuário</h5>
+            <button class="modal-close" onclick="closeModal('editUserModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId" name="user_id">
+                <div class="form-group mb-3">
+                    <label for="editNomeCompleto">Nome Completo *</label>
+                    <input type="text" id="editNomeCompleto" name="nome_completo" 
+                           class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="editUsername">Username *</label>
+                    <input type="text" id="editUsername" name="username" 
+                           class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="editEmail">Email *</label>
+                    <input type="email" id="editEmail" name="email" 
+                           class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="editTipoUsuario">Tipo de Usuário *</label>
+                    <select id="editTipoUsuario" name="tipo_usuario" class="form-select" required>
+                        <option value="user">Usuário</option>
+                        <option value="moderator">Moderador</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editAtivo">Status *</label>
+                    <select id="editAtivo" name="ativo" class="form-select" required>
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('editUserModal')">Cancelar</button>
+            <button class="btn-admin" onclick="updateUser()">
+                <i class="fas fa-save"></i> Salvar Alterações
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Reset de Senha -->
+<div id="resetPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Resetar Senha</h5>
+            <button class="modal-close" onclick="closeModal('resetPasswordModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja resetar a senha do usuário:</p>
+            <p><strong id="resetUsername"></strong></p>
+            <p class="text-muted">Uma nova senha temporária será gerada automaticamente.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('resetPasswordModal')">Cancelar</button>
+            <button class="btn-warning" onclick="confirmResetPassword()">
+                <i class="fas fa-key"></i> Resetar Senha
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Exibir Senha Gerada -->
+<div id="showPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Senha Temporária Gerada</h5>
+            <button class="modal-close" onclick="closeModal('showPasswordModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>A senha temporária foi gerada com sucesso:</p>
+            <div class="password-display" id="generatedPassword">
+                <!-- Senha será exibida aqui -->
+            </div>
+            <p class="text-muted">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+                <strong>Importante:</strong> Anote esta senha. O usuário deve alterá-la no primeiro login.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('showPasswordModal')">Fechar</button>
+            <button class="btn-admin" onclick="copyPassword()">
+                <i class="fas fa-copy"></i> Copiar Senha
+            </button>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 <script>
-function mostrarInfo() {
-    alert('✅ Sistema de usuários funcionando!\n\n📋 Funcionalidades disponíveis:\n• Dashboard completo\n• Gestão de CTEs\n• Sistema de baixas\n• Análise financeira\n• Administração');
+// Função para limpar filtros
+function clearFilters() {
+    $('#searchInput').val('');
+    $('#roleFilter').val('');
+    $('#statusFilter').val('');
+    
+    currentFilters = {
+        search: '',
+        role: '',
+        status: ''
+    };
+    
+    loadUsers(1);
+    showInfo('Filtros limpos com sucesso');
 }
 
+// Inicialização específica da página
 $(document).ready(function() {
-    console.log('👤 Sistema de usuários carregado com sucesso!');
+    console.log('🚀 Página de gerenciamento de usuários carregada');
+    
+    // Verificar se o admin.js foi carregado
+    if (typeof loadUsers === 'function') {
+        console.log('✅ Admin.js carregado corretamente');
+    } else {
+        console.error('❌ Admin.js não foi carregado');
+        showError('Erro ao carregar scripts administrativos');
+    }
 });
 </script>
 {% endblock %}

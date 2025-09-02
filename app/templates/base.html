@@ -3,279 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Dashboard Transpontual{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{% block title %}Dashboard Financeiro Transpontual{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- CSS Principal -->
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <!-- Dashboard Fixes CSS -->
+    <link href="{{ url_for('static', filename='css/dashboard-fixes.css') }}" rel="stylesheet">
+    
+    <!-- CSS Responsivo Global -->
     <style>
         :root {
             --primary-color: #667eea;
             --secondary-color: #764ba2;
-            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #f56565;
+            --info-color: #4299e1;
+            --light-color: #f7fafc;
+            --dark-color: #2d3748;
         }
         
         body {
-            background: var(--gradient);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
-        .navbar {
-            background: rgba(0,0,0,0.2) !important;
-            backdrop-filter: blur(10px);
+        .main-content {
+            flex: 1;
+            padding: 1rem 0;
         }
         
         .navbar-brand {
-            font-weight: bold;
-            color: white !important;
+            font-weight: 700;
+            font-size: 1.3rem;
         }
         
-        .content-wrapper {
-            margin-top: 20px;
-            margin-bottom: 40px;
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            margin: 0 0.25rem;
+            transition: all 0.3s ease;
         }
         
-        .card {
+        .navbar-nav .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .dropdown-menu {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            background: rgba(255,255,255,0.95);
-        }
-        
-        .btn-primary {
-            background: var(--gradient);
-            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            padding: 0.5rem 0;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #007bff, #ffffff);
+            color: white;
+            transform: translateX(5px);
         }
         
         .footer {
-            background: rgba(0,0,0,0.1);
+            background: #343a40;
             color: white;
-            text-align: center;
-            padding: 20px;
+            padding: 1rem 0;
             margin-top: auto;
         }
+        
+        .breadcrumb {
+            background: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Indicador visual para dropdowns */
+        .navbar-nav .dropdown-toggle::after {
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-nav .dropdown.show .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        /* Responsividade melhorada */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0.5rem 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .dropdown-item {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Loading global */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 300px;
+        }
     </style>
+    
     {% block extra_css %}{% endblock %}
-<style>
-/* ========================================
-   DESIGN GLOBAL ESTILO SUPABASE
-   Interface profissional e moderna
-======================================== */
-
-:root {
-    --supabase-primary: #3ecf8e;
-    --supabase-secondary: #2dd4bf;
-    --supabase-dark: #1e1e2e;
-    --supabase-dark-light: #2d2d44;
-    --supabase-gray: #6b7280;
-    --supabase-light: #f9fafb;
-}
-
-/* Navbar profissional */
-.navbar {
-    background: linear-gradient(135deg, var(--supabase-dark) 0%, var(--supabase-dark-light) 100%) !important;
-    backdrop-filter: blur(10px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-}
-
-.navbar-brand {
-    font-weight: 800 !important;
-    font-size: 1.5rem !important;
-    color: white !important;
-    transition: all 0.3s ease !important;
-}
-
-.navbar-brand:hover {
-    color: var(--supabase-primary) !important;
-    transform: scale(1.05) !important;
-}
-
-.navbar-nav .nav-link {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-weight: 600 !important;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 8px !important;
-    margin: 0 0.25rem !important;
-    transition: all 0.3s ease !important;
-}
-
-.navbar-nav .nav-link:hover {
-    color: white !important;
-    background: rgba(62, 207, 142, 0.2) !important;
-    transform: translateY(-1px) !important;
-}
-
-/* Dropdowns profissionais */
-.dropdown-menu {
-    background: rgba(255, 255, 255, 0.98) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
-    padding: 0.5rem !important;
-}
-
-.dropdown-item {
-    border-radius: 8px !important;
-    margin: 0.25rem 0 !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-}
-
-.dropdown-item:hover {
-    background: var(--supabase-primary) !important;
-    color: white !important;
-    transform: translateX(5px) !important;
-}
-
-/* Botões estilo Supabase */
-.btn-primary {
-    background: linear-gradient(135deg, var(--supabase-primary) 0%, var(--supabase-secondary) 100%) !important;
-    border: none !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    padding: 0.75rem 2rem !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 4px 15px rgba(62, 207, 142, 0.3) !important;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(62, 207, 142, 0.4) !important;
-}
-
-/* Cards profissionais */
-.card {
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-    transition: all 0.3s ease !important;
-    overflow: hidden !important;
-}
-
-.card:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1) !important;
-}
-
-.card-header {
-    background: linear-gradient(135deg, var(--supabase-light) 0%, white 100%) !important;
-    border-bottom: 1px solid rgba(62, 207, 142, 0.1) !important;
-    font-weight: 700 !important;
-}
-
-/* Body background */
-body {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
-    min-height: 100vh !important;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
-}
-
-/* Container principal */
-.container, .container-fluid {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
-}
-
-/* Alertas estilo Supabase */
-.alert {
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    padding: 1rem 1.5rem !important;
-}
-
-.alert-success {
-    background: rgba(62, 207, 142, 0.1) !important;
-    color: #059669 !important;
-    border-left: 4px solid var(--supabase-primary) !important;
-}
-
-.alert-danger {
-    background: rgba(239, 68, 68, 0.1) !important;
-    color: #dc2626 !important;
-    border-left: 4px solid #ef4444 !important;
-}
-
-/* Tabelas profissionais */
-.table {
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-}
-
-.table thead th {
-    background: linear-gradient(135deg, var(--supabase-dark) 0%, var(--supabase-dark-light) 100%) !important;
-    color: white !important;
-    font-weight: 700 !important;
-    border: none !important;
-    padding: 1rem !important;
-}
-
-.table tbody tr {
-    transition: all 0.3s ease !important;
-}
-
-.table tbody tr:hover {
-    background: rgba(62, 207, 142, 0.05) !important;
-    transform: scale(1.01) !important;
-}
-
-/* Inputs estilo Supabase */
-.form-control, .form-select {
-    border: 2px solid #e5e7eb !important;
-    border-radius: 8px !important;
-    padding: 0.75rem 1rem !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: var(--supabase-primary) !important;
-    box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.1) !important;
-}
-
-/* Badges profissionais */
-.badge {
-    font-weight: 600 !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 50px !important;
-}
-
-/* Animações suaves */
-* {
-    transition: all 0.3s ease !important;
-}
-
-/* Scrollbar customizada */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, var(--supabase-primary), var(--supabase-secondary));
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, var(--supabase-secondary), var(--supabase-primary));
-}</style>
 </head>
 <body>
-    <!-- Navegação -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('dashboard.index') }}">
+            <a class="navbar-brand" href="{{ url_for('dashboard.index') if current_user.is_authenticated else url_for('auth.login') }}">
                 <i class="fas fa-truck"></i> Dashboard Transpontual
             </a>
             
+            {% if current_user.is_authenticated %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -285,11 +168,10 @@ body {
                     <!-- Dashboard -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard.index') }}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                            <i class="fas fa-home"></i> Dashboard
                         </a>
                     </li>
                     
-                    <!-- CTEs -->
                     <!-- CTEs com Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="ctesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -303,20 +185,31 @@ body {
                                 <i class="fas fa-plus"></i> Inserir CTE
                             </a></li>
                             <li><a class="dropdown-item" href="{{ url_for('ctes.listar') }}#buscar">
-                                <i class="fas fa-search"></i> Buscar/Editar
+                                <i class="fas fa-search"></i> Buscar & Editar
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/ctes/atualizar-lote">
-                                <i class="fas fa-sync-alt"></i> Atualizar Lote
+                            <li><a class="dropdown-item" href="{{ url_for('ctes.atualizar_lote') }}">
+                                <i class="fas fa-upload"></i> Importar em Lote
                             </a></li>
                         </ul>
                     </li>
                     
-                    <!-- Baixas -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('baixas.index') }}">
+                    <!-- Baixas com Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="baixasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-money-check-alt"></i> Baixas
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="baixasDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('baixas.index') }}">
+                                <i class="fas fa-tachometer-alt"></i> Painel de Baixas
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('baixas.index') }}#conciliacao">
+                                <i class="fas fa-balance-scale"></i> Conciliação
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('baixas.index') }}#historico">
+                                <i class="fas fa-history"></i> Histórico
+                            </a></li>
+                        </ul>
                     </li>
                     
                     <!-- Análise Financeira -->
@@ -326,70 +219,118 @@ body {
                         </a>
                     </li>
                     
-                    <!-- Administração -->
+                    <!-- Administração (apenas para admins) -->
                     {% if current_user.tipo_usuario == 'admin' %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin.index') }}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-cogs"></i> Administração
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('admin.index') }}">
+                                <i class="fas fa-tachometer-alt"></i> Painel Admin
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin.users') }}">
+                                <i class="fas fa-users"></i> Gerenciar Usuários
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin.index') }}#configuracoes">
+                                <i class="fas fa-cog"></i> Configurações
+                            </a></li>
+                        </ul>
                     </li>
                     {% endif %}
                 </ul>
                 
+                <!-- Menu do Usuário -->
                 <ul class="navbar-nav">
-                    {% if current_user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> {{ current_user.nome_completo or current_user.username }}
+                            <i class="fas fa-user"></i> {{ current_user.username }}
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <!-- Perfil do usuário -->
+                            <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+                                <i class="fas fa-user-circle"></i> Minha Conta
+                            </a></li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            <!-- Logout -->
                             <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
                                 <i class="fas fa-sign-out-alt"></i> Sair
                             </a></li>
                         </ul>
                     </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth.login') }}">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
-                    </li>
-                    {% endif %}
                 </ul>
             </div>
+            {% endif %}
         </div>
     </nav>
 
-    <!-- Conteúdo Principal -->
-    <div class="container content-wrapper">
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
+    <!-- Conteúdo Principal -->
+    <main class="container-fluid main-content">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
     <!-- Footer -->
     <footer class="footer mt-auto">
-        <div class="container">
-            <p class="mb-0">
-                © {{ current_year }} Dashboard Transpontual - Sistema de Gestão Financeira
-                <span class="ms-3">Versão {{ app_version }}</span>
-            </p>
+        <div class="container text-center">
+            <span class="text-muted">
+                © 2025 Dashboard Sistema de Gestão Financeira - Versão 3.0
+            </span>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
     {% block extra_js %}{% endblock %}
+    
+    <!-- Scripts globais -->
+    <script>
+        // Função global para mostrar loading
+        function mostrarLoading(mostrar = true, mensagem = 'Carregando...') {
+            if (mostrar) {
+                if (!$('#loadingGlobal').length) {
+                    $('body').append(`
+                        <div id="loadingGlobal" class="loading-overlay">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary mb-3" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                                <p>${mensagem}</p>
+                            </div>
+                        </div>
+                    `);
+                }
+                $('#loadingGlobal').show();
+            } else {
+                $('#loadingGlobal').hide();
+            }
+        }
+        
+        // Auto-ocultar alertas após 5 segundos
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        });
+    </script>
 </body>
 </html>

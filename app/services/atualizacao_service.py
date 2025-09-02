@@ -1,20 +1,25 @@
 # app/services/atualizacao_service.py
 from __future__ import annotations
 
+print("DEBUG: Starting imports...")
 from io import BytesIO
 from typing import Dict, List, Tuple, Optional
 from datetime import datetime
+print("DEBUG: Basic imports done")
 
 import pandas as pd
+print("DEBUG: pandas imported")
 
-# Try imports that might fail in standalone mode
 try:
     from app import db
+    print("DEBUG: app.db imported")
     from app.models.cte import CTE
-    DB_AVAILABLE = True
-except ImportError:
-    DB_AVAILABLE = False
+    print("DEBUG: CTE imported")
+except ImportError as e:
+    print(f"Import error: {e}")
+    raise
 
+print("DEBUG: Defining constants...")
 ALIAS_COLUNAS = {
     # Cabeçalhos "humanos" -> campos do modelo
     "Número CTE": "numero_cte",
@@ -62,6 +67,8 @@ COLUNAS_COMPLETAS = [
 
 class AtualizacaoService:
     """Importação/atualização em lote de CTEs (CSV + Excel)."""
+
+    print("DEBUG: Inside class definition...")
 
     @staticmethod
     def _read_as_dataframe(file_storage) -> Tuple[bool, str, Optional[pd.DataFrame]]:
@@ -162,10 +169,6 @@ class AtualizacaoService:
             "detalhes": [],
         }
 
-        if not DB_AVAILABLE:
-            resultado["detalhes"].append({"erro": "Database não disponível"})
-            return resultado
-
         if hasattr(file_storage, 'seek'):
             file_storage.seek(0)
 
@@ -188,24 +191,27 @@ class AtualizacaoService:
             for _, row in df.iterrows():
                 resultado["processados"] += 1
 
-                dados = {k: row.get(k) for k in COLUNAS_COMPLETAS if k in df.columns}
-                numero = row.get("numero_cte")
+                # Extrai dados brutos
+                dados_brutos = {k: row.get(k) for k in COLUNAS_COMPLETAS if k in df.columns}
+                
+                # Normaliza os dados usando as funções de limpeza
+                dados = AtualizacaoService._normalizar_dados_linha(dados_brutos)
+                numero = dados.get("numero_cte")
 
-                if pd.isna(numero) or numero in (None, ""):
+                if numero is None:
                     resultado["ignorados"] += 1
                     resultado["detalhes"].append({
                         "cte": None, "sucesso": False,
-                        "mensagem": "Linha sem número do CTE"
+                        "mensagem": "Linha sem número do CTE válido"
                     })
                     continue
 
-                try:
-                    numero = int(float(str(numero).strip()))
-                except Exception:
+                # O número já foi limpo pela função de normalização
+                if not isinstance(numero, int):
                     resultado["erros"] += 1
                     resultado["detalhes"].append({
-                        "cte": numero, "sucesso": False,
-                        "mensagem": "Número do CTE inválido"
+                        "cte": str(numero), "sucesso": False,
+                        "mensagem": "Número do CTE inválido após normalização"
                     })
                     continue
 
@@ -276,7 +282,26 @@ class AtualizacaoService:
         # Linha de cabeçalho
         csv_content = ";".join(headers) + "\n"
         
-        # Linha de exemplo com dados de amostra
+        # Comentários explicativos sobre formato esperado
+        csv_content += ";".join([
+            "# FORMATOS ESPERADOS:",
+            "Razão Social Completa",
+            "ABC-1234",
+            "1500.50 (decimal com ponto)",
+            "AAAA-MM-DD (2025-01-15)",
+            "AAAA-MM-DD ou vazio",
+            "Número/Código da Fatura",
+            "AAAA-MM-DD ou vazio",
+            "AAAA-MM-DD ou vazio",
+            "AAAA-MM-DD ou vazio",
+            "AAAA-MM-DD ou vazio",
+            "AAAA-MM-DD ou vazio",
+            "AAAA-MM-DD ou vazio",
+            "Texto livre",
+            "Sistema/CSV/Manual"
+        ]) + "\n"
+        
+        # Linha de exemplo com dados de amostra corretamente formatados
         exemplo = [
             "12345",
             "Cliente Exemplo Ltda",
@@ -295,6 +320,26 @@ class AtualizacaoService:
             "Sistema"
         ]
         csv_content += ";".join(exemplo) + "\n"
+        
+        # Exemplo adicional com campos opcionais vazios
+        exemplo2 = [
+            "12346",
+            "Outro Cliente SA",
+            "XYZ-5678",
+            "2300.75",
+            "2025-01-16",
+            "",  # Data Baixa vazia
+            "",  # Número Fatura vazio
+            "",  # Data Inclusão Fatura vazia
+            "",  # Data Envio Processo vazia
+            "",  # Primeiro Envio vazio
+            "",  # Data RQ/TMC vazia
+            "",  # Data Atesto vazia
+            "",  # Envio Final vazio
+            "CTE ainda em processo",
+            "CSV"
+        ]
+        csv_content += ";".join(exemplo2) + "\n"
         
         return csv_content
 
@@ -319,8 +364,28 @@ class AtualizacaoService:
             "Origem dos Dados"
         ]
         
+        # Linha de instruções sobre formatos
+        instrucoes = {
+            "Número CTE": "Número inteiro",
+            "Destinatário": "Razão Social Completa",
+            "Placa Veículo": "ABC-1234",
+            "Valor Total": "1500.50 (decimal)",
+            "Data Emissão": "AAAA-MM-DD",
+            "Data Baixa": "AAAA-MM-DD ou vazio",
+            "Número Fatura": "Código/Número",
+            "Data Inclusão Fatura": "AAAA-MM-DD ou vazio",
+            "Data Envio Processo": "AAAA-MM-DD ou vazio",
+            "Primeiro Envio": "AAAA-MM-DD ou vazio",
+            "Data RQ/TMC": "AAAA-MM-DD ou vazio",
+            "Data Atesto": "AAAA-MM-DD ou vazio",
+            "Envio Final": "AAAA-MM-DD ou vazio",
+            "Observação": "Texto livre",
+            "Origem dos Dados": "Sistema/CSV/Manual"
+        }
+        
         # Dados de exemplo
         dados_exemplo = [
+            instrucoes,  # Primeira linha com instruções
             {
                 "Número CTE": 12345,
                 "Destinatário": "Cliente Exemplo Ltda",
@@ -353,7 +418,7 @@ class AtualizacaoService:
                 "Data Atesto": "",
                 "Envio Final": "",
                 "Observação": "CTE ainda em processo",
-                "Origem dos Dados": "Sistema"
+                "Origem dos Dados": "CSV"
             }
         ]
         
@@ -410,3 +475,97 @@ class AtualizacaoService:
         
         buffer.seek(0)
         return buffer
+
+    @staticmethod
+    def _limpar_valor_monetario(valor):
+        """Limpa e converte valores monetários brasileiros para decimal."""
+        if pd.isna(valor) or valor in (None, ""):
+            return None
+            
+        valor_str = str(valor).strip()
+        if not valor_str:
+            return None
+            
+        # Remove símbolos monetários e espaços
+        valor_str = valor_str.replace("R$", "").replace("$", "").strip()
+        
+        # Se contém vírgula e ponto, assume formato brasileiro (1.234,56)
+        if "," in valor_str and "." in valor_str:
+            # Remove pontos (separadores de milhares) e troca vírgula por ponto
+            valor_str = valor_str.replace(".", "").replace(",", ".")
+        elif "," in valor_str and valor_str.count(",") == 1:
+            # Apenas vírgula - pode ser decimal brasileiro
+            if len(valor_str.split(",")[1]) <= 2:  # máximo 2 dígitos após vírgula
+                valor_str = valor_str.replace(",", ".")
+        
+        try:
+            return float(valor_str)
+        except ValueError:
+            return None
+
+    @staticmethod  
+    def _limpar_data(data_str):
+        """Limpa e converte datas para formato ISO (YYYY-MM-DD)."""
+        if pd.isna(data_str) or data_str in (None, ""):
+            return None
+            
+        data_str = str(data_str).strip()
+        if not data_str:
+            return None
+            
+        # Já está no formato ISO
+        if len(data_str) == 10 and data_str.count("-") == 2:
+            return data_str
+            
+        # Formato brasileiro DD/MM/YYYY ou DD/MM/YY
+        if "/" in data_str:
+            partes = data_str.split("/")
+            if len(partes) == 3:
+                dia, mes, ano = partes
+                # Converte ano de 2 dígitos para 4
+                if len(ano) == 2:
+                    ano_int = int(ano)
+                    if ano_int < 50:  # assume 20xx
+                        ano = f"20{ano}"
+                    else:  # assume 19xx
+                        ano = f"19{ano}"
+                        
+                return f"{ano}-{mes.zfill(2)}-{dia.zfill(2)}"
+        
+        return data_str
+
+    @staticmethod
+    def _normalizar_dados_linha(dados):
+        """Normaliza uma linha de dados importados."""
+        dados_limpos = {}
+        
+        for campo, valor in dados.items():
+            if campo == "numero_cte":
+                # Limpa número do CTE
+                if pd.notna(valor) and valor != "":
+                    try:
+                        dados_limpos[campo] = int(float(str(valor).strip()))
+                    except ValueError:
+                        dados_limpos[campo] = None
+                else:
+                    dados_limpos[campo] = None
+                    
+            elif campo == "valor_total":
+                # Limpa valor monetário
+                dados_limpos[campo] = AtualizacaoService._limpar_valor_monetario(valor)
+                
+            elif campo.startswith("data_"):
+                # Limpa datas
+                dados_limpos[campo] = AtualizacaoService._limpar_data(valor)
+                
+            elif campo in ["destinatario_nome", "veiculo_placa", "numero_fatura", "observacao", "origem_dados"]:
+                # Campos de texto - apenas limpa espaços
+                if pd.notna(valor) and valor != "":
+                    dados_limpos[campo] = str(valor).strip()
+                else:
+                    dados_limpos[campo] = None
+            else:
+                # Outros campos
+                dados_limpos[campo] = valor if pd.notna(valor) and valor != "" else None
+                
+        return dados_limpos

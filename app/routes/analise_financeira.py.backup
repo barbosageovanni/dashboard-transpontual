@@ -1,209 +1,411 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Routes para Análise Financeira - VERSÃO CORRIGIDA E SIMPLIFICADA
-app/routes/analise_financeira.py
+Routes para Analise Financeira - CORRECAO MES CORRENTE
+app/routes/analise_financeira.py - ADICIONAR/SUBSTITUIR APENAS AS FUNCOES ABAIXO
 """
 
 from flask import Blueprint, render_template, jsonify, request
 from flask_login import login_required
 from datetime import datetime, timedelta
-import logging
 from app.models.cte import CTE
 from app import db
+from sqlalchemy import func, and_, desc, extract
+import logging
+import calendar
 
-bp = Blueprint('analise_financeira', __name__, url_prefix='/analise-financeira')
+# SUBSTITUIR/ADICIONAR ESTAS FUNCOES NO SEU ARQUIVO EXISTENTE
 
-@bp.route('/')
-@login_required
-def index():
-    """Página principal da análise financeira"""
-    return render_template('analise_financeira/index.html')
-
-@bp.route('/api/analise-completa')
-@login_required
-def api_analise_completa():
-    """API simplificada para análise financeira"""
+def calcular_receita_faturada(filtro_dias, filtro_cliente, data_inicio, data_fim):
+    """Calcula receita faturada FOCADA NO MES CORRENTE"""
     try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
-        filtro_cliente = request.args.get('filtro_cliente', '').strip()
+        # Para os cards, sempre focar no MES CORRENTE
+        agora = datetime.now()
+        primeiro_dia_mes = agora.replace(day=1).date()
+        ultimo_dia_mes = agora.replace(day=calendar.monthrange(agora.year, agora.month)[1]).date()
         
-        # Validar período
-        if filtro_dias not in [7, 15, 30, 60, 90, 180]:
-            return jsonify({'success': False, 'error': 'Período inválido'}), 400
+        # Query base focada no mes corrente
+        query = CTE.query.filter(
+            CTE.data_emissao.between(primeiro_dia_mes, ultimo_dia_mes)
+        )
         
-        # Buscar dados básicos
-        data_limite = datetime.now().date() - timedelta(days=filtro_dias)
-        query = CTE.query.filter(CTE.data_emissao >= data_limite)
-        
-        if filtro_cliente and hasattr(CTE, 'destinatario_nome'):
+        # Filtro por cliente se especificado
+        if filtro_cliente:
             query = query.filter(CTE.destinatario_nome.ilike(f'%{filtro_cliente}%'))
         
-        ctes = query.all()
+        # Buscar CTEs com envio_final preenchido (receita faturada)
+        try:
+            ctes_faturados = query.filter(CTE.envio_final.isnot(None)).all()
+        except AttributeError:
+            # Fallback: usar data_baixa como proxy
+            logging.warning("Campo envio_final nao encontrado, usando data_baixa como proxy")
+            ctes_faturados = query.filter(CTE.data_baixa.isnot(None)).all()
         
-        if not ctes:
-            return jsonify({'success': False, 'error': 'Nenhum dado encontrado'})
+        # Calcular metricas DO MES CORRENTE
+        receita_total_mes = sum(float(cte.valor_total or 0) for cte in ctes_faturados)
+        quantidade_ctes_mes = len(ctes_faturados)
         
-        # Calcular métricas básicas
-        total_ctes = len(ctes)
-        receita_total = sum(float(cte.valor_total or 0) for cte in ctes)
+        # Total geral do mes (para calcular percentual)
+        ctes_total_mes = query.all()
+        total_geral_mes = sum(float(cte.valor_total or 0) for cte in ctes_total_mes)
+        percentual_total = (receita_total_mes / total_geral_mes * 100) if total_geral_mes > 0 else 0
         
-        # Contar clientes únicos
-        clientes = set()
-        for cte in ctes:
-            cliente = getattr(cte, 'destinatario_nome', 'SEM_NOME')
-            if cliente:
-                clientes.add(cliente)
+        # Comparar com MES ANTERIOR
+        mes_anterior = primeiro_dia_mes.replace(day=1) - timedelta(days=1)
+        primeiro_dia_mes_anterior = mes_anterior.replace(day=1)
+        ultimo_dia_mes_anterior = mes_anterior
         
-        # Baixas
-        faturas_pagas = sum(1 for cte in ctes if getattr(cte, 'has_baixa', False))
-        valor_pago = sum(float(cte.valor_total or 0) for cte in ctes if getattr(cte, 'has_baixa', False))
+        query_mes_anterior = CTE.query.filter(
+            CTE.data_emissao.between(primeiro_dia_mes_anterior, ultimo_dia_mes_anterior)
+        )
         
-        return jsonify({
-            'success': True,
-            'data_analise': datetime.now().strftime('%d/%m/%Y %H:%M'),
-            'metricas_fundamentais': {
-                'total_ctes': total_ctes,
-                'receita_total': round(receita_total, 2),
-                'clientes_unicos': len(clientes),
-                'faturas_pagas': faturas_pagas,
-                'faturas_pendentes': total_ctes - faturas_pagas,
-                'valor_pago': round(valor_pago, 2),
-                'valor_pendente': round(receita_total - valor_pago, 2),
-                'ticket_medio': round(receita_total / total_ctes, 2) if total_ctes > 0 else 0,
-                'taxa_pagamento': round((faturas_pagas / total_ctes) * 100, 2) if total_ctes > 0 else 0
-            },
-            'analise_receita': {'crescimento_mensal': 5.2},
-            'analise_clientes': {
-                'top_clientes': [{'nome': c, 'faturamento': receita_total/len(clientes)} for c in list(clientes)[:5]]
-            },
-            'graficos': {
-                'receita_mensal': {
-                    'labels': ['Jan', 'Feb', 'Mar'],
-                    'valores': [receita_total * 0.3, receita_total * 0.4, receita_total * 0.3]
-                }
-            }
-        })
+        if filtro_cliente:
+            query_mes_anterior = query_mes_anterior.filter(
+                CTE.destinatario_nome.ilike(f'%{filtro_cliente}%')
+            )
         
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@bp.route('/api/projecao-futura')
-@login_required 
-def api_projecao_futura():
-    """Projeção simplificada"""
-    try:
-        data_limite = datetime.now().date() - timedelta(days=90)
-        ctes = CTE.query.filter(CTE.data_emissao >= data_limite).all()
+        try:
+            ctes_faturados_mes_anterior = query_mes_anterior.filter(CTE.envio_final.isnot(None)).all()
+        except AttributeError:
+            ctes_faturados_mes_anterior = query_mes_anterior.filter(CTE.data_baixa.isnot(None)).all()
         
-        receita_media = sum(float(cte.valor_total or 0) for cte in ctes) / 3 if ctes else 1000
+        receita_mes_anterior = sum(float(cte.valor_total or 0) for cte in ctes_faturados_mes_anterior)
         
-        projecoes = []
-        meses = ['Janeiro', 'Fevereiro', 'Março']
-        
-        for i, mes in enumerate(meses):
-            valor = receita_media * (1 + (i * 0.02))
-            projecoes.append({
-                'mes_nome': f'{mes}/2026',
-                'valor_projetado': round(valor, 2),
-                'confianca_percentual': 80 - (i * 5)
-            })
-        
-        return jsonify({
-            'success': True,
-            'projecoes_mensais': projecoes,
-            'total_projetado_3_meses': sum(p['valor_projetado'] for p in projecoes),
-            'tendencia_geral': 'Crescimento'
-        })
-        
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@bp.route('/api/analise-veiculos')
-@login_required
-def api_analise_veiculos():
-    """Análise simplificada por veículo"""
-    try:
-        filtro_dias = int(request.args.get('filtro_dias', 180))
-        data_limite = datetime.now().date() - timedelta(days=filtro_dias)
-        
-        ctes = CTE.query.filter(CTE.data_emissao >= data_limite).all()
-        
-        if not ctes:
-            return jsonify({'success': False, 'error': 'Nenhum dado encontrado'})
-        
-        # Agrupar por veículo
-        veiculos = {}
-        for cte in ctes:
-            placa = getattr(cte, 'veiculo_placa', 'SEM_PLACA') or 'SEM_PLACA'
-            placa = str(placa).strip().upper()
-            
-            if placa not in veiculos:
-                veiculos[placa] = {'faturamento': 0, 'viagens': 0}
-            
-            veiculos[placa]['faturamento'] += float(cte.valor_total or 0)
-            veiculos[placa]['viagens'] += 1
-        
-        # Criar ranking
-        ranking = []
-        for placa, data in veiculos.items():
-            score = min(100, (data['faturamento'] / max(v['faturamento'] for v in veiculos.values()) * 100)) if veiculos else 0
-            
-            ranking.append({
-                'veiculo_placa': placa,
-                'faturamento_total': round(data['faturamento'], 2),
-                'total_viagens': data['viagens'],
-                'ticket_medio': round(data['faturamento'] / data['viagens'], 2) if data['viagens'] > 0 else 0,
-                'score_performance': round(score, 2),
-                'classificacao': 'Bom' if score > 50 else 'Regular',
-                'cor_classificacao': 'success' if score > 50 else 'warning'
-            })
-        
-        ranking.sort(key=lambda x: x['faturamento_total'], reverse=True)
-        
-        return jsonify({
-            'success': True,
-            'total_veiculos': len(veiculos),
-            'ranking_veiculos': ranking,
-            'metricas_performance': {
-                'total_veiculos_ativos': len(veiculos),
-                'faturamento_medio_por_veiculo': round(sum(v['faturamento'] for v in veiculos.values()) / len(veiculos), 2) if veiculos else 0
-            }
-        })
-        
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@bp.route('/api/lista-veiculos')
-@login_required
-def api_lista_veiculos():
-    """Lista de veículos"""
-    try:
-        if hasattr(CTE, 'veiculo_placa'):
-            veiculos = db.session.query(CTE.veiculo_placa).distinct().filter(
-                CTE.veiculo_placa.isnot(None)
-            ).all()
-            lista = [v[0] for v in veiculos if v[0]]
+        # Calcular variacao percentual
+        if receita_mes_anterior > 0:
+            variacao_percentual = ((receita_total_mes - receita_mes_anterior) / receita_mes_anterior) * 100
         else:
-            lista = ['VEICULO-001', 'VEICULO-002']  # Dados de exemplo
+            variacao_percentual = 100 if receita_total_mes > 0 else 0
         
-        return jsonify({'success': True, 'veiculos': lista})
+        return {
+            'receita_total': receita_total_mes,
+            'quantidade_ctes': quantidade_ctes_mes,
+            'percentual_total': percentual_total,
+            'variacao_percentual': variacao_percentual,
+            'receita_mes_atual': receita_total_mes,
+            'receita_mes_anterior': receita_mes_anterior,
+            'mes_referencia': agora.strftime('%m/%Y'),
+            'periodo_completo': f"{primeiro_dia_mes.strftime('%d/%m')} a {ultimo_dia_mes.strftime('%d/%m')}"
+        }
+        
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+        logging.error(f"Erro ao calcular receita faturada: {str(e)}")
+        return {
+            'receita_total': 0.0,
+            'quantidade_ctes': 0,
+            'percentual_total': 0.0,
+            'variacao_percentual': 0.0,
+            'receita_mes_atual': 0.0,
+            'receita_mes_anterior': 0.0,
+            'mes_referencia': datetime.now().strftime('%m/%Y'),
+            'periodo_completo': 'Mes corrente'
+        }
 
-@bp.route('/api/clientes')
-@login_required
-def api_clientes():
-    """Lista de clientes"""
+def calcular_receita_com_faturas(filtro_dias, filtro_cliente, data_inicio, data_fim):
+    """Calcula receita com faturas FOCADA NO MES CORRENTE"""
     try:
-        if hasattr(CTE, 'destinatario_nome'):
-            clientes = db.session.query(CTE.destinatario_nome).distinct().filter(
-                CTE.destinatario_nome.isnot(None)
-            ).all()
-            lista = [c[0] for c in clientes if c[0]]
-        else:
-            lista = ['Cliente A', 'Cliente B']  # Dados de exemplo
+        # Para os cards, sempre focar no MES CORRENTE
+        agora = datetime.now()
+        primeiro_dia_mes = agora.replace(day=1).date()
+        ultimo_dia_mes = agora.replace(day=calendar.monthrange(agora.year, agora.month)[1]).date()
         
-        return jsonify({'success': True, 'clientes': lista})
+        # Query base focada no mes corrente
+        query = CTE.query.filter(
+            CTE.data_emissao.between(primeiro_dia_mes, ultimo_dia_mes)
+        )
+        
+        # Filtro por cliente se especificado
+        if filtro_cliente:
+            query = query.filter(CTE.destinatario_nome.ilike(f'%{filtro_cliente}%'))
+        
+        # Buscar CTEs com data_inclusao_fatura preenchida
+        try:
+            ctes_com_faturas = query.filter(CTE.data_inclusao_fatura.isnot(None)).all()
+        except AttributeError:
+            # Fallback: usar primeiro_envio como proxy
+            logging.warning("Campo data_inclusao_fatura nao encontrado, usando primeiro_envio como proxy")
+            ctes_com_faturas = query.filter(CTE.primeiro_envio.isnot(None)).all()
+        
+        # Calcular metricas DO MES CORRENTE
+        receita_total_mes = sum(float(cte.valor_total or 0) for cte in ctes_com_faturas)
+        quantidade_ctes_mes = len(ctes_com_faturas)
+        
+        # Calcular ticket medio
+        ticket_medio = receita_total_mes / quantidade_ctes_mes if quantidade_ctes_mes > 0 else 0
+        
+        # Total geral do mes (para calcular cobertura)
+        ctes_total_mes = query.all()
+        total_ctes_mes = len(ctes_total_mes)
+        percentual_cobertura = (quantidade_ctes_mes / total_ctes_mes * 100) if total_ctes_mes > 0 else 0
+        
+        # Gerar dados para grafico de evolucao (ultimos 12 meses)
+        grafico_dados = gerar_grafico_evolucao_receita_com_faturas(filtro_cliente)
+        
+        return {
+            'receita_total': receita_total_mes,
+            'quantidade_ctes': quantidade_ctes_mes,
+            'ticket_medio': ticket_medio,
+            'percentual_cobertura': percentual_cobertura,
+            'grafico': grafico_dados,
+            'mes_referencia': agora.strftime('%m/%Y'),
+            'periodo_completo': f"{primeiro_dia_mes.strftime('%d/%m')} a {ultimo_dia_mes.strftime('%d/%m')}"
+        }
+        
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+        logging.error(f"Erro ao calcular receita com faturas: {str(e)}")
+        return {
+            'receita_total': 0.0,
+            'quantidade_ctes': 0,
+            'ticket_medio': 0.0,
+            'percentual_cobertura': 0.0,
+            'grafico': {'labels': [], 'valores': []},
+            'mes_referencia': datetime.now().strftime('%m/%Y'),
+            'periodo_completo': 'Mes corrente'
+        }
+
+def gerar_grafico_evolucao_receita_com_faturas(filtro_cliente=None):
+    """Gera dados para grafico de evolucao da receita com faturas (ultimos 12 meses)"""
+    try:
+        # Calcular periodo dos ultimos 12 meses
+        hoje = datetime.now().date()
+        inicio_periodo = hoje.replace(day=1) - timedelta(days=365)
+        
+        # Query base
+        query = db.session.query(
+            extract('year', CTE.data_emissao).label('ano'),
+            extract('month', CTE.data_emissao).label('mes'),
+            func.sum(CTE.valor_total).label('total')
+        ).filter(
+            CTE.data_emissao >= inicio_periodo
+        )
+        
+        # Aplicar filtro de cliente se especificado
+        if filtro_cliente:
+            query = query.filter(CTE.destinatario_nome.ilike(f'%{filtro_cliente}%'))
+        
+        # Filtrar apenas CTEs com data_inclusao_fatura (ou proxy)
+        try:
+            query = query.filter(CTE.data_inclusao_fatura.isnot(None))
+        except AttributeError:
+            query = query.filter(CTE.primeiro_envio.isnot(None))
+        
+        # Agrupar por mes
+        receita_mensal = query.group_by(
+            extract('year', CTE.data_emissao),
+            extract('month', CTE.data_emissao)
+        ).order_by(
+            extract('year', CTE.data_emissao),
+            extract('month', CTE.data_emissao)
+        ).all()
+        
+        if not receita_mensal:
+            return {'labels': [], 'valores': []}
+        
+        # Formatar dados
+        labels = []
+        valores = []
+        
+        for item in receita_mensal:
+            try:
+                # Criar label no formato "Jan/2024"
+                mes_nome = [
+                    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+                ][int(item.mes) - 1]
+                
+                label = f"{mes_nome}/{int(item.ano)}"
+                labels.append(label)
+                valores.append(float(item.total))
+            except:
+                continue
+        
+        return {
+            'labels': labels,
+            'valores': valores,
+            'titulo': 'Evolucao Receita com Faturas - Ultimos 12 Meses'
+        }
+        
+    except Exception as e:
+        logging.error(f"Erro ao gerar grafico evolucao receita com faturas: {str(e)}")
+        return {'labels': [], 'valores': []}
+
+# NOVA API para grafico de evolucao da receita faturada
+@bp.route('/api/evolucao-receita-faturada')
+@login_required
+def api_evolucao_receita_faturada():
+    """API para grafico de evolucao da receita faturada"""
+    try:
+        filtro_cliente = request.args.get('filtro_cliente', '').strip()
+        
+        # Limpar filtro de cliente
+        if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
+            filtro_cliente = None
+        
+        # Gerar dados para grafico (ultimos 12 meses)
+        grafico_dados = gerar_grafico_evolucao_receita_faturada(filtro_cliente)
+        
+        return jsonify({
+            'success': True,
+            'dados': grafico_dados
+        })
+        
+    except Exception as e:
+        logging.error(f"Erro na API evolucao receita faturada: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Erro ao calcular evolucao receita faturada'
+        }), 500
+
+def gerar_grafico_evolucao_receita_faturada(filtro_cliente=None):
+    """Gera dados para grafico de evolucao da receita faturada (ultimos 12 meses)"""
+    try:
+        # Calcular periodo dos ultimos 12 meses
+        hoje = datetime.now().date()
+        inicio_periodo = hoje.replace(day=1) - timedelta(days=365)
+        
+        # Query base
+        query = db.session.query(
+            extract('year', CTE.data_emissao).label('ano'),
+            extract('month', CTE.data_emissao).label('mes'),
+            func.sum(CTE.valor_total).label('total'),
+            func.count(CTE.id).label('quantidade')
+        ).filter(
+            CTE.data_emissao >= inicio_periodo
+        )
+        
+        # Aplicar filtro de cliente se especificado
+        if filtro_cliente:
+            query = query.filter(CTE.destinatario_nome.ilike(f'%{filtro_cliente}%'))
+        
+        # Filtrar apenas CTEs com envio_final (ou proxy)
+        try:
+            query = query.filter(CTE.envio_final.isnot(None))
+        except AttributeError:
+            query = query.filter(CTE.data_baixa.isnot(None))
+        
+        # Agrupar por mes
+        receita_mensal = query.group_by(
+            extract('year', CTE.data_emissao),
+            extract('month', CTE.data_emissao)
+        ).order_by(
+            extract('year', CTE.data_emissao),
+            extract('month', CTE.data_emissao)
+        ).all()
+        
+        if not receita_mensal:
+            return {
+                'labels': [],
+                'valores': [],
+                'quantidades': [],
+                'titulo': 'Evolucao Receita Faturada - Sem Dados'
+            }
+        
+        # Formatar dados
+        labels = []
+        valores = []
+        quantidades = []
+        
+        for item in receita_mensal:
+            try:
+                # Criar label no formato "Jan/2024"
+                mes_nome = [
+                    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+                ][int(item.mes) - 1]
+                
+                label = f"{mes_nome}/{int(item.ano)}"
+                labels.append(label)
+                valores.append(float(item.total))
+                quantidades.append(int(item.quantidade))
+            except Exception as e:
+                logging.error(f"Erro ao processar item do grafico: {e}")
+                continue
+        
+        # Calcular estatisticas
+        total_periodo = sum(valores)
+        media_mensal = total_periodo / len(valores) if valores else 0
+        ctes_total = sum(quantidades)
+        
+        return {
+            'labels': labels,
+            'valores': valores,
+            'quantidades': quantidades,
+            'titulo': 'Evolucao Receita Faturada - Ultimos 12 Meses',
+            'estatisticas': {
+                'total_periodo': total_periodo,
+                'media_mensal': media_mensal,
+                'total_ctes': ctes_total,
+                'meses_analisados': len(valores)
+            },
+            'filtro_cliente': filtro_cliente or 'Todos os clientes'
+        }
+        
+    except Exception as e:
+        logging.error(f"Erro ao gerar grafico evolucao receita faturada: {str(e)}")
+        return {
+            'labels': [],
+            'valores': [],
+            'quantidades': [],
+            'titulo': 'Evolucao Receita Faturada - Erro'
+        }
+
+# CORRECAO da API principal para garantir que calculos sejam para mes corrente nos cards
+@bp.route('/api/metricas-mes-corrente')
+@login_required
+def api_metricas_mes_corrente():
+    """API especifica para metricas do mes corrente (para os cards)"""
+    try:
+        filtro_cliente = request.args.get('filtro_cliente', '').strip()
+        if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
+            filtro_cliente = None
+        
+        # Calcular periodo do mes corrente
+        agora = datetime.now()
+        primeiro_dia_mes = agora.replace(day=1).date()
+        ultimo_dia_mes = agora.replace(day=calendar.monthrange(agora.year, agora.month)[1]).date()
+        
+        # Query base para mes corrente
+        query_mes = CTE.query.filter(
+            CTE.data_emissao.between(primeiro_dia_mes, ultimo_dia_mes)
+        )
+        
+        if filtro_cliente:
+            query_mes = query_mes.filter(CTE.destinatario_nome.ilike(f'%{filtro_cliente}%'))
+        
+        # Metricas basicas do mes
+        total_ctes_mes = query_mes.count()
+        receita_total_mes = query_mes.with_entities(func.sum(CTE.valor_total)).scalar() or 0
+        ticket_medio_mes = receita_total_mes / total_ctes_mes if total_ctes_mes > 0 else 0
+        
+        # CTEs com baixa no mes
+        ctes_com_baixa_mes = query_mes.filter(CTE.data_baixa.isnot(None)).count()
+        valor_baixado_mes = query_mes.filter(CTE.data_baixa.isnot(None)).with_entities(
+            func.sum(CTE.valor_total)
+        ).scalar() or 0
+        
+        # Calcular metricas especificas
+        dados_receita_faturada = calcular_receita_faturada(0, filtro_cliente, None, None)
+        dados_receita_com_faturas = calcular_receita_com_faturas(0, filtro_cliente, None, None)
+        
+        return jsonify({
+            'success': True,
+            'mes_referencia': agora.strftime('%m/%Y'),
+            'periodo': f"{primeiro_dia_mes.strftime('%d/%m')} a {ultimo_dia_mes.strftime('%d/%m')}",
+            'metricas_basicas': {
+                'receita_mes_atual': float(receita_total_mes),
+                'total_ctes': total_ctes_mes,
+                'ticket_medio': float(ticket_medio_mes),
+                'ctes_com_baixa': ctes_com_baixa_mes,
+                'valor_baixado': float(valor_baixado_mes),
+                'percentual_baixado': (valor_baixado_mes / receita_total_mes * 100) if receita_total_mes > 0 else 0
+            },
+            'receita_faturada': dados_receita_faturada,
+            'receita_com_faturas': dados_receita_com_faturas
+        })
+        
+    except Exception as e:
+        logging.error(f"Erro nas metricas do mes corrente: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Erro ao calcular metricas do mes: {str(e)}'
+        }), 500

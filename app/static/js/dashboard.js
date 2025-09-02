@@ -166,6 +166,8 @@ function atualizarCardsMetricas() {
 }
 
 function atualizarAlertas() {
+    console.log('🚨 Atualizando sistema de alertas...');
+    
     // Primeiro envio pendente
     const primeiroEnvio = alertas.primeiro_envio_pendente || {qtd: 0, valor: 0};
     $('#qtdPrimeiroEnvio').text(primeiroEnvio.qtd);
@@ -190,7 +192,7 @@ function atualizarAlertas() {
         cardEnvio.removeClass('alert-warning').addClass('alert-success');
     }
     
-    // Faturas vencidas
+    // Faturas vencidas - 🔧 FUNÇÃO COMPLETADA
     const faturasVencidas = alertas.faturas_vencidas || {qtd: 0, valor: 0};
     $('#qtdFaturasVencidas').text(faturasVencidas.qtd);
     $('#valorFaturasVencidas').text(formatarMoeda(faturasVencidas.valor) + ' inadimplentes');
@@ -200,6 +202,40 @@ function atualizarAlertas() {
         cardVencidas.removeClass('alert-success').addClass('alert-danger');
     } else {
         cardVencidas.removeClass('alert-danger').addClass('alert-success');
+    }
+    
+    // CTEs sem faturas (opcional - se houver card no HTML)
+    const ctesSemFaturas = alertas.ctes_sem_faturas || {qtd: 0, valor: 0};
+    if ($('#qtdCtesSemFaturas').length > 0) {
+        $('#qtdCtesSemFaturas').text(ctesSemFaturas.qtd);
+        $('#valorCtesSemFaturas').text(formatarMoeda(ctesSemFaturas.valor) + ' sem fatura');
+        
+        const cardSemFaturas = $('#alertaCtesSemFaturas');
+        if (ctesSemFaturas.qtd > 0) {
+            cardSemFaturas.removeClass('alert-success').addClass('alert-warning');
+        } else {
+            cardSemFaturas.removeClass('alert-warning').addClass('alert-success');
+        }
+    }
+    
+    // Log para debugging
+    console.log('📊 Alertas atualizados:', {
+        'primeiro_envio': primeiroEnvio.qtd,
+        'envio_final': envioFinal.qtd,
+        'faturas_vencidas': faturasVencidas.qtd,
+        'ctes_sem_faturas': ctesSemFaturas.qtd
+    });
+    
+    // Atualizar contador total de alertas
+    const totalAlertas = primeiroEnvio.qtd + envioFinal.qtd + faturasVencidas.qtd + ctesSemFaturas.qtd;
+    const valorTotalRisco = primeiroEnvio.valor + envioFinal.valor + faturasVencidas.valor + ctesSemFaturas.valor;
+    
+    // Atualizar cards de resumo se existirem
+    if ($('#alertasAtivos').length > 0) {
+        $('#alertasAtivos').text(formatarNumero(totalAlertas));
+    }
+    if ($('#valorRisco').length > 0) {
+        $('#valorRisco').text(formatarMoeda(valorTotalRisco) + ' em risco');
     }
 }
 

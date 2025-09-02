@@ -1,795 +1,897 @@
 {% extends "base.html" %}
 
-{% block title %}Análise Financeira{% endblock %}
+{% block title %}Análise Financeira - Dashboard Transpontual{% endblock %}
 
 {% block extra_css %}
 <style>
-/* CSS OTIMIZADO PARA MÁXIMO CONTRASTE */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f8f9fa;
-}
+    body {
+        background: linear-gradient(135deg, #0a6ed1 0%, #feffff 100%);
+        min-height: 100vh;
+    }
+    
+    .analysis-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin: 20px;
+        padding: 30px;
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        border-radius: 16px;
+        padding: 24px;
+        margin: 12px 0;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        min-height: 120px;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    .chart-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(15px);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 400px;
+        padding: 20px;
+    }
+    
+    .chart-container-financeira {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+    
+    .filter-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .metric-number {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+    }
+    
+    .metric-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+    
+    .header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-.nav-tabs-enhanced {
-    border-bottom: 3px solid #198754;
-    margin-bottom: 2rem;
-    background: #ffffff;
-    border-radius: 12px 12px 0 0;
-    padding: 0.75rem 1rem 0 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+    /* Cards especiais */
+    .card-receita-faturada {
+        border-left: 5px solid #28a745;
+        background: linear-gradient(135deg, rgba(40,167,69,0.1) 0%, rgba(255,255,255,0.9) 100%);
+    }
+    
+    .card-receita-faturas {
+        border-left: 5px solid #ffc107;
+        background: linear-gradient(135deg, rgba(255,193,7,0.1) 0%, rgba(255,255,255,0.9) 100%);
+    }
+    
+    .status-card {
+        background: linear-gradient(135deg, rgba(23,162,184,0.1) 0%, rgba(255,255,255,0.9) 100%);
+        border-left: 5px solid #17a2b8;
+    }
 
-.nav-tabs-enhanced .nav-link {
-    border: 2px solid #dee2e6 !important;
-    color: #000000 !important;  /* PRETO FORTE */
-    font-weight: 800 !important;  /* NEGRITO MÁXIMO */
-    padding: 1.25rem 2rem !important;
-    margin: 0 0.5rem;
-    border-radius: 10px 10px 0 0;
-    background: #f8f9fa !important;
-    font-size: 1rem !important;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+    /* Melhorias para avisos de fallback */
+    .fallback-warning {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
 
-.nav-tabs-enhanced .nav-link:hover:not(.active) {
-    background: #e9ecef !important;
-    color: #000000 !important;
-    border-color: #198754 !important;
-    transform: translateY(-3px);
-}
+    /* Indicadores de status melhorados */
+    .status-indicator {
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+    
+    /* Responsividade MELHORADA */
+    @media (max-width: 1200px) {
+        .metric-number {
+            font-size: 1.8rem;
+        }
+        
+        .chart-container {
+            height: 350px;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .analysis-container {
+            margin: 15px;
+            padding: 25px;
+        }
+        
+        .metric-number {
+            font-size: 1.6rem;
+        }
+        
+        .chart-container,
+        .chart-container-financeira {
+            height: 300px;
+        }
+        
+        .header-gradient {
+            padding: 30px 15px;
+        }
+        
+        .header-gradient h1 {
+            font-size: 2.5rem;
+        }
+        
+        .header-gradient p {
+            font-size: 1.1rem;
+        }
+    }
 
-.nav-tabs-enhanced .nav-link.active {
-    background: #198754 !important;  /* VERDE ESCURO */
-    color: #ffffff !important;  /* BRANCO PURO */
-    border-color: #198754 !important;
-    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.5) !important;
-    transform: translateY(-3px);
-}
+    @media (max-width: 768px) {
+        .analysis-container {
+            margin: 10px;
+            padding: 15px;
+        }
+        
+        .metric-card {
+            padding: 16px;
+            margin: 8px 0;
+            min-height: 100px;
+        }
+        
+        .metric-number {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        
+        .chart-container,
+        .chart-container-financeira {
+            height: 250px;
+            padding: 10px;
+        }
+        
+        .header-gradient {
+            padding: 20px 10px;
+            margin-bottom: 20px;
+        }
+        
+        .header-gradient h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header-gradient p {
+            font-size: 1rem;
+        }
+        
+        .filter-card {
+            padding: 15px;
+        }
+        
+        /* Melhor espaçamento em mobile */
+        .row {
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+        
+        .row > * {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        /* Botões responsivos */
+        .btn-group {
+            flex-wrap: wrap;
+        }
+        
+        .btn-group .btn {
+            margin: 2px;
+            font-size: 0.8rem;
+        }
+        
+        /* Tabela responsiva */
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+        
+        /* Cards em coluna única em mobile muito pequeno */
+        .col-md-3, .col-md-6, .col-md-4, .col-md-8 {
+            margin-bottom: 15px;
+        }
+    }
 
-.metric-card {
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 1.75rem;
-    text-align: center;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    border: 2px solid #e9ecef;
-    height: 100%;
-}
+    @media (max-width: 576px) {
+        .analysis-container {
+            margin: 5px;
+            padding: 12px;
+        }
+        
+        .metric-number {
+            font-size: 1.2rem;
+        }
+        
+        .metric-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .chart-container,
+        .chart-container-financeira {
+            height: 200px;
+            padding: 5px;
+        }
+        
+        .header-gradient h1 {
+            font-size: 1.5rem;
+        }
+        
+        .header-gradient p {
+            font-size: 0.9rem;
+        }
+        
+        /* Filtros em mobile */
+        .filter-card .row > * {
+            margin-bottom: 10px;
+        }
+        
+        /* Esconder alguns elementos em telas muito pequenas */
+        .d-none-xs {
+            display: none !important;
+        }
+        
+        /* Botões menores */
+        .btn {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+        
+        /* Status em linha */
+        .status-card .row > * {
+            margin-bottom: 15px;
+        }
+    }
 
-.metric-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #198754;
-    margin: 0.75rem 0;
-}
+    /* Melhorias para indicadores visuais */
+    .text-success-custom {
+        color: #28a745 !important;
+        font-weight: 600;
+    }
+    
+    .text-warning-custom {
+        color: #fd7e14 !important;
+        font-weight: 600;
+    }
+    
+    .text-danger-custom {
+        color: #dc3545 !important;
+        font-weight: 600;
+    }
 
-.chart-container {
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    border: 2px solid #e9ecef;
-}
+    /* Loading overlay melhorado */
+    #loadingAnalise {
+        backdrop-filter: blur(5px);
+    }
 
-.loading-spinner {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #198754;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
+    /* Animações suaves */
+    .metric-card, .chart-card, .filter-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+    /* Melhor espaçamento para elementos pequenos */
+    small.text-muted {
+        line-height: 1.3;
+        margin: 2px 0;
+        display: block;
+    }
 
-.alert {
-    border-radius: 12px;
-    border: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-}
-
-.module-header {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%) !important;
-    color: white !important;
-    padding: 2.5rem !important;
-    border-radius: 15px !important;
-    margin-bottom: 2rem !important;
-    text-align: center !important;
-    box-shadow: 0 8px 32px rgba(25, 135, 84, 0.3) !important;
-}
-
-.module-header h2 {
-    color: white !important;
-    font-weight: 800 !important;
-    margin-bottom: 1rem !important;
-}
-
-.module-header p {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 1.1rem !important;
-}
-
-/* CABEÇALHO ESTILO SUPABASE - ANÁLISE FINANCEIRA */
-.module-header {
-    background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%) !important;
-    color: white !important;
-    padding: 3rem 2.5rem !important;
-    border-radius: 15px !important;
-    margin-bottom: 2rem !important;
-    text-align: center !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
-}
-
-.module-header h2 {
-    color: white !important;
-    font-weight: 800 !important;
-    font-size: 2.5rem !important;
-    margin-bottom: 1rem !important;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-}
-
-.module-header p {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 1.2rem !important;
-    font-weight: 300 !important;
-    margin: 0 !important;
-}
-
-.module-header .fa-chart-line {
-    color: #3ecf8e !important;
-    text-shadow: 0 0 20px rgba(62, 207, 142, 0.5) !important;
-    margin-right: 1rem !important;
-}
-
-/* Cards estilo Supabase */
-.supabase-card {
-    background: rgba(255, 255, 255, 0.98) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease !important;
-}
-
-.supabase-card:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15) !important;
-}
+    /* Força quebra de texto em números grandes */
+    .metric-number {
+        word-break: break-word;
+        line-height: 1.2;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="module-header text-center mb-4">
-                <h2><i class="fas fa-chart-line"></i> Análise Financeira Avançada</h2>
-                <p class="mb-0">Dashboard completo com métricas, projeções e insights automatizados</p>
-            </div>
-        </div>
+<div class="analysis-container">
+    <!-- Header -->
+    <div class="header-gradient">
+        <h1 style="font-size: 3rem; margin-bottom: 15px;">Análise Financeira Avançada</h1>
+        <p style="font-size: 1.3rem; opacity: 0.9;">Dashboard completo de métricas e indicadores de performance</p>
+        <small id="ultimaAtualizacao" style="opacity: 0.7;">Carregando...</small>
     </div>
 
-    <!-- Filtros -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-3">
-                            <label for="filtroPeriodo" class="form-label fw-bold">📅 Período:</label>
-                            <select id="filtroPeriodo" class="form-select">
-                                <option value="7">Últimos 7 dias</option>
-                                <option value="15">Últimos 15 dias</option>
-                                <option value="30">Últimos 30 dias</option>
-                                <option value="90">Últimos 90 dias</option>
-                                <option value="180" selected>Últimos 6 meses</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filtroCliente" class="form-label fw-bold">👥 Cliente:</label>
-                            <select id="filtroCliente" class="form-select">
-                                <option value="">Todos os clientes</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="d-flex gap-2 mt-4">
-                                <button class="btn btn-success" onclick="aplicarFiltros()">
-                                    <i class="fas fa-filter"></i> Aplicar Filtros
-                                </button>
-                                <button class="btn btn-outline-secondary" onclick="limparFiltros()">
-                                    <i class="fas fa-times"></i> Limpar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div id="statusFiltro" class="text-muted small mt-4">
-                                Carregando...
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Filtros Avançados -->
+    <div class="filter-card">
+        <h6 class="mb-3">
+            <i class="fas fa-filter"></i> Filtros Avançados de Análise
+        </h6>
+        <div class="row">
+            <!-- Período tradicional -->
+            <div class="col-md-2 col-sm-6">
+                <label for="filtroPeriodo" class="form-label">Período</label>
+                <select id="filtroPeriodo" class="form-select">
+                    <option value="30">30 dias</option>
+                    <option value="90">90 dias</option>
+                    <option value="180" selected>180 dias</option>
+                    <option value="360">360 dias</option>
+                </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Loading Global -->
-    <div id="loadingGlobal" class="text-center py-5" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p class="mt-3">Carregando análise financeira...</p>
-    </div>
-
-    <!-- Navegação por Abas -->
-    <ul class="nav nav-tabs nav-tabs-enhanced" id="analiseFinanceiraTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="geral-tab" data-bs-toggle="tab" data-bs-target="#geral" type="button">
-                📊 Visão Geral
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="projecoes-tab" data-bs-toggle="tab" data-bs-target="#projecoes" type="button">
-                🔮 Projeções
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="comparativo-tab" data-bs-toggle="tab" data-bs-target="#comparativo" type="button">
-                📈 Comparativo
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="veiculos-tab" data-bs-toggle="tab" data-bs-target="#veiculos" type="button">
-                🚛 Veículos
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="insights-tab" data-bs-toggle="tab" data-bs-target="#insights" type="button">
-                🧠 Insights
-            </button>
-        </li>
-    </ul>
-
-    <!-- Conteúdo das Abas -->
-    <div class="tab-content" id="analiseFinanceiraContent">
-        <!-- Aba 1: Visão Geral -->
-        <div class="tab-pane fade show active" id="geral" role="tabpanel">
-            <!-- Métricas Principais -->
-            <div class="row mb-4" id="metricas-principais">
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <h6 class="text-muted">💰 Receita Total</h6>
-                        <div class="metric-number" id="receitaTotal">R$ 0,00</div>
-                        <small class="text-muted">Período selecionado</small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <h6 class="text-muted">📋 Total CTEs</h6>
-                        <div class="metric-number" id="totalCTEs">0</div>
-                        <small class="text-muted">Documentos emitidos</small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <h6 class="text-muted">✅ Valor Baixado</h6>
-                        <div class="metric-number" id="valorBaixado">R$ 0,00</div>
-                        <small class="text-muted">Pagamentos efetivados</small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metric-card">
-                        <h6 class="text-muted">⏳ Valor Pendente</h6>
-                        <div class="metric-number" id="valorPendente">R$ 0,00</div>
-                        <small class="text-muted">Aguardando pagamento</small>
-                    </div>
-                </div>
+            
+            <!-- Cliente -->
+            <div class="col-md-2 col-sm-6">
+                <label for="filtroCliente" class="form-label">Cliente</label>
+                <select id="filtroCliente" class="form-select">
+                    <option value="">Todos os Clientes</option>
+                </select>
             </div>
-
-            <!-- Gráfico de Receita Mensal -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="chart-container">
-                        <h5 class="text-center mb-4">📈 Evolução da Receita Mensal</h5>
-                        <canvas id="chartReceitaMensal" height="100"></canvas>
-                    </div>
-                </div>
+            
+            <!-- Data Início -->
+            <div class="col-md-2 col-sm-6">
+                <label for="dataInicio" class="form-label">Data Início</label>
+                <input type="date" class="form-control" id="dataInicio">
+                <small class="text-muted">Substitui período</small>
             </div>
-
-            <!-- Top Clientes -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5><i class="fas fa-users"></i> Top 10 Clientes</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="tabelaTopClientes">
-                                    <thead>
-                                        <tr>
-                                            <th>Cliente</th>
-                                            <th>Faturamento</th>
-                                            <th>CTEs</th>
-                                            <th>Ticket Médio</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="4" class="text-center">Carregando dados...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            
+            <!-- Data Fim -->
+            <div class="col-md-2 col-sm-6">
+                <label for="dataFim" class="form-label">Data Fim</label>
+                <input type="date" class="form-control" id="dataFim">
+                <small class="text-muted">Substitui período</small>
             </div>
-        </div>
-
-        <!-- Aba 2: Projeções -->
-        <div class="tab-pane fade" id="projecoes" role="tabpanel">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5><i class="fas fa-crystal-ball"></i> Projeções para os Próximos 3 Meses</h5>
-                        </div>
-                        <div class="card-body" id="containerProjecoes">
-                            <div class="text-center py-4">
-                                <div class="loading-spinner"></div>
-                                <p class="mt-3">Calculando projeções...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Aba 3: Comparativo -->
-        <div class="tab-pane fade" id="comparativo" role="tabpanel">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="periodoComparativo" class="form-label fw-bold">Período de Comparação:</label>
-                    <select id="periodoComparativo" class="form-select">
-                        <option value="7">Últimos 7 dias</option>
-                        <option value="15">Últimos 15 dias</option>
-                        <option value="30" selected>Últimos 30 dias</option>
-                    </select>
-                </div>
-                <div class="col-md-8">
-                    <button class="btn btn-success mt-4" onclick="carregarComparativo()">
-                        <i class="fas fa-chart-bar"></i> Atualizar Comparativo
+            
+            <!-- Botões -->
+            <div class="col-md-4">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary" id="btnAplicarFiltros">
+                        <i class="fas fa-search"></i> 
+                        <span class="d-none d-sm-inline">Aplicar</span>
+                    </button>
+                    <button class="btn btn-outline-secondary" id="btnLimparFiltros">
+                        <i class="fas fa-eraser"></i> 
+                        <span class="d-none d-sm-inline">Limpar</span>
                     </button>
                 </div>
             </div>
-            
-            <div class="row mt-4" id="containerComparativo">
-                <div class="col-12">
-                    <div class="text-center py-4">
-                        <div class="loading-spinner"></div>
-                        <p class="mt-3">Carregando análise comparativa...</p>
+        </div>
+        
+        <!-- Status dos filtros -->
+        <div class="mt-3">
+            <small class="text-muted">
+                <i class="fas fa-info-circle"></i>
+                <span id="statusFiltro">Período: 180 dias</span>
+            </small>
+        </div>
+    </div>
+
+    <!-- Cards de Métricas Principais - Linha 1 -->
+    <div class="row mb-4">
+        <!-- Receita Mês Atual -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card">
+                <div class="metric-number" id="receitaMesAtual">R$ 0,00</div>
+                <div class="metric-label">Receita Mês Atual</div>
+                <small class="text-muted" id="variacaoMensal">0% vs mês anterior</small>
+            </div>
+        </div>
+        
+        <!-- Ticket Médio -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card">
+                <div class="metric-number" id="ticketMedio">R$ 0,00</div>
+                <div class="metric-label">Ticket Médio</div>
+                <small class="text-muted" id="ticketMediana">Mediana: R$ 0,00</small>
+            </div>
+        </div>
+        
+        <!-- Receita Faturada -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card card-receita-faturada">
+                <div class="metric-number" id="receitaFaturada">R$ 0,00</div>
+                <div class="metric-label">
+                    <i class="fas fa-file-invoice-dollar"></i> Receita Faturada
+                </div>
+                <small class="text-muted" id="qtdCtesFaturados">0 CTEs</small>
+                <small class="text-muted" id="percentualFaturado">0% do total</small>
+                <small id="variacaoFaturada">Carregando...</small>
+                <div id="avisoFallbackFaturada" class="fallback-warning" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- Receita com Faturas -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card card-receita-faturas">
+                <div class="metric-number" id="receitaComFaturas">R$ 0,00</div>
+                <div class="metric-label">
+                    <i class="fas fa-receipt"></i> Receita c/ Faturas
+                </div>
+                <small class="text-muted" id="qtdCtesComFaturas">0 CTEs</small>
+                <small class="text-muted" id="ticketMedioFaturas">R$ 0,00 ticket médio</small>
+                <small id="coberturaFaturas">0% de cobertura</small>
+                <div id="avisoFallbackFaturas" class="fallback-warning" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Métricas Secundárias - Linha 2 -->
+    <div class="row mb-4">
+        <!-- Tempo Médio Cobrança -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card">
+                <div class="metric-number" id="tempoMedioCobranca">0 dias</div>
+                <div class="metric-label">Tempo Médio Cobrança</div>
+                <small class="text-muted" id="qtdBaixas">0 baixas realizadas</small>
+            </div>
+        </div>
+        
+        <!-- Concentração Top 5 -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card">
+                <div class="metric-number" id="concentracaoTop5">0%</div>
+                <div class="metric-label">Concentração Top 5</div>
+                <small class="text-muted">Clientes principais</small>
+            </div>
+        </div>
+        
+        <!-- Receita Média Mensal -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card">
+                <div class="metric-number" id="receitaMediaMensal">R$ 0,00</div>
+                <div class="metric-label">Receita Média Mensal</div>
+                <small class="text-muted" id="mesesAnalisados">Últimos 6 meses</small>
+                <small class="text-muted" id="tendenciaReceita">Calculando...</small>
+            </div>
+        </div>
+        
+        <!-- Previsão Próximo Mês -->
+        <div class="col-md-3 col-sm-6">
+            <div class="metric-card">
+                <div class="metric-number" id="previsaoProximoMes">R$ 0,00</div>
+                <div class="metric-label">Previsão Próximo Mês</div>
+                <small class="text-muted">Baseado na tendência</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel de Status Avançado -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="metric-card status-card">
+                <h6 class="mb-3">
+                    <i class="fas fa-info-circle"></i> Status do Sistema e Indicadores
+                </h6>
+                <div class="row text-center">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="metric-number" id="totalRegistros">0</div>
+                        <div class="metric-label">CTEs Processados</div>
+                        <small class="text-muted">No período selecionado</small>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="metric-number" id="taxaFaturamento">0%</div>
+                        <div class="metric-label">Taxa de Faturamento</div>
+                        <small class="text-muted">CTEs com envio final</small>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="metric-number" id="taxaComFaturas">0%</div>
+                        <div class="metric-label">Taxa com Faturas</div>
+                        <small class="text-muted">CTEs com data inclusão</small>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="metric-number" id="impactoTopCliente">0%</div>
+                        <div class="metric-label">Impacto Top Cliente</div>
+                        <small class="text-muted">Risco de concentração</small>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Aba 4: Veículos -->
-        <div class="tab-pane fade" id="veiculos" role="tabpanel">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5><i class="fas fa-truck"></i> Análise de Faturamento por Veículo</h5>
+    <!-- Gráficos Principais - Linha 1 -->
+    <div class="row">
+        <!-- Evolução da Receita Mensal -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-chart-line"></i> 
+                        <span class="d-none d-sm-inline">Evolução da </span>Receita Mensal
+                    </h5>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartReceitaMensal"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Concentração de Clientes -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-chart-pie"></i> 
+                        <span class="d-none d-sm-inline">Concentração de </span>Clientes
+                    </h5>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartConcentracao"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos Secundários - Linha 2 -->
+    <div class="row">
+        <!-- Análise de Tendência -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-chart-area"></i> 
+                        <span class="d-none d-sm-inline">Análise de </span>Tendência
+                    </h5>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartTendencia"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tempo de Cobrança -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-clock"></i> 
+                        <span class="d-none d-sm-inline">Distribuição </span>Tempo Cobrança
+                    </h5>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartTempoCobranca"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOVO: Gráfico Evolução Receita com Faturas por Inclusão -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-card" style="border-left: 5px solid #ffc107;">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); background: rgba(255,193,7,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-chart-bar"></i> 
+                        Evolução da Receita com Faturas 
+                        <span class="d-none d-sm-inline">(Data Inclusão)</span>
+                    </h5>
+                    <small class="text-muted">Análise baseada em data_inclusao_fatura - performance de faturamento</small>
+                </div>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="chartEvolucaoReceitaInclusaoFatura"></canvas>
+                </div>
+                <!-- Estatísticas do gráfico -->
+                <div style="padding: 15px; background: rgba(255,255,255,0.5); border-top: 1px solid rgba(0,0,0,0.1);">
+                    <div class="row text-center">
+                        <div class="col-md-3 col-sm-6">
+                            <small class="text-muted d-block">Total Período</small>
+                            <strong id="totalPeriodoInclusao">R$ 0,00</strong>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="tabelaVeiculos">
-                                    <thead>
-                                        <tr>
-                                            <th>Placa</th>
-                                            <th>Faturamento</th>
-                                            <th>Viagens</th>
-                                            <th>Ticket Médio</th>
-                                            <th>Score</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="5" class="text-center">Carregando dados dos veículos...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="col-md-3 col-sm-6">
+                            <small class="text-muted d-block">Média Mensal</small>
+                            <strong id="mediaMensalInclusao">R$ 0,00</strong>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <small class="text-muted d-block">CTEs Total</small>
+                            <strong id="totalCtesInclusao">0</strong>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <small class="text-muted d-block">Meses Analisados</small>
+                            <strong id="mesesAnalisadosInclusao">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OUTRO GRÁFICO: Receita com Faturas (para compatibilidade) -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-card" style="border-left: 5px solid #fd7e14;">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); background: rgba(253,126,20,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-chart-line"></i> 
+                        Evolução Receita com Faturas 
+                        <span class="d-none d-sm-inline">(Mensal)</span>
+                    </h5>
+                    <small class="text-muted">Gráfico complementar de receita com faturas</small>
+                </div>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="chartReceitaComFaturas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Clientes e Stress Test -->
+    <div class="row">
+        <!-- Top Clientes -->
+        <div class="col-md-8">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-users"></i> 
+                        Top <span class="d-none d-sm-inline">10 </span>Clientes
+                        <span class="d-none d-sm-inline"> por Receita</span>
+                    </h5>
+                </div>
+                <div style="padding: 20px;">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tabelaTopClientes">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Cliente</th>
+                                    <th>Receita</th>
+                                    <th class="d-none d-sm-table-cell">% Total</th>
+                                    <th>Risco</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Carregando dados...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stress Test -->
+        <div class="col-md-4">
+            <div class="chart-card">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Stress Test
+                        <span class="d-none d-sm-inline"> de Receita</span>
+                    </h5>
+                </div>
+                <div style="padding: 20px;">
+                    <div id="stressTestContainer">
+                        <p class="text-center text-muted">Carregando cenários...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema de Exportação -->
+    <div class="row">
+        <div class="col-12">
+            <div class="chart-card" style="border-left: 5px solid #28a745;">
+                <div style="padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); background: rgba(40,167,69,0.1);">
+                    <h5 style="margin: 0;">
+                        <i class="fas fa-download"></i> 
+                        Sistema de Exportação
+                        <span class="d-none d-sm-inline"> Avançado</span>
+                    </h5>
+                    <small class="text-muted">Exporte os dados da análise em múltiplos formatos</small>
+                </div>
+                <div style="padding: 20px;">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="btn-group flex-wrap" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-export-json">
+                                    <i class="fas fa-code"></i> 
+                                    <span class="d-none d-sm-inline">JSON</span>
+                                </button>
+                                <button type="button" class="btn btn-outline-success btn-export-excel">
+                                    <i class="fas fa-file-excel"></i> 
+                                    <span class="d-none d-sm-inline">Excel</span>
+                                </button>
+                                <button type="button" class="btn btn-outline-info btn-export-csv">
+                                    <i class="fas fa-file-csv"></i> 
+                                    <span class="d-none d-sm-inline">CSV</span>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-export-pdf">
+                                    <i class="fas fa-file-pdf"></i> 
+                                    <span class="d-none d-sm-inline">PDF</span>
+                                </button>
                             </div>
                         </div>
+                        <div class="col-md-3 text-end">
+                            <small class="text-muted" id="statusExportacao" style="display: none;">
+                                Processando exportação...
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Aba 5: Insights -->
-        <div class="tab-pane fade" id="insights" role="tabpanel">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5><i class="fas fa-lightbulb"></i> Insights Automáticos</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="containerInsights">
-                                <div class="alert alert-info">
-                                    <h6><i class="fas fa-info-circle"></i> Sistema de Insights</h6>
-                                    <p>Os insights serão gerados automaticamente após o carregamento dos dados.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Botões de Ação -->
+    <div class="text-center" style="margin-top: 40px;">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <button class="btn btn-success" onclick="exportarExcel()">
+                <i class="fas fa-file-excel"></i> 
+                <span class="d-none d-sm-inline">Exportar </span>Excel
+            </button>
+            <button class="btn btn-primary" onclick="exportarPDF()">
+                <i class="fas fa-file-pdf"></i> 
+                <span class="d-none d-sm-inline">Gerar </span>PDF
+            </button>
+            <button class="btn btn-info" onclick="carregarTodasAsMetricas()">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+            <a href="{{ url_for('dashboard.index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> 
+                <span class="d-none d-sm-inline">Voltar ao </span>Dashboard
+            </a>
         </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingAnalise" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white;">
+        <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <h5>Processando análise financeira...</h5>
+        <p>Aguarde enquanto carregamos os dados...</p>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-// JavaScript SIMPLIFICADO E FUNCIONAL para Análise Financeira
-let chartReceitaMensal = null;
+<!-- Script da Análise Financeira -->
+<script src="{{ url_for('static', filename='js/analise_financeira.js') }}"></script>
 
+<!-- Script de Inicialização -->
+<script>
 $(document).ready(function() {
-    console.log('🚀 Inicializando Análise Financeira...');
+    console.log('🚀 Inicializando dashboard financeiro completo...');
     
-    // Configurar eventos das abas
-    $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        const target = $(e.target).attr('data-bs-target');
-        console.log('📋 Aba ativada:', target);
-        
-        // Carregar dados específicos da aba
-        if (target === '#projecoes') {
-            carregarProjecoes();
-        } else if (target === '#veiculos') {
-            carregarAnaliseVeiculos();
-        } else if (target === '#comparativo') {
-            carregarComparativo();
+    // Definir timestamp de última atualização
+    const agora = new Date();
+    $('#ultimaAtualizacao').text('Última atualização: ' + agora.toLocaleString('pt-BR'));
+    
+    // Aguardar carregamento das dependências
+    setTimeout(function() {
+        if (typeof inicializarDashboardCompleto === 'function') {
+            console.log('✅ Usando inicializarDashboardCompleto');
+            inicializarDashboardCompleto();
+        } else if (typeof inicializarAnaliseFinanceira === 'function') {
+            console.log('✅ Usando inicializarAnaliseFinanceira (fallback)');
+            inicializarAnaliseFinanceira();
+        } else {
+            console.error('❌ Nenhuma função de inicialização encontrada');
+            // Tentar carregar script novamente
+            const script = document.createElement('script');
+            script.src = "{{ url_for('static', filename='js/analise_financeira.js') }}";
+            script.onload = function() {
+                if (typeof inicializarDashboardCompleto === 'function') {
+                    inicializarDashboardCompleto();
+                }
+            };
+            document.head.appendChild(script);
         }
-    });
+    }, 500);
     
-    // Configurar eventos dos filtros
-    $('#filtroPeriodo').on('change', aplicarFiltros);
-    $('#filtroCliente').on('change', aplicarFiltros);
-    
-    // Carregar dados iniciais
-    carregarListaClientes();
-    aplicarFiltros();
+    // Atualizar timestamp a cada carregamento
+    setInterval(function() {
+        const agora = new Date();
+        $('#ultimaAtualizacao').text('Última atualização: ' + agora.toLocaleString('pt-BR'));
+    }, 60000); // A cada minuto
 });
 
+// Função de compatibilidade
 function aplicarFiltros() {
-    console.log('🔍 Aplicando filtros...');
-    mostrarLoading();
-    carregarAnaliseGeral();
-}
-
-function limparFiltros() {
-    $('#filtroPeriodo').val('180');
-    $('#filtroCliente').val('');
-    aplicarFiltros();
-}
-
-function mostrarLoading() {
-    $('#loadingGlobal').show();
-    $('#metricas-principais').hide();
-}
-
-function esconderLoading() {
-    $('#loadingGlobal').hide();
-    $('#metricas-principais').show();
-}
-
-function carregarListaClientes() {
-    $.ajax({
-        url: '/analise-financeira/api/clientes',
-        method: 'GET',
-        success: function(response) {
-            if (response.success) {
-                const select = $('#filtroCliente');
-                select.empty().append('<option value="">Todos os clientes</option>');
-                
-                response.clientes.forEach(cliente => {
-                    select.append(`<option value="${cliente}">${cliente}</option>`);
-                });
-            }
-        },
-        error: function() {
-            console.warn('⚠️ Erro ao carregar lista de clientes');
-        }
-    });
-}
-
-function carregarAnaliseGeral() {
-    const filtros = {
-        filtro_dias: $('#filtroPeriodo').val(),
-        filtro_cliente: $('#filtroCliente').val()
-    };
-    
-    $.ajax({
-        url: '/analise-financeira/api/analise-completa',
-        method: 'GET',
-        data: filtros,
-        success: function(response) {
-            if (response.success) {
-                console.log('✅ Dados carregados:', response);
-                processarAnaliseGeral(response);
-                esconderLoading();
-            } else {
-                mostrarErro('Erro: ' + response.error);
-            }
-        },
-        error: function(xhr) {
-            console.error('❌ Erro na requisição:', xhr);
-            esconderLoading();
-            mostrarErro('Erro ao carregar análise: ' + xhr.status);
-        }
-    });
-}
-
-function processarAnaliseGeral(dados) {
-    // Atualizar métricas
-    const resumo = dados.resumo;
-    $('#receitaTotal').text(formatarMoeda(resumo.valor_total));
-    $('#totalCTEs').text(resumo.total_ctes.toLocaleString());
-    $('#valorBaixado').text(formatarMoeda(resumo.valor_baixado));
-    $('#valorPendente').text(formatarMoeda(resumo.valor_pendente));
-    
-    // Atualizar status
-    $('#statusFiltro').text(`✅ ${resumo.total_ctes} CTEs analisados | ${resumo.percentual_baixado}% baixado`);
-    
-    // Atualizar gráfico
-    if (dados.graficos && dados.graficos.receita_mensal) {
-        atualizarGraficoReceita(dados.graficos.receita_mensal);
-    }
-    
-    // Atualizar tabela de clientes
-    if (dados.top_clientes) {
-        atualizarTabelaClientes(dados.top_clientes);
-    }
-    
-    // Atualizar tabela de veículos
-    if (dados.analise_veiculos) {
-        atualizarTabelaVeiculos(dados.analise_veiculos);
+    if (typeof carregarTodasAsMetricas === 'function') {
+        carregarTodasAsMetricas();
+    } else if (typeof carregarAnaliseCompleta === 'function') {
+        carregarAnaliseCompleta();
     }
 }
 
-function atualizarGraficoReceita(dadosGrafico) {
-    const ctx = document.getElementById('chartReceitaMensal').getContext('2d');
-    
-    if (chartReceitaMensal) {
-        chartReceitaMensal.destroy();
+function atualizarAnalise() {
+    if (typeof carregarTodasAsMetricas === 'function') {
+        carregarTodasAsMetricas();
+    } else if (typeof carregarAnaliseCompleta === 'function') {
+        carregarAnaliseCompleta();
     }
-    
-    chartReceitaMensal = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: dadosGrafico.labels,
-            datasets: [{
-                label: 'Receita Mensal',
-                data: dadosGrafico.dados,
-                borderColor: '#198754',
-                backgroundColor: 'rgba(25, 135, 84, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return 'R$ ' + value.toLocaleString();
-                        }
-                    }
-                }
-            }
-        }
-    });
 }
 
-function atualizarTabelaClientes(clientes) {
-    const tbody = $('#tabelaTopClientes tbody');
-    tbody.empty();
+// Função de apoio para debugging
+function debugarSistema() {
+    console.log('🔍 Debug do Sistema:');
+    console.log('- Filtros:', typeof filtrosAtivos !== 'undefined' ? filtrosAtivos : 'undefined');
+    console.log('- Charts:', typeof chartsFinanceira !== 'undefined' ? Object.keys(chartsFinanceira) : 'undefined');
+    console.log('- APIs disponíveis:', [
+        typeof carregarTodasAsMetricas !== 'undefined' ? 'carregarTodasAsMetricas' : null,
+        typeof carregarAnaliseCompleta !== 'undefined' ? 'carregarAnaliseCompleta' : null,
+        typeof inicializarDashboardCompleto !== 'undefined' ? 'inicializarDashboardCompleto' : null
+    ].filter(Boolean));
     
-    if (clientes.length === 0) {
-        tbody.append('<tr><td colspan="4" class="text-center">Nenhum cliente encontrado</td></tr>');
-        return;
-    }
-    
-    clientes.forEach(cliente => {
-        const ticketMedio = cliente.quantidade > 0 ? cliente.valor / cliente.quantidade : 0;
-        
-        tbody.append(`
-            <tr>
-                <td>${cliente.nome}</td>
-                <td>${formatarMoeda(cliente.valor)}</td>
-                <td>${cliente.quantidade}</td>
-                <td>${formatarMoeda(ticketMedio)}</td>
-            </tr>
-        `);
-    });
+    // Testar API básica
+    $.get('/analise-financeira/api/test-conexao')
+        .done(function(data) {
+            console.log('✅ API test-conexao:', data);
+        })
+        .fail(function() {
+            console.log('❌ API test-conexao: FALHOU');
+        });
 }
 
-function atualizarTabelaVeiculos(veiculos) {
-    const tbody = $('#tabelaVeiculos tbody');
-    tbody.empty();
-    
-    if (veiculos.length === 0) {
-        tbody.append('<tr><td colspan="5" class="text-center">Nenhum veículo encontrado</td></tr>');
-        return;
-    }
-    
-    veiculos.forEach(veiculo => {
-        const badgeScore = veiculo.score >= 80 ? 'success' : 
-                          veiculo.score >= 60 ? 'warning' : 'danger';
-        
-        tbody.append(`
-            <tr>
-                <td><strong>${veiculo.placa}</strong></td>
-                <td>${formatarMoeda(veiculo.faturamento)}</td>
-                <td>${veiculo.viagens}</td>
-                <td>${formatarMoeda(veiculo.ticket_medio)}</td>
-                <td><span class="badge bg-${badgeScore}">${veiculo.score}</span></td>
-            </tr>
-        `);
-    });
-}
-
-function carregarProjecoes() {
-    $('#containerProjecoes').html('<div class="text-center py-4"><div class="loading-spinner"></div><p class="mt-3">Calculando projeções...</p></div>');
-    
-    $.ajax({
-        url: '/analise-financeira/api/projecoes',
-        method: 'GET',
-        success: function(response) {
-            if (response.success) {
-                let html = '<div class="row">';
-                
-                response.projecoes.forEach(projecao => {
-                    const badgeClass = projecao.cenario === 'Otimista' ? 'success' : 
-                                      projecao.cenario === 'Base' ? 'primary' : 'warning';
-                    
-                    html += `
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h6>${projecao.mes}</h6>
-                                    <div class="metric-number">${formatarMoeda(projecao.valor_projetado)}</div>
-                                    <span class="badge bg-${badgeClass}">${projecao.cenario}</span>
-                                    <br>
-                                    <small class="text-muted">${projecao.confianca}% confiança</small>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += '</div>';
-                
-                if (response.base_calculo) {
-                    html += `
-                        <div class="alert alert-info mt-3">
-                            <h6><i class="fas fa-info-circle"></i> Metodologia</h6>
-                            <p>Projeções baseadas em ${response.base_calculo.meses_analisados} meses de dados históricos. 
-                            Média mensal: ${formatarMoeda(response.base_calculo.media_mensal)}</p>
-                        </div>
-                    `;
-                }
-                
-                $('#containerProjecoes').html(html);
-            } else {
-                $('#containerProjecoes').html('<div class="alert alert-danger">Erro: ' + response.error + '</div>');
-            }
-        },
-        error: function() {
-            $('#containerProjecoes').html('<div class="alert alert-danger">Erro ao carregar projeções</div>');
-        }
-    });
-}
-
-function carregarComparativo() {
-    const periodo = $('#periodoComparativo').val();
-    $('#containerComparativo').html('<div class="text-center py-4"><div class="loading-spinner"></div><p class="mt-3">Carregando comparativo...</p></div>');
-    
-    $.ajax({
-        url: '/analise-financeira/api/comparativo',
-        method: 'GET',
-        data: { periodo: periodo },
-        success: function(response) {
-            if (response.success) {
-                const comp = response.comparativo;
-                
-                const html = `
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6>📅 Período Atual</h6>
-                                    <small>${comp.periodo_atual.periodo}</small>
-                                </div>
-                                <div class="card-body text-center">
-                                    <div class="metric-number">${formatarMoeda(comp.periodo_atual.valor)}</div>
-                                    <small>${comp.periodo_atual.quantidade} CTEs</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6>📊 vs Período Anterior</h6>
-                                    <small>${comp.periodo_anterior.periodo}</small>
-                                </div>
-                                <div class="card-body text-center">
-                                    <div class="metric-number">${formatarMoeda(comp.periodo_anterior.valor)}</div>
-                                    <span class="badge ${comp.periodo_anterior.variacao_valor >= 0 ? 'bg-success' : 'bg-danger'}">
-                                        ${comp.periodo_anterior.variacao_valor >= 0 ? '+' : ''}${comp.periodo_anterior.variacao_valor}%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6>📈 vs Ano Anterior</h6>
-                                    <small>${comp.ano_anterior.periodo}</small>
-                                </div>
-                                <div class="card-body text-center">
-                                    <div class="metric-number">${formatarMoeda(comp.ano_anterior.valor)}</div>
-                                    <span class="badge ${comp.ano_anterior.variacao_valor >= 0 ? 'bg-success' : 'bg-danger'}">
-                                        ${comp.ano_anterior.variacao_valor >= 0 ? '+' : ''}${comp.ano_anterior.variacao_valor}%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                $('#containerComparativo').html(html);
-            } else {
-                $('#containerComparativo').html('<div class="alert alert-danger">Erro: ' + response.error + '</div>');
-            }
-        },
-        error: function() {
-            $('#containerComparativo').html('<div class="alert alert-danger">Erro ao carregar comparativo</div>');
-        }
-    });
-}
-
-function carregarAnaliseVeiculos() {
-    // Os dados já são carregados na análise geral
-    console.log('📊 Dados de veículos já carregados na análise geral');
-}
-
-function formatarMoeda(valor) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(valor || 0);
-}
-
-function mostrarErro(mensagem) {
-    console.error('❌', mensagem);
-    $('#statusFiltro').text('❌ ' + mensagem);
-}
+// Disponibilizar função de debug globalmente
+window.debugarSistema = debugarSistema;
 </script>
 {% endblock %}
