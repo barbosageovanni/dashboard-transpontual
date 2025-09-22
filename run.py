@@ -44,19 +44,19 @@ def create_tables_if_needed():
             with app.app_context():
                 db.create_all()
                 app._tables_created = True
-                print("✅ Tabelas verificadas/criadas")
+                print("[OK] Tabelas verificadas/criadas")
         except Exception as e:
-            print(f"⚠️ Aviso ao verificar tabelas: {e}")
+            print(f"[AVISO] Erro ao verificar tabelas: {e}")
 
 if __name__ == '__main__':
     # Verificar se é primeira execução
     if not os.path.exists('.env'):
-        print("❌ Execute primeiro: python setup_dashboard.py")
+        print("[ERRO] Execute primeiro: python setup_dashboard.py")
         exit(1)
-    
-    print("🚀 Iniciando Dashboard Baker Flask...")
-    print("📊 Acesse: http://localhost:5000")
-    print("👤 Login: admin / senha: senha123")
+
+    print("[INFO] Iniciando Dashboard Baker Flask...")
+    print("[INFO] Acesse: http://localhost:5000")
+    print("[INFO] Login: admin / senha: senha123")
     print("=" * 50)
     
     # Executar aplicação

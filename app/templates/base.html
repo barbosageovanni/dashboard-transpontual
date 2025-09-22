@@ -218,7 +218,57 @@
                             <i class="fas fa-chart-line"></i> Análise Financeira
                         </a>
                     </li>
-                    
+
+                    <!-- Sistema de Frotas -->
+                    {% if integration_available %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="frotasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-truck"></i>
+                            Sistema de Frotas
+                            {% if is_jwt_authenticated %}
+                                <span class="badge bg-success ms-1">
+                                    <i class="fas fa-link"></i>
+                                </span>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="frotasDropdown">
+                            <li><a class="dropdown-item" href="{{ frotas_dashboard_link }}" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> Dashboard Principal
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ frotas_system_url }}/docs" target="_blank">
+                                <i class="fas fa-book"></i> API Documentation
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ frotas_system_url }}?return_to={{ request.url }}" target="_blank">
+                                <i class="fas fa-tachometer-alt"></i> Gestão de Veículos
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ frotas_system_url }}/motoristas?return_to={{ request.url }}" target="_blank">
+                                <i class="fas fa-users"></i> Gestão de Motoristas
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ frotas_system_url }}/checklists?return_to={{ request.url }}" target="_blank">
+                                <i class="fas fa-clipboard-check"></i> Checklists Veiculares
+                            </a></li>
+                            {% if frotas_user_info %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><span class="dropdown-item-text text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Conectado como: {{ frotas_user_info.nome_completo or frotas_user_info.username }}
+                            </span></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-muted" href="#" title="Sistema de Frotas indisponível">
+                            <i class="fas fa-truck"></i>
+                            Sistema de Frotas
+                            <span class="badge bg-warning ms-1">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+
                     <!-- Administração (apenas para admins) -->
                     {% if current_user.tipo_usuario == 'admin' %}
                     <li class="nav-item dropdown">

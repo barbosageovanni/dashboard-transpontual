@@ -31,8 +31,14 @@ def api_login_required(f):
     """Decorator para endpoints de API que retorna JSON 401 ao invés de redirect"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # Check if user is authenticated
         if not current_user.is_authenticated:
-            return jsonify({"success": False, "message": "Não autenticado"}), 401
+            # For API endpoints, return JSON error instead of redirect
+            if request.path.startswith('/api/') or 'api' in request.path:
+                return jsonify({"success": False, "message": "Não autenticado"}), 401
+            else:
+                # For regular pages, redirect to login
+                return redirect(url_for('auth.login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -1459,4 +1465,143 @@ def api_diagnostico_simples():
             'success': False,
             'error': str(e),
             'message': 'Erro no diagnóstico simples'
+        }), 500
+
+# ==================== RELATÓRIOS POR VEÍCULO ====================
+
+@bp.route('/relatorios-veiculo')
+@login_required
+def relatorios_veiculo():
+    """Página de relatórios de utilização e faturamento por veículo"""
+    return render_template('ctes/relatorios_veiculo.html')
+
+@bp.route('/api/relatorios-veiculo')
+@login_required
+def api_relatorios_veiculo():
+    """API para dados de relatórios por veículo"""
+    try:
+        # Obter parâmetros de filtro de data
+        data_inicio = request.args.get('data_inicio')
+        data_fim = request.args.get('data_fim')
+
+        # Query base para obter dados por veículo
+        where_conditions = ["veiculo_placa IS NOT NULL AND veiculo_placa != ''"]
+
+        # Adicionar filtros de data se fornecidos (escape SQL injection by validating dates)
+        if data_inicio:
+            try:
+                # Validate date format
+                datetime.strptime(data_inicio, '%Y-%m-%d')
+                where_conditions.append(f"data_emissao >= '{data_inicio}'")
+            except ValueError:
+                current_app.logger.warning(f"Invalid data_inicio format: {data_inicio}")
+
+        if data_fim:
+            try:
+                # Validate date format
+                datetime.strptime(data_fim, '%Y-%m-%d')
+                where_conditions.append(f"data_emissao <= '{data_fim}'")
+            except ValueError:
+                current_app.logger.warning(f"Invalid data_fim format: {data_fim}")
+
+        where_clause = " AND ".join(where_conditions)
+
+        sql_query = f"""
+            SELECT
+                veiculo_placa,
+                COUNT(*) as total_ctes,
+                SUM(valor_total) as faturamento_total,
+                AVG(valor_total) as faturamento_medio,
+                MIN(data_emissao) as primeira_operacao,
+                MAX(data_emissao) as ultima_operacao,
+                COUNT(CASE WHEN data_baixa IS NOT NULL THEN 1 END) as ctes_pagos,
+                COUNT(CASE WHEN data_baixa IS NULL THEN 1 END) as ctes_pendentes,
+                COUNT(DISTINCT destinatario_nome) as clientes_unicos
+            FROM dashboard_baker
+            WHERE {where_clause}
+            GROUP BY veiculo_placa
+            ORDER BY faturamento_total DESC
+        """
+
+        try:
+            df = pd.read_sql_query(sql_query, db.engine)
+        except Exception as sql_error:
+            current_app.logger.error(f"Erro na consulta SQL: {sql_error}")
+            current_app.logger.error(f"SQL: {sql_query}")
+            raise
+
+        if df.empty:
+            return jsonify({
+                'success': True,
+                'veiculos': [],
+                'resumo': {
+                    'total_veiculos': 0,
+                    'faturamento_total_frota': 0,
+                    'veiculo_mais_rentavel': None,
+                    'utilizacao_media': 0
+                }
+            })
+
+        # Calcular métricas adicionais
+        hoje = datetime.now().date()
+        veiculos = []
+
+        for _, row in df.iterrows():
+            try:
+                primeira_op = pd.to_datetime(row['primeira_operacao']).date() if pd.notna(row['primeira_operacao']) else hoje
+                ultima_op = pd.to_datetime(row['ultima_operacao']).date() if pd.notna(row['ultima_operacao']) else hoje
+            except Exception as date_error:
+                current_app.logger.warning(f"Erro ao converter datas para veículo {row['veiculo_placa']}: {date_error}")
+                primeira_op = hoje
+                ultima_op = hoje
+
+            # Calcular dias de operação
+            dias_operacao = (ultima_op - primeira_op).days + 1 if primeira_op <= ultima_op else 1
+            dias_desde_primeira = (hoje - primeira_op).days + 1
+
+            # Calcular utilização (% de dias com operação)
+            utilizacao_pct = (dias_operacao / dias_desde_primeira * 100) if dias_desde_primeira > 0 else 0
+
+            # Dias ociosos estimados
+            dias_ociosos = max(0, dias_desde_primeira - dias_operacao)
+
+            veiculo_data = {
+                'placa': str(row['veiculo_placa']),
+                'total_ctes': int(row['total_ctes'] or 0),
+                'faturamento_total': float(row['faturamento_total'] or 0),
+                'faturamento_medio': float(row['faturamento_medio'] or 0),
+                'primeira_operacao': primeira_op.strftime('%d/%m/%Y'),
+                'ultima_operacao': ultima_op.strftime('%d/%m/%Y'),
+                'ctes_pagos': int(row['ctes_pagos'] or 0),
+                'ctes_pendentes': int(row['ctes_pendentes'] or 0),
+                'clientes_unicos': int(row['clientes_unicos'] or 0),
+                'utilizacao_pct': round(utilizacao_pct, 1),
+                'dias_operacao': dias_operacao,
+                'dias_ociosos': dias_ociosos,
+                'taxa_pagamento': round((int(row['ctes_pagos'] or 0) / int(row['total_ctes'] or 1) * 100), 1) if int(row['total_ctes'] or 0) > 0 else 0
+            }
+            veiculos.append(veiculo_data)
+
+        # Resumo geral
+        resumo = {
+            'total_veiculos': len(veiculos),
+            'faturamento_total_frota': float(df['faturamento_total'].sum()),
+            'veiculo_mais_rentavel': veiculos[0]['placa'] if veiculos else None,
+            'utilizacao_media': round(sum(v['utilizacao_pct'] for v in veiculos) / len(veiculos), 1) if veiculos else 0,
+            'faturamento_medio_frota': float(df['faturamento_medio'].mean()) if not df.empty else 0
+        }
+
+        return jsonify({
+            'success': True,
+            'veiculos': veiculos,
+            'resumo': resumo,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        current_app.logger.exception("Erro ao gerar relatórios por veículo")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'message': 'Erro ao carregar relatórios por veículo'
         }), 500

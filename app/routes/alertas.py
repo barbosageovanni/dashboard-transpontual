@@ -2,11 +2,20 @@
 app/routes/alertas.py
 """
 
-from flask import Blueprint, jsonify, request
+import logging
+from flask import Blueprint, jsonify, request, render_template
 from flask_login import login_required
 from app.services.alertas_service import AlertasService
 
+logger = logging.getLogger(__name__)
+
 bp = Blueprint('alertas', __name__, url_prefix='/alertas')
+
+@bp.route('/')
+@login_required
+def index():
+    """Página principal de alertas"""
+    return render_template('alertas/index.html')
 
 @bp.route('/api/alertas-ativos')
 @login_required

@@ -1,8 +1,14 @@
 // Dashboard Baker - Sistema de Métricas Avançadas
-let charts = {};
+window.dashboardCharts = window.dashboardCharts || {};
+window.dashboardMetricas = window.dashboardMetricas || {};
+window.dashboardAlertas = window.dashboardAlertas || {};
+window.dashboardVariacoes = window.dashboardVariacoes || {};
+
+// Variáveis globais para armazenar dados
 let metricas = {};
 let alertas = {};
 let variacoes = {};
+let charts = {};
 
 // Configurações dos gráficos
 const chartColors = {
@@ -14,22 +20,28 @@ const chartColors = {
     info: '#17a2b8'
 };
 
-$(document).ready(function() {
-    console.log('🚀 Inicializando Dashboard Baker...');
+// Função principal de inicialização
+function inicializarDashboard() {
+    console.log('[INIT] Inicializando Dashboard Baker...');
     carregarDashboard();
+}
+
+$(document).ready(function() {
+    console.log('[INIT] Dashboard Baker carregado...');
+    inicializarDashboard();
     
     // Auto-refresh a cada 5 minutos
     setInterval(carregarDashboard, 300000);
 });
 
 function carregarDashboard() {
-    console.log('📊 Carregando dados do dashboard...');
+    console.log('[DATA] Carregando dados do dashboard...');
     
     Promise.all([
         carregarMetricas(),
         carregarDadosGraficos()
     ]).then(() => {
-        console.log('✅ Dashboard carregado com sucesso!');
+        console.log('[OK] Dashboard carregado com sucesso!');
     }).catch(error => {
         console.error('❌ Erro ao carregar dashboard:', error);
         mostrarErro('Erro ao carregar dados do dashboard');
@@ -65,10 +77,10 @@ Debug Info:
 
 // Atualizar a função carregarMetricas para mostrar mais debug
 function carregarMetricas() {
-    console.log('📊 Carregando métricas...');
+    console.log('[DATA] Carregando métricas...');
     
     return $.ajax({
-        url: '/dashboard/api/metricas',
+        url: '/dashboard/api/dashboard/metricas',
         method: 'GET',
         timeout: 30000
     }).done(function(response) {
@@ -138,15 +150,26 @@ function carregarDadosGraficos() {
 }
 
 function atualizarCardsMetricas() {
+    // Verificar se métricas estão disponíveis
+    if (!metricas) {
+        console.warn('[WARN] Métricas não disponíveis');
+        return;
+    }
+
     // Cards principais
-    $('#valorTotal').text(formatarMoeda(metricas.valor_total));
-    $('#totalCtes').text(formatarNumero(metricas.total_ctes));
-    $('#processosCompletos').text(formatarNumero(metricas.processos_completos));
-    
-    // Calcular total de alertas
-    const totalAlertas = Object.values(alertas).reduce((sum, alerta) => sum + alerta.qtd, 0);
-    const valorRisco = Object.values(alertas).reduce((sum, alerta) => sum + alerta.valor, 0);
-    
+    $('#valorTotal').text(formatarMoeda(metricas.valor_total || 0));
+    $('#totalCtes').text(formatarNumero(metricas.total_ctes || 0));
+    $('#processosCompletos').text(formatarNumero(metricas.processos_completos || 0));
+
+    // Calcular total de alertas com verificação
+    let totalAlertas = 0;
+    let valorRisco = 0;
+
+    if (alertas && typeof alertas === 'object') {
+        totalAlertas = Object.values(alertas).reduce((sum, alerta) => sum + (alerta.qtd || 0), 0);
+        valorRisco = Object.values(alertas).reduce((sum, alerta) => sum + (alerta.valor || 0), 0);
+    }
+
     $('#alertasAtivos').text(formatarNumero(totalAlertas));
     $('#valorRisco').text(formatarMoeda(valorRisco) + ' em risco');
     
@@ -166,8 +189,13 @@ function atualizarCardsMetricas() {
 }
 
 function atualizarAlertas() {
-    console.log('🚨 Atualizando sistema de alertas...');
-    
+    console.log('[ALERT] Atualizando sistema de alertas...');
+
+    if (!alertas) {
+        console.warn('[WARN] Alertas não disponíveis');
+        return;
+    }
+
     // Primeiro envio pendente
     const primeiroEnvio = alertas.primeiro_envio_pendente || {qtd: 0, valor: 0};
     $('#qtdPrimeiroEnvio').text(primeiroEnvio.qtd);
@@ -241,8 +269,8 @@ function atualizarAlertas() {
 
 function atualizarVariacoes() {
     const container = $('#variacoesContainer');
-    
-    if (Object.keys(variacoes).length === 0) {
+
+    if (!variacoes || Object.keys(variacoes).length === 0) {
         container.html(`
             <div class="col-12 text-center">
                 <div class="alert alert-info">
@@ -293,7 +321,12 @@ function atualizarVariacoes() {
 
 function criarGraficos(dadosGraficos) {
     console.log('📈 Criando gráficos...', dadosGraficos);
-    
+
+    if (!dadosGraficos) {
+        console.warn('[WARN] Dados dos gráficos não disponíveis');
+        return;
+    }
+
     if (dadosGraficos.erro) {
         console.error('Erro nos dados dos gráficos:', dadosGraficos.erro);
         return;
@@ -317,13 +350,13 @@ function criarGraficoEvolucaoMensal(dados) {
     
     const canvas = document.getElementById('chartEvolucaoMensal');
     if (!canvas) {
-        console.error('❌ Canvas chartEvolucaoMensal não encontrado');
+        console.error('[ERROR] Canvas chartEvolucaoMensal não encontrado');
         return;
     }
     
     // VERIFICAÇÃO CRÍTICA DO CHART.JS
     if (typeof Chart === 'undefined') {
-        console.error('❌ ERRO: Chart.js não disponível ao criar gráfico');
+        console.error('[ERROR] ERRO: Chart.js não disponível ao criar gráfico');
         canvas.parentElement.innerHTML = `
             <div class="alert alert-danger text-center p-4">
                 <h5>❌ Chart.js não carregado</h5>
@@ -335,13 +368,13 @@ function criarGraficoEvolucaoMensal(dados) {
     }
     
     if (!dados || !dados.labels || dados.labels.length === 0) {
-        console.warn('⚠️ Dados de evolução vazios ou inválidos');
+        console.warn('[WARN] Dados de evolução vazios ou inválidos');
         canvas.parentElement.innerHTML = '<p class="text-center text-muted p-4">Dados insuficientes para evolução mensal</p>';
         return;
     }
     
     try {
-        console.log('✅ Iniciando criação do gráfico com Chart.js');
+        console.log('[OK] Iniciando criação do gráfico com Chart.js');
         
         // Destruir gráfico anterior se existir
         if (charts.evolucaoMensal) {
@@ -395,7 +428,7 @@ function criarGraficoEvolucaoMensal(dados) {
             }
         });
         
-        console.log('✅ Gráfico evolução criado com sucesso!');
+        console.log('[OK] Gráfico evolução criado com sucesso!');
         
     } catch (error) {
         console.error('❌ Erro ao criar gráfico evolução:', error);
@@ -414,13 +447,13 @@ function criarGraficoTopClientes(dados) {
     
     const canvas = document.getElementById('chartTopClientes');
     if (!canvas) {
-        console.error('❌ Canvas chartTopClientes não encontrado');
+        console.error('[ERROR] Canvas chartTopClientes não encontrado');
         return;
     }
     
     // VERIFICAÇÃO CRÍTICA DO CHART.JS
     if (typeof Chart === 'undefined') {
-        console.error('❌ ERRO: Chart.js não disponível ao criar gráfico');
+        console.error('[ERROR] ERRO: Chart.js não disponível ao criar gráfico');
         canvas.parentElement.innerHTML = `
             <div class="alert alert-danger text-center p-4">
                 <h5>❌ Chart.js não carregado</h5>
@@ -432,13 +465,13 @@ function criarGraficoTopClientes(dados) {
     }
     
     if (!dados || !dados.labels || dados.labels.length === 0) {
-        console.warn('⚠️ Dados de clientes vazios ou inválidos');
+        console.warn('[WARN] Dados de clientes vazios ou inválidos');
         canvas.parentElement.innerHTML = '<p class="text-center text-muted p-4">Dados insuficientes para top clientes</p>';
         return;
     }
     
     try {
-        console.log('✅ Iniciando criação do gráfico clientes com Chart.js');
+        console.log('[OK] Iniciando criação do gráfico clientes com Chart.js');
         
         // Destruir gráfico anterior se existir
         if (charts.topClientes) {
@@ -500,7 +533,7 @@ function criarGraficoTopClientes(dados) {
             }
         });
         
-        console.log('✅ Gráfico clientes criado com sucesso!');
+        console.log('[OK] Gráfico clientes criado com sucesso!');
         
     } catch (error) {
         console.error('❌ Erro ao criar gráfico clientes:', error);

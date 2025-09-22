@@ -1,0 +1,603 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}Relatórios por Veículo{% endblock %}
+
+{% block extra_css %}
+<style>
+.summary-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.vehicle-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #667eea;
+    transition: transform 0.3s ease;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.metric-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.metric-value {
+    font-weight: 700;
+    color: #333;
+}
+
+.progress-bar-custom {
+    height: 10px;
+    border-radius: 5px;
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.8s ease;
+    border-radius: 5px;
+}
+
+.utilization-high { background: linear-gradient(90deg, #28a745, #20c997); }
+.utilization-medium { background: linear-gradient(90deg, #ffc107, #fd7e14); }
+.utilization-low { background: linear-gradient(90deg, #dc3545, #e83e8c); }
+
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: #667eea;
+}
+
+.vehicle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.vehicle-plate {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #667eea;
+}
+
+.vehicle-status {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-high { background: #d4edda; color: #155724; }
+.status-medium { background: #fff3cd; color: #856404; }
+.status-low { background: #f8d7da; color: #721c24; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="bi bi-truck me-2"></i>
+                Relatórios de Utilização e Faturamento por Veículo
+            </h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/ctes">CTEs</a></li>
+                    <li class="breadcrumb-item active">Relatórios por Veículo</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <p class="mt-2">Carregando dados dos veículos...</p>
+    </div>
+
+    <!-- Content -->
+    <div id="content" style="display: none;">
+        <!-- Resumo Geral -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="summary-card">
+                    <h4 class="mb-3">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Resumo da Frota
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="mb-1" id="total-veiculos">-</h3>
+                                <small>Veículos Ativos</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="mb-1" id="faturamento-total">R$ -</h3>
+                                <small>Faturamento Total</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="mb-1" id="utilizacao-media">-%</h3>
+                                <small>Utilização Média</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="mb-1" id="veiculo-top">-</h3>
+                                <small>Mais Rentável</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" id="filtro-placa" class="form-control" placeholder="Filtrar por placa...">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <select id="filtro-utilizacao" class="form-select">
+                    <option value="">Todas as utilizações</option>
+                    <option value="alta">Utilização Alta (>70%)</option>
+                    <option value="media">Utilização Média (30-70%)</option>
+                    <option value="baixa">Utilização Baixa (<30%)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="ordenacao" class="form-select">
+                    <option value="faturamento">Ordenar por Faturamento</option>
+                    <option value="utilizacao">Ordenar por Utilização</option>
+                    <option value="placa">Ordenar por Placa</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar-event"></i>
+                    </span>
+                    <input type="date" id="filtro-data-inicio" class="form-control" title="Data de início">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar-check"></i>
+                    </span>
+                    <input type="date" id="filtro-data-fim" class="form-control" title="Data de fim">
+                </div>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-outline-secondary" onclick="limparFiltros()" title="Limpar Filtros">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Top 10 Veículos por Faturamento
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartFaturamento" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-speedometer2 me-2"></i>
+                            Distribuição de Utilização
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartUtilizacao" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Veículos -->
+        <div class="row">
+            <div class="col-12">
+                <div id="veiculos-container">
+                    <!-- Veículos serão carregados aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let dadosVeiculos = [];
+let dadosOriginais = [];
+let chartFaturamento = null;
+let chartUtilizacao = null;
+
+$(document).ready(function() {
+    carregarDados();
+
+    // Event listeners para filtros
+    $('#filtro-placa').on('input', aplicarFiltros);
+    $('#filtro-utilizacao').on('change', aplicarFiltros);
+    $('#ordenacao').on('change', aplicarFiltros);
+    $('#filtro-data-inicio').on('change', function() {
+        carregarDados();
+    });
+    $('#filtro-data-fim').on('change', function() {
+        carregarDados();
+    });
+});
+
+function carregarDados() {
+    const dataInicio = $('#filtro-data-inicio').val();
+    const dataFim = $('#filtro-data-fim').val();
+
+    let url = '/ctes/api/relatorios-veiculo';
+    const params = new URLSearchParams();
+
+    if (dataInicio) params.append('data_inicio', dataInicio);
+    if (dataFim) params.append('data_fim', dataFim);
+
+    if (params.toString()) {
+        url += '?' + params.toString();
+    }
+
+    $.get(url)
+        .done(function(response) {
+            if (response.success) {
+                dadosOriginais = response.veiculos;
+                dadosVeiculos = [...dadosOriginais];
+
+                // Atualizar resumo
+                atualizarResumo(response.resumo);
+
+                // Renderizar veículos
+                renderizarVeiculos();
+
+                // Renderizar gráficos
+                renderizarGraficos();
+
+                // Mostrar conteúdo
+                $('#loading').hide();
+                $('#content').show();
+            } else {
+                mostrarErro('Erro ao carregar dados: ' + response.message);
+            }
+        })
+        .fail(function() {
+            mostrarErro('Erro de comunicação com o servidor');
+        });
+}
+
+function atualizarResumo(resumo) {
+    $('#total-veiculos').text(resumo.total_veiculos);
+    $('#faturamento-total').text('R$ ' + resumo.faturamento_total_frota.toLocaleString('pt-BR', {minimumFractionDigits: 2}));
+    $('#utilizacao-media').text(resumo.utilizacao_media + '%');
+    $('#veiculo-top').text(resumo.veiculo_mais_rentavel || 'N/A');
+}
+
+function renderizarVeiculos() {
+    const container = $('#veiculos-container');
+    container.empty();
+
+    if (dadosVeiculos.length === 0) {
+        container.html('<div class="alert alert-info text-center">Nenhum veículo encontrado com os filtros aplicados.</div>');
+        return;
+    }
+
+    dadosVeiculos.forEach(veiculo => {
+        const card = criarCardVeiculo(veiculo);
+        container.append(card);
+    });
+}
+
+function criarCardVeiculo(veiculo) {
+    const utilizacaoClass = veiculo.utilizacao_pct > 70 ? 'utilization-high' :
+                          veiculo.utilizacao_pct > 30 ? 'utilization-medium' : 'utilization-low';
+
+    const statusClass = veiculo.utilizacao_pct > 70 ? 'status-high' :
+                       veiculo.utilizacao_pct > 30 ? 'status-medium' : 'status-low';
+
+    const statusText = veiculo.utilizacao_pct > 70 ? 'Alta Utilização' :
+                      veiculo.utilizacao_pct > 30 ? 'Média Utilização' : 'Baixa Utilização';
+
+    return $(`
+        <div class="vehicle-card">
+            <div class="vehicle-header">
+                <div class="vehicle-plate">${veiculo.placa}</div>
+                <div class="vehicle-status ${statusClass}">${statusText}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="metric-row">
+                        <span class="metric-label">Faturamento Total:</span>
+                        <span class="metric-value">R$ ${veiculo.faturamento_total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Faturamento Médio:</span>
+                        <span class="metric-value">R$ ${veiculo.faturamento_medio.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Total de CTEs:</span>
+                        <span class="metric-value">${veiculo.total_ctes}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Clientes Únicos:</span>
+                        <span class="metric-value">${veiculo.clientes_unicos}</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="metric-row">
+                        <span class="metric-label">Utilização da Frota:</span>
+                        <span class="metric-value">${veiculo.utilizacao_pct}%</span>
+                    </div>
+                    <div class="progress-bar-custom mb-3">
+                        <div class="progress-fill ${utilizacaoClass}" style="width: ${veiculo.utilizacao_pct}%"></div>
+                    </div>
+
+                    <div class="metric-row">
+                        <span class="metric-label">Dias de Operação:</span>
+                        <span class="metric-value">${veiculo.dias_operacao}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Dias Ociosos:</span>
+                        <span class="metric-value">${veiculo.dias_ociosos}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Taxa de Pagamento:</span>
+                        <span class="metric-value">${veiculo.taxa_pagamento}%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        Primeira operação: ${veiculo.primeira_operacao}
+                    </small>
+                </div>
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        Última operação: ${veiculo.ultima_operacao}
+                    </small>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+function aplicarFiltros() {
+    const filtroPlaca = $('#filtro-placa').val().toLowerCase();
+    const filtroUtilizacao = $('#filtro-utilizacao').val();
+    const ordenacao = $('#ordenacao').val();
+
+    // Aplicar filtros
+    dadosVeiculos = dadosOriginais.filter(veiculo => {
+        const placaMatch = veiculo.placa.toLowerCase().includes(filtroPlaca);
+
+        let utilizacaoMatch = true;
+        if (filtroUtilizacao === 'alta') {
+            utilizacaoMatch = veiculo.utilizacao_pct > 70;
+        } else if (filtroUtilizacao === 'media') {
+            utilizacaoMatch = veiculo.utilizacao_pct >= 30 && veiculo.utilizacao_pct <= 70;
+        } else if (filtroUtilizacao === 'baixa') {
+            utilizacaoMatch = veiculo.utilizacao_pct < 30;
+        }
+
+        return placaMatch && utilizacaoMatch;
+    });
+
+    // Aplicar ordenação
+    dadosVeiculos.sort((a, b) => {
+        switch(ordenacao) {
+            case 'faturamento':
+                return b.faturamento_total - a.faturamento_total;
+            case 'utilizacao':
+                return b.utilizacao_pct - a.utilizacao_pct;
+            case 'placa':
+                return a.placa.localeCompare(b.placa);
+            default:
+                return 0;
+        }
+    });
+
+    renderizarVeiculos();
+    renderizarGraficos();
+}
+
+function mostrarErro(mensagem) {
+    $('#loading').hide();
+    $('#content').html(`
+        <div class="alert alert-danger text-center">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            ${mensagem}
+            <br><br>
+            <button class="btn btn-outline-danger" onclick="carregarDados()">
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                Tentar Novamente
+            </button>
+        </div>
+    `).show();
+}
+
+function renderizarGraficos() {
+    renderizarGraficoFaturamento();
+    renderizarGraficoUtilizacao();
+}
+
+function renderizarGraficoFaturamento() {
+    const ctx = document.getElementById('chartFaturamento').getContext('2d');
+
+    // Preparar dados - Top 10 por faturamento
+    const dadosOrdenados = [...dadosVeiculos]
+        .sort((a, b) => b.faturamento_total - a.faturamento_total)
+        .slice(0, 10);
+
+    const labels = dadosOrdenados.map(v => v.placa);
+    const valores = dadosOrdenados.map(v => v.faturamento_total);
+
+    // Destruir gráfico anterior se existir
+    if (chartFaturamento) {
+        chartFaturamento.destroy();
+    }
+
+    chartFaturamento = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Faturamento (R$)',
+                data: valores,
+                backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'R$ ' + value.toLocaleString('pt-BR');
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Faturamento: R$ ' + context.parsed.y.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderizarGraficoUtilizacao() {
+    const ctx = document.getElementById('chartUtilizacao').getContext('2d');
+
+    // Categorizar veículos por utilização
+    let alta = 0, media = 0, baixa = 0;
+
+    dadosVeiculos.forEach(veiculo => {
+        if (veiculo.utilizacao_pct > 70) {
+            alta++;
+        } else if (veiculo.utilizacao_pct > 30) {
+            media++;
+        } else {
+            baixa++;
+        }
+    });
+
+    // Destruir gráfico anterior se existir
+    if (chartUtilizacao) {
+        chartUtilizacao.destroy();
+    }
+
+    chartUtilizacao = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Alta (>70%)', 'Média (30-70%)', 'Baixa (<30%)'],
+            datasets: [{
+                data: [alta, media, baixa],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(255, 193, 7, 0.8)',
+                    'rgba(220, 53, 69, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(220, 53, 69, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return context.label + ': ' + context.parsed + ' veículos (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function limparFiltros() {
+    $('#filtro-placa').val('');
+    $('#filtro-utilizacao').val('');
+    $('#ordenacao').val('faturamento');
+    $('#filtro-data-inicio').val('');
+    $('#filtro-data-fim').val('');
+    carregarDados();
+}
+</script>
+{% endblock %}

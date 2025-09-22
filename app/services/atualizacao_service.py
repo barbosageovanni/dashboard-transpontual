@@ -26,7 +26,9 @@ ALIAS_COLUNAS = {
     "Cliente": "destinatario_nome",
     "Destinatário": "destinatario_nome",
     "Placa Veículo": "veiculo_placa",
-    "Placa": "veiculo_placa", 
+    "Placa": "veiculo_placa",
+    "Veiculo": "veiculo_placa",
+    "Veículo": "veiculo_placa", 
     "Valor Total": "valor_total",
     "Valor": "valor_total",
     "Data Emissão": "data_emissao",
@@ -44,6 +46,7 @@ ALIAS_COLUNAS = {
     "Data RQ/TMC": "data_rq_tmc",
     "Data RQ TMC": "data_rq_tmc",
     "RQ/TMC": "data_rq_tmc",
+    "Data Rq/TMC": "data_rq_tmc",
     "Data Atesto": "data_atesto",
     "Data de Atesto": "data_atesto",
     "Atesto": "data_atesto",
@@ -122,7 +125,9 @@ class AtualizacaoService:
 
         mapping = {}
         for col in df.columns:
-            mapping[col] = ALIAS_COLUNAS.get(col, col)
+            # Limpa o BOM e caracteres invisíveis dos nomes das colunas
+            col_clean = str(col).strip().replace('\ufeff', '').replace('\u200b', '')
+            mapping[col] = ALIAS_COLUNAS.get(col_clean, col_clean)
 
         df = df.rename(columns=mapping)
         return df

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_sidebar.html" %}
 
 {% block title %}Dashboard Transpontual{% endblock %}
 
@@ -77,6 +77,111 @@
                 <div class="metric-number" id="receitaMediaMensal">R$ 0,00</div>
                 <div class="metric-title">📅 Receita Média Mensal</div>
                 <div class="metric-subtitle">📊 Últimos 12 meses</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card de Integração com Sistema de Frotas -->
+    <div class="section-card mb-4">
+        <div style="padding: 25px;">
+            <h3 style="text-align: center; margin-bottom: 25px; color: #4a5568;">
+                <i class="fas fa-truck"></i> Integração Sistema de Frotas
+            </h3>
+
+            <div class="row">
+                {% if integration_available %}
+                    <div class="col-md-6">
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-check-circle"></i> Sistema Conectado
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                {% if is_jwt_authenticated %}
+                                    <div class="alert alert-success mb-3">
+                                        <i class="fas fa-user-check"></i>
+                                        <strong>Autenticado:</strong> {{ frotas_user_info.nome_completo or frotas_user_info.username }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="d-grid gap-2">
+                                    <a href="{{ frotas_dashboard_link }}" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Abrir Dashboard de Frotas
+                                    </a>
+                                    <a href="{{ frotas_system_url }}/checklists" target="_blank" class="btn btn-outline-primary">
+                                        <i class="fas fa-clipboard-check"></i> Checklists Veiculares
+                                    </a>
+                                    <a href="{{ frotas_system_url }}/veiculos" target="_blank" class="btn btn-outline-primary">
+                                        <i class="fas fa-truck"></i> Gestão de Veículos
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card border-info">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-sync-alt"></i> Sincronização de Dados
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h4 class="text-primary" id="frotasVeiculosCount">-</h4>
+                                        <small class="text-muted">Veículos</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h4 class="text-primary" id="frotasMotoristasCount">-</h4>
+                                        <small class="text-muted">Motoristas</small>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-info" onclick="sincronizarDados()">
+                                        <i class="fas fa-sync"></i> Sincronizar Agora
+                                    </button>
+                                </div>
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="fas fa-clock"></i> Última sincronização: <span id="ultimaSincronizacao">Nunca</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <div class="card border-warning">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-exclamation-triangle"></i> Sistema Indisponível
+                                </h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="text-muted mb-3">
+                                    O Sistema de Gestão de Frotas não está disponível no momento.
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Status da Conexão:</h6>
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times"></i> Desconectado
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Última Tentativa:</h6>
+                                        <small class="text-muted" id="ultimaTentativaConexao">-</small>
+                                    </div>
+                                </div>
+                                <hr>
+                                <button class="btn btn-warning" onclick="verificarConexaoFrotas()">
+                                    <i class="fas fa-redo"></i> Tentar Reconectar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -176,8 +281,20 @@
                 <span class="d-none d-sm-inline">Ver Todos os </span>CTEs
             </a>
             <a href="{{ url_for('analise_financeira.index') }}" class="btn btn-modern">
-                <i class="fas fa-chart-line"></i> 
+                <i class="fas fa-chart-line"></i>
                 <span class="d-none d-sm-inline">Análise </span>Financeira
+            </a>
+            <a href="http://localhost:8050/manager-reports" target="_blank" class="btn btn-modern">
+                <i class="fas fa-file-alt"></i>
+                <span class="d-none d-sm-inline">Relatórios </span>Gerenciais
+            </a>
+            <a href="http://localhost:8050/multas" target="_blank" class="btn btn-modern">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span class="d-none d-sm-inline">Sistema de </span>Multas
+            </a>
+            <a href="http://localhost:8050/abastecimentos" target="_blank" class="btn btn-modern">
+                <i class="fas fa-gas-pump"></i>
+                <span class="d-none d-sm-inline">Controle de </span>Abastecimentos
             </a>
         </div>
     </div>
@@ -267,10 +384,10 @@ function testarDebug() {
     
     // Verificar APIs disponíveis
     const apis = [
-        '/api/dashboard/metricas',
-        '/api/dashboard/alertas', 
-        '/api/dashboard/variacoes',
-        '/api/dashboard/graficos'
+        '/dashboard/api/metricas',
+        '/dashboard/api/alertas',
+        '/dashboard/api/variacoes',
+        '/dashboard/api/graficos'
     ];
     
     apis.forEach(function(api) {
@@ -302,5 +419,159 @@ function atualizarMetrica(id, valor, subtitulo = null) {
         $(`#${id}`).siblings('.metric-subtitle').text(subtitulo);
     }
 }
+
+// ===== FUNÇÕES DE INTEGRAÇÃO COM SISTEMA DE FROTAS =====
+
+function sincronizarDados() {
+    console.log('🔄 Iniciando sincronização com Sistema de Frotas...');
+
+    const button = $('button[onclick="sincronizarDados()"]');
+    const originalText = button.html();
+
+    // Feedback visual
+    button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Sincronizando...');
+
+    // Tentar buscar dados do sistema de frotas
+    const frotasUrl = '{{ frotas_system_url }}';
+
+    Promise.all([
+        buscarDadosFrotas(`${frotasUrl}/api/v1/veiculos/count`),
+        buscarDadosFrotas(`${frotasUrl}/api/v1/motoristas/count`)
+    ])
+    .then(([veiculos, motoristas]) => {
+        // Atualizar contadores
+        $('#frotasVeiculosCount').text(veiculos || '-');
+        $('#frotasMotoristasCount').text(motoristas || '-');
+
+        // Atualizar timestamp
+        const agora = new Date();
+        $('#ultimaSincronizacao').text(agora.toLocaleTimeString('pt-BR'));
+
+        // Feedback de sucesso
+        mostrarNotificacao('Sincronização realizada com sucesso!', 'success');
+
+        console.log('✅ Sincronização concluída:', { veiculos, motoristas });
+    })
+    .catch(error => {
+        console.error('❌ Erro na sincronização:', error);
+        mostrarNotificacao('Erro na sincronização. Tente novamente.', 'error');
+    })
+    .finally(() => {
+        // Restaurar botão
+        button.prop('disabled', false).html(originalText);
+    });
+}
+
+function buscarDadosFrotas(url) {
+    return new Promise((resolve, reject) => {
+        // Verificar se temos token JWT
+        const jwtToken = getCookie('frotas_jwt') || getUrlParameter('jwt_token');
+
+        const headers = {};
+        if (jwtToken) {
+            headers['Authorization'] = `Bearer ${jwtToken}`;
+        }
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            headers: headers,
+            timeout: 5000,
+            success: function(data) {
+                if (data && typeof data.count !== 'undefined') {
+                    resolve(data.count);
+                } else if (typeof data === 'number') {
+                    resolve(data);
+                } else {
+                    resolve(0);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.warn(`Erro ao buscar ${url}:`, status, error);
+                resolve(null);
+            }
+        });
+    });
+}
+
+function verificarConexaoFrotas() {
+    console.log('🔍 Verificando conexão com Sistema de Frotas...');
+
+    const button = $('button[onclick="verificarConexaoFrotas()"]');
+    const originalText = button.html();
+
+    button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Verificando...');
+
+    const frotasUrl = '{{ frotas_system_url }}';
+
+    $.ajax({
+        url: `${frotasUrl}/health`,
+        method: 'GET',
+        timeout: 3000,
+        success: function(data) {
+            mostrarNotificacao('Conexão com Sistema de Frotas restabelecida!', 'success');
+            setTimeout(() => {
+                location.reload(); // Recarregar para atualizar status
+            }, 1500);
+        },
+        error: function(xhr, status, error) {
+            const agora = new Date();
+            $('#ultimaTentativaConexao').text(agora.toLocaleTimeString('pt-BR'));
+
+            mostrarNotificacao('Sistema de Frotas ainda indisponível', 'warning');
+            console.error('❌ Falha na reconexão:', status, error);
+        },
+        complete: function() {
+            button.prop('disabled', false).html(originalText);
+        }
+    });
+}
+
+// ===== FUNÇÕES AUXILIARES =====
+
+function mostrarNotificacao(mensagem, tipo = 'info') {
+    const alertClass = {
+        'success': 'alert-success',
+        'error': 'alert-danger',
+        'warning': 'alert-warning',
+        'info': 'alert-info'
+    }[tipo] || 'alert-info';
+
+    const notification = $(`
+        <div class="alert ${alertClass} alert-dismissible fade show position-fixed"
+             style="top: 20px; right: 20px; z-index: 10000; min-width: 300px;">
+            ${mensagem}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `);
+
+    $('body').append(notification);
+
+    // Auto-remove após 5 segundos
+    setTimeout(() => {
+        notification.alert('close');
+    }, 5000);
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// Inicialização automática dos dados de integração
+$(document).ready(function() {
+    // Se a integração estiver disponível, carregar dados iniciais
+    if ('{{ integration_available }}' === 'True') {
+        setTimeout(() => {
+            sincronizarDados();
+        }, 2000); // Aguardar 2 segundos após carregamento da página
+    }
+});
 </script>
 {% endblock %}

@@ -1,0 +1,386 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}Gerenciar Permissões - Transpontual{% endblock %}
+
+{% block extra_css %}
+<style>
+    .permission-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .permission-badge {
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin: 2px;
+        display: inline-block;
+    }
+
+    .permission-badge.view { background: #e3f2fd; color: #1976d2; }
+    .permission-badge.create { background: #e8f5e8; color: #388e3c; }
+    .permission-badge.edit { background: #fff3e0; color: #f57c00; }
+    .permission-badge.delete { background: #ffebee; color: #d32f2f; }
+    .permission-badge.approve { background: #f3e5f5; color: #7b1fa2; }
+
+    .module-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .module-header {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .module-header i {
+        margin-right: 8px;
+        font-size: 1.1rem;
+    }
+
+    .action-checkbox {
+        margin: 5px 10px 5px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="bi bi-shield-check me-2"></i>
+                    Gerenciar Permissões de Usuários
+                </h2>
+                <div>
+                    <button class="btn btn-primary" onclick="initializePermissions()">
+                        <i class="bi bi-gear me-1"></i>
+                        Inicializar Sistema
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="permission-card">
+                <h5 class="mb-3">
+                    <i class="bi bi-people me-2"></i>
+                    Usuários do Sistema
+                </h5>
+
+                <div id="users-list">
+                    {% for user in users %}
+                    <div class="d-flex align-items-center p-2 mb-2 border rounded user-item"
+                         onclick="loadUserPermissions({{ user.id }})"
+                         style="cursor: pointer;">
+                        <div class="user-avatar me-3">
+                            {{ user.username[0].upper() }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">{{ user.nome_completo or user.username }}</div>
+                            <small class="text-muted">{{ user.email }}</small>
+                            <br>
+                            <span class="badge bg-{{ 'success' if user.tipo_usuario == 'admin' else 'secondary' }}">
+                                {{ user.tipo_usuario.title() }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="permission-card">
+                <div id="user-permissions-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-gear me-2"></i>
+                            Permissões de <span id="selected-user-name"></span>
+                        </h5>
+                        <div>
+                            <select class="form-select me-2" id="quick-profile-select" onchange="assignProfile()">
+                                <option value="">Selecionar Perfil Padrão</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Operacional">Operacional</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Motorista">Motorista</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <form id="permissions-form">
+                        <div id="modules-permissions">
+                            <!-- Módulos serão carregados dinamicamente -->
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check me-1"></i>
+                                Salvar Permissões
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-2" onclick="resetPermissions()">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                Resetar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="no-user-selected" class="text-center py-5">
+                    <i class="bi bi-person-plus-fill fs-1 text-muted"></i>
+                    <h5 class="mt-3 text-muted">Selecione um usuário para gerenciar permissões</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentUserId = null;
+let modules = {};
+
+// Definir módulos e ações disponíveis
+const moduleDefinitions = {
+    'financeiro': {
+        name: 'Sistema Financeiro',
+        icon: 'bi-currency-dollar',
+        actions: ['view', 'create', 'edit', 'delete', 'approve']
+    },
+    'frotas': {
+        name: 'Sistema de Frotas',
+        icon: 'bi-truck',
+        actions: ['view', 'create', 'edit', 'delete']
+    },
+    'admin': {
+        name: 'Administração',
+        icon: 'bi-gear',
+        actions: ['view', 'create', 'edit', 'delete']
+    }
+};
+
+const actionLabels = {
+    'view': 'Visualizar',
+    'create': 'Criar',
+    'edit': 'Editar',
+    'delete': 'Excluir',
+    'approve': 'Aprovar'
+};
+
+function loadUserPermissions(userId) {
+    currentUserId = userId;
+
+    // Destacar usuário selecionado
+    document.querySelectorAll('.user-item').forEach(item => {
+        item.classList.remove('bg-light');
+    });
+    event.currentTarget.classList.add('bg-light');
+
+    // Mostrar seção de permissões
+    document.getElementById('user-permissions-section').style.display = 'block';
+    document.getElementById('no-user-selected').style.display = 'none';
+
+    // Carregar dados do usuário
+    fetch(`/permissions/api/user/${userId}/permissions`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('selected-user-name').textContent =
+                    data.user.nome_completo || data.user.username;
+
+                renderPermissionsForm(data.permissions);
+            } else {
+                showError('Erro ao carregar permissões: ' + data.error);
+            }
+        })
+        .catch(error => {
+            showError('Erro na requisição: ' + error.message);
+        });
+}
+
+function renderPermissionsForm(currentPermissions) {
+    const container = document.getElementById('modules-permissions');
+    container.innerHTML = '';
+
+    Object.keys(moduleDefinitions).forEach(moduleKey => {
+        const module = moduleDefinitions[moduleKey];
+        const userPermissions = currentPermissions[moduleKey] || [];
+
+        const moduleDiv = document.createElement('div');
+        moduleDiv.className = 'module-section';
+
+        moduleDiv.innerHTML = `
+            <div class="module-header">
+                <i class="${module.icon}"></i>
+                ${module.name}
+            </div>
+            <div class="row">
+                ${module.actions.map(action => `
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input action-checkbox"
+                                   type="checkbox"
+                                   id="${moduleKey}_${action}"
+                                   ${userPermissions.includes(action) ? 'checked' : ''}>
+                            <label class="form-check-label" for="${moduleKey}_${action}">
+                                ${actionLabels[action]}
+                            </label>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        container.appendChild(moduleDiv);
+    });
+}
+
+function assignProfile() {
+    const profileName = document.getElementById('quick-profile-select').value;
+    if (!profileName || !currentUserId) return;
+
+    fetch(`/permissions/api/user/${currentUserId}/assign-profile`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            profile_name: profileName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess('Perfil atribuído com sucesso!');
+            loadUserPermissions(currentUserId); // Recarregar permissões
+        } else {
+            showError('Erro ao atribuir perfil: ' + data.message);
+        }
+    })
+    .catch(error => {
+        showError('Erro na requisição: ' + error.message);
+    });
+
+    // Resetar select
+    document.getElementById('quick-profile-select').value = '';
+}
+
+function resetPermissions() {
+    if (currentUserId) {
+        loadUserPermissions(currentUserId);
+    }
+}
+
+// Submissão do formulário
+document.getElementById('permissions-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (!currentUserId) {
+        showError('Nenhum usuário selecionado');
+        return;
+    }
+
+    // Coletar permissões marcadas
+    const permissions = {};
+
+    Object.keys(moduleDefinitions).forEach(moduleKey => {
+        const module = moduleDefinitions[moduleKey];
+        const modulePermissions = [];
+
+        module.actions.forEach(action => {
+            const checkbox = document.getElementById(`${moduleKey}_${action}`);
+            if (checkbox && checkbox.checked) {
+                modulePermissions.push(action);
+            }
+        });
+
+        if (modulePermissions.length > 0) {
+            permissions[moduleKey] = modulePermissions;
+        }
+    });
+
+    // Enviar permissões
+    fetch(`/permissions/api/user/${currentUserId}/permissions`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            permissions: permissions
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess('Permissões atualizadas com sucesso!');
+        } else {
+            showError('Erro ao salvar permissões: ' + data.error);
+        }
+    })
+    .catch(error => {
+        showError('Erro na requisição: ' + error.message);
+    });
+});
+
+function initializePermissions() {
+    if (!confirm('Isso criará os perfis padrão no sistema. Continuar?')) {
+        return;
+    }
+
+    fetch('/permissions/api/initialize-permissions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess('Sistema de permissões inicializado com sucesso!');
+        } else {
+            showError('Erro ao inicializar: ' + data.error);
+        }
+    })
+    .catch(error => {
+        showError('Erro na requisição: ' + error.message);
+    });
+}
+
+function showSuccess(message) {
+    // Implementar toast de sucesso
+    alert(message); // Placeholder
+}
+
+function showError(message) {
+    // Implementar toast de erro
+    alert(message); // Placeholder
+}
+</script>
+{% endblock %}

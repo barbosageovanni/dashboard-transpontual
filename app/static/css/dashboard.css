@@ -38,7 +38,7 @@ body {
 .header-card {
     background: var(--primary-gradient);
     border-radius: var(--border-radius-large);
-    padding: 40px;
+    padding: 25px;
     text-align: center;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -47,13 +47,13 @@ body {
 }
 
 .header-card h1 {
-    font-size: 3rem;
+    font-size: 2rem;
     margin-bottom: 15px;
     font-weight: 800;
 }
 
 .header-card p {
-    font-size: 1.3rem;
+    font-size: 1rem;
     opacity: 0.9;
     margin-bottom: 10px;
 }
@@ -62,7 +62,7 @@ body {
 .metric-card {
     background: var(--card-gradient);
     border-radius: var(--border-radius);
-    padding: 24px;
+    padding: 18px;
     margin: 12px 0;
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: var(--backdrop-blur);
@@ -70,7 +70,7 @@ body {
     position: relative;
     overflow: hidden;
     height: 100%;
-    min-height: 140px;
+    min-height: 110px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -94,7 +94,7 @@ body {
 }
 
 .metric-number {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
@@ -108,7 +108,7 @@ body {
 }
 
 .metric-title {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: #4a5568;
     text-transform: uppercase;
@@ -117,7 +117,7 @@ body {
 }
 
 .metric-subtitle {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #718096;
     font-weight: 500;
 }

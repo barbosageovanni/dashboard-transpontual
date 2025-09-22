@@ -60,17 +60,32 @@ def create_app(config_class=None):
     @app.context_processor
     def inject_globals():
         """Injetar variáveis globais nos templates"""
-        return {
+        base_context = {
             'current_year': datetime.now().year,
             'app_version': '3.0',
             'app_name': 'Dashboard Baker'
         }
 
-    # Middleware de segurança
+        # Adicionar contexto de integração JWT
+        try:
+            from app.services.jwt_integration import inject_integration_context
+            integration_context = inject_integration_context()
+            base_context.update(integration_context)
+        except:
+            pass  # Falha silenciosa se houver problemas
+
+        return base_context
+
+    # Middleware de segurança e integração JWT
     @app.before_request
     def security_headers():
-        """Aplicar headers de segurança"""
+        """Aplicar headers de segurança e verificar JWT"""
         g.start_time = datetime.utcnow()
+
+        # Verificar autenticação JWT do sistema de frotas
+        from app.services.jwt_integration import verificar_autenticacao_jwt
+        verificar_autenticacao_jwt()
+
         # Log de acesso para rotas admin
         if request.path.startswith('/admin'):
             print(f"🔐 Acesso admin: {request.remote_addr} -> {request.path}")
@@ -87,7 +102,7 @@ def create_app(config_class=None):
         if hasattr(g, 'start_time'):
             duration = (datetime.utcnow() - g.start_time).total_seconds()
             if duration > 1.0:  # Log requests lentos
-                print(f"⚠️ Request lento: {request.path} ({duration:.2f}s)")
+                print(f"[AVISO] Request lento: {request.path} ({duration:.2f}s)")
 
         return response
 
@@ -128,6 +143,14 @@ def registrar_blueprints(app):
 
     from app.routes import health_check
     app.register_blueprint(health_check.bp)
+
+    # Blueprint de Integração com Sistema de Frotas
+    from app.routes import frotas_integration
+    app.register_blueprint(frotas_integration.bp)
+
+    # Blueprint de Permissões
+    from app.routes import permissions
+    app.register_blueprint(permissions.bp)
 
     # Rota raiz
     @app.route('/')

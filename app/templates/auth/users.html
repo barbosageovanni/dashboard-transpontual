@@ -1,0 +1,185 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}Gerenciar Usuários{% endblock %}
+
+{% block extra_css %}
+<style>
+.user-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #667eea;
+    transition: transform 0.3s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.user-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.user-role {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.role-admin { background: #d4edda; color: #155724; }
+.role-user { background: #d1ecf1; color: #0c5460; }
+.role-viewer { background: #f8d7da; color: #721c24; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="bi bi-people me-2"></i>
+                Gerenciar Usuários
+            </h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dashboard.index') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Usuários</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary" onclick="criarUsuario()">
+                <i class="bi bi-person-plus me-1"></i>
+                Novo Usuário
+            </button>
+        </div>
+    </div>
+
+    <!-- Users List -->
+    <div class="row">
+        <div class="col-12">
+            <div id="users-container">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando usuários...</span>
+                    </div>
+                    <p class="mt-2">Carregando lista de usuários...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para criar/editar usuário -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Novo Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nome de Usuário</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_usuario" class="form-label">Tipo de Usuário</label>
+                        <select class="form-select" id="tipo_usuario" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="admin">Administrador</option>
+                            <option value="user">Usuário</option>
+                            <option value="viewer">Visualizador</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    carregarUsuarios();
+});
+
+function carregarUsuarios() {
+    // Por enquanto, mostrar uma mensagem simples
+    $('#users-container').html(`
+        <div class="alert alert-info">
+            <h5><i class="bi bi-info-circle me-2"></i>Funcionalidade em Desenvolvimento</h5>
+            <p>O gerenciamento de usuários está sendo implementado. Por enquanto, utilize as credenciais padrão:</p>
+            <ul>
+                <li><strong>Usuário:</strong> admin</li>
+                <li><strong>Senha:</strong> senha123</li>
+                <li><strong>Tipo:</strong> Administrador</li>
+            </ul>
+        </div>
+
+        <div class="user-card">
+            <div class="user-header">
+                <div>
+                    <div class="user-name">admin</div>
+                    <small class="text-muted">Usuário padrão do sistema</small>
+                </div>
+                <div class="user-role role-admin">Admin</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> admin@transpontual.com</p>
+                    <p><strong>Último acesso:</strong> Ativo</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Permissões:</strong> Todas</p>
+                    <p><strong>Status:</strong> <span class="badge bg-success">Ativo</span></p>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+function criarUsuario() {
+    // Mostrar modal (funcionalidade futura)
+    alert('Funcionalidade em desenvolvimento. Use as credenciais padrão por enquanto.');
+}
+
+function salvarUsuario() {
+    // Funcionalidade futura
+    alert('Funcionalidade em desenvolvimento.');
+}
+</script>
+{% endblock %}

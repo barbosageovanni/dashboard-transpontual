@@ -1,7 +1,8 @@
 # app/routes/dashboard.py
 from flask import Blueprint, render_template, jsonify, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.models.cte import CTE
+from app.models.permissions import PermissionManager
 from app import db
 from datetime import datetime, timedelta
 import pandas as pd
@@ -14,7 +15,7 @@ try:
     from app.services.metricas_service import MetricasService
     METRICAS_SERVICE_OK = True
 except Exception as e:
-    print(f"⚠️ MetricasService não disponível: {e}")
+    print(f"[AVISO] MetricasService nao disponivel: {e}")
     METRICAS_SERVICE_OK = False
 
 bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
@@ -22,7 +23,29 @@ bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 @bp.route('/')
 @login_required
 def index():
-    return render_template('dashboard/index.html')
+    # Obter módulos que o usuário tem acesso
+    user_modules = PermissionManager.get_modules_for_display(current_user.id)
+
+    # Verificar se tem acesso aos módulos específicos
+    can_access_financial = any(m['key'] == 'financeiro' for m in user_modules)
+    can_access_fleet = any(m['key'] == 'frotas' for m in user_modules)
+    can_access_admin = any(m['key'] == 'admin' for m in user_modules)
+
+    # Verificar integração com sistema de frotas
+    integration_available = True  # Assumir que está disponível por enquanto
+    frotas_system_url = "http://localhost:8050"  # URL do sistema de frotas
+    is_jwt_authenticated = False  # Por enquanto
+    frotas_user_info = None  # Por enquanto
+
+    return render_template('dashboard/frotas_style.html',
+                         user_modules=user_modules,
+                         can_access_financial=can_access_financial,
+                         can_access_fleet=can_access_fleet,
+                         can_access_admin=can_access_admin,
+                         integration_available=integration_available,
+                         frotas_system_url=frotas_system_url,
+                         is_jwt_authenticated=is_jwt_authenticated,
+                         frotas_user_info=frotas_user_info)
 
 @bp.route('/api/debug')
 @login_required
@@ -59,11 +82,49 @@ def api_debug():
 @bp.route('/api/metricas')
 @login_required
 def api_metricas():
+    """API para métricas do dashboard principal"""
+    try:
+        # Obter estatísticas básicas dos CTEs
+        total_ctes = CTE.query.count()
+
+        # Receita total
+        receita_total = db.session.query(db.func.sum(CTE.valor_total)).scalar() or 0
+
+        # Processos completos (CTEs com envio_final preenchido)
+        processos_completos = CTE.query.filter(CTE.envio_final.isnot(None)).count()
+
+        # Alertas pendentes (CTEs sem primeiro_envio há mais de 30 dias)
+        from datetime import datetime, timedelta
+        data_limite = datetime.now() - timedelta(days=30)
+        alertas_pendentes = CTE.query.filter(
+            CTE.primeiro_envio.is_(None),
+            CTE.data_emissao < data_limite
+        ).count()
+
+        return jsonify({
+            'success': True,
+            'metricas': {
+                'total_ctes': total_ctes,
+                'receita_total': float(receita_total),
+                'processos_completos': processos_completos,
+                'alertas_pendentes': alertas_pendentes
+            }
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@bp.route('/api/dashboard/metricas')
+@login_required
+def api_dashboard_metricas():
     """Métricas principais do dashboard (corrigidas)"""
     try:
         return _calcular_metricas_completas()
     except Exception as e:
-        print(f"❌ Erro na API de métricas: {e}")
+        print(f"[ERROR] Erro na API de métricas: {e}")
         return jsonify({
             'success': False,
             'error': str(e),
@@ -103,11 +164,11 @@ def _carregar_df_cte() -> pd.DataFrame:
             if col in df.columns:
                 df[col] = pd.to_datetime(df[col], errors='coerce')
 
-        print(f"✅ DataFrame carregado: {len(df)} registros")
+        print(f"[OK] DataFrame carregado: {len(df)} registros")
         return df
         
     except Exception as e:
-        print(f"❌ Erro ao carregar DataFrame: {e}")
+        print(f"[ERRO] Erro ao carregar DataFrame: {e}")
         # Fallback: retornar DataFrame vazio com colunas necessárias
         return pd.DataFrame(columns=[
             'numero_cte', 'destinatario_nome', 'veiculo_placa', 'valor_total',
@@ -121,7 +182,7 @@ def _calcular_metricas_completas():
     df = _carregar_df_cte()
 
     if df.empty:
-        print("⚠️ DataFrame vazio - retornando métricas zeradas")
+        print("[WARN] DataFrame vazio - retornando métricas zeradas")
         return jsonify({
             'success': True,
             'metricas': _metricas_vazias(),
@@ -132,7 +193,7 @@ def _calcular_metricas_completas():
             'total_registros': 0
         })
 
-    print(f"📊 Calculando métricas para {len(df)} registros")
+    print(f"[CALC] Calculando métricas para {len(df)} registros")
     metricas = _metricas_basicas(df)
     alertas = calcular_alertas_inteligentes(df)  # ✅ CORRIGIDO!
     variacoes = _variacoes(df)
@@ -167,7 +228,7 @@ def _metricas_basicas(df: pd.DataFrame) -> dict:
         f_pagas = int(has_baixa.sum())
         f_pend = int((~has_baixa).sum())
         valor_pago = float(valores[has_baixa].sum()) if any(has_baixa) else 0.0
-        valor_pend = float(valores[~has_baixa].sum()) if any(~has_baixa) else valor_total
+        valor_pend = float(valores[~has_baixa].sum()) if any(~has_baixa) else 0.0
 
         # Métricas de fatura
         tem_fatura = False
@@ -203,14 +264,15 @@ def _metricas_basicas(df: pd.DataFrame) -> dict:
         if 'data_emissao' in df.columns and df['data_emissao'].notna().any():
             try:
                 tmp = df[df['data_emissao'].notna()].copy()
+                tmp['valor_numerico'] = valores[df['data_emissao'].notna()]
                 tmp['mes_ano'] = tmp['data_emissao'].dt.to_period('M')
-                receita = tmp.groupby('mes_ano')['valor_total'].sum()
+                receita = tmp.groupby('mes_ano')['valor_numerico'].sum()
                 if len(receita) > 0:
                     receita_mensal_media = float(receita.mean())
                     if len(receita) >= 2 and float(receita.iloc[-2]) > 0:
                         crescimento_mensal = float((receita.iloc[-1] - receita.iloc[-2]) / receita.iloc[-2] * 100)
             except Exception as e:
-                print(f"⚠️ Erro no cálculo de receita mensal: {e}")
+                print(f"[WARN] Erro no cálculo de receita mensal: {e}")
 
         return {
             'total_ctes': total_ctes,
@@ -238,7 +300,7 @@ def _metricas_basicas(df: pd.DataFrame) -> dict:
         }
         
     except Exception as e:
-        print(f"❌ Erro no cálculo de métricas básicas: {e}")
+        print(f"[ERROR] Erro no cálculo de métricas básicas: {e}")
         return _metricas_vazias()
 
 def _alertas(df: pd.DataFrame) -> dict:
@@ -274,7 +336,7 @@ def _alertas(df: pd.DataFrame) -> dict:
                     base[extra_field] = None
                 return base
             except Exception as e:
-                print(f"⚠️ Erro ao criar item de alerta: {e}")
+                print(f"[WARN] Erro ao criar item de alerta: {e}")
                 return {'numero_cte': 0, 'destinatario_nome': 'Erro', 'valor_total': 0.0, extra_field: None}
 
         # 1) Primeiro envio pendente (>1 dias após emissão)
@@ -334,18 +396,18 @@ def _alertas(df: pd.DataFrame) -> dict:
                 }
 
     except Exception as e:
-        print(f"⚠️ Erro no cálculo de alertas: {e}")
+        print(f"[WARN] Erro no cálculo de alertas: {e}")
 
     return alertas
 
 def _variacoes(df: pd.DataFrame) -> dict:
     """Calcula variações de tempo entre processos"""
     configs = [
-        ('rq_tmc_primeiro_envio', 'RQ/TMC → 1º Envio', 'data_rq_tmc', 'primeiro_envio', 3),
-        ('primeiro_envio_atesto', '1º Envio → Atesto', 'primeiro_envio', 'data_atesto', 7),
-        ('atesto_envio_final', 'Atesto → Envio Final', 'data_atesto', 'envio_final', 2),
-        ('cte_inclusao_fatura', 'CTE → Inclusão Fatura', 'data_emissao', 'data_inclusao_fatura', 2),
-        ('cte_baixa', 'CTE → Baixa', 'data_emissao', 'data_baixa', 30),
+        ('rq_tmc_primeiro_envio', 'RQ/TMC - 1º Envio', 'data_rq_tmc', 'primeiro_envio', 3),
+        ('primeiro_envio_atesto', '1º Envio - Atesto', 'primeiro_envio', 'data_atesto', 7),
+        ('atesto_envio_final', 'Atesto - Envio Final', 'data_atesto', 'envio_final', 2),
+        ('cte_inclusao_fatura', 'CTE - Inclusão Fatura', 'data_emissao', 'data_inclusao_fatura', 2),
+        ('cte_baixa', 'CTE - Baixa', 'data_emissao', 'data_baixa', 30),
     ]
     
     out = {}
@@ -390,7 +452,7 @@ def _variacoes(df: pd.DataFrame) -> dict:
                 }
                 
     except Exception as e:
-        print(f"⚠️ Erro no cálculo de variações: {e}")
+        print(f"[WARN] Erro no cálculo de variações: {e}")
 
     return out
 
@@ -430,7 +492,7 @@ def _graficos(df: pd.DataFrame) -> dict:
                             'quantidades': [int(q) for q in receita['qtd']]
                         }
             except Exception as e:
-                print(f"⚠️ Erro na evolução mensal: {e}")
+                print(f"[WARN] Erro na evolução mensal: {e}")
 
         # Top clientes
         if 'destinatario_nome' in df.columns:
@@ -444,7 +506,7 @@ def _graficos(df: pd.DataFrame) -> dict:
                         'valores': [float(v) for v in top.values]
                     }
             except Exception as e:
-                print(f"⚠️ Erro no top clientes: {e}")
+                print(f"[WARN] Erro no top clientes: {e}")
 
         # Distribuição de status
         try:
@@ -462,7 +524,7 @@ def _graficos(df: pd.DataFrame) -> dict:
                 'processos': {'labels': ['Completos', 'Incompletos'], 'valores': [proc_compl, proc_incompl]}
             }
         except Exception as e:
-            print(f"⚠️ Erro na distribuição de status: {e}")
+            print(f"[WARN] Erro na distribuição de status: {e}")
 
         # Performance de veículos
         if 'veiculo_placa' in df.columns:
@@ -481,10 +543,10 @@ def _graficos(df: pd.DataFrame) -> dict:
                         'quantidades': [int(x) for x in v['qtd']]
                     }
             except Exception as e:
-                print(f"⚠️ Erro na performance de veículos: {e}")
+                print(f"[WARN] Erro na performance de veículos: {e}")
 
     except Exception as e:
-        print(f"⚠️ Erro geral nos gráficos: {e}")
+        print(f"[WARN] Erro geral nos gráficos: {e}")
 
     return graficos
 
@@ -565,7 +627,7 @@ def api_relatorio_executivo():
         return jsonify({'success': True, 'relatorio': relatorio})
         
     except Exception as e:
-        print(f"❌ Erro no relatório executivo: {e}")
+        print(f"[ERROR] Erro no relatório executivo: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
     
     # ================================
@@ -574,7 +636,7 @@ def api_relatorio_executivo():
 
 def calcular_alertas_inteligentes(df):
     """Sistema de alertas inteligentes - VERSÃO CORRIGIDA"""
-    print(f"🚨 Iniciando cálculo de alertas para {len(df)} registros")
+    print(f"[ALERT] Iniciando cálculo de alertas para {len(df)} registros")
     
     alertas = {
         'primeiro_envio_pendente': {'qtd': 0, 'valor': 0.0, 'lista': []},
@@ -584,14 +646,14 @@ def calcular_alertas_inteligentes(df):
     }
 
     if df.empty:
-        print("⚠️ DataFrame vazio para alertas")
+        print("[WARN] DataFrame vazio para alertas")
         return alertas
 
     hoje = pd.Timestamp.now().normalize()
 
     try:
         # 1. Primeiro envio pendente (10 dias após emissão) - ✅ MANTIDO
-        print("🔍 Calculando primeiro envio pendente...")
+        print("[SEARCH] Calculando primeiro envio pendente...")
         mask_primeiro_envio = (
             df['data_emissao'].notna() & 
             ((hoje - df['data_emissao']).dt.days > 10) &
@@ -610,7 +672,7 @@ def calcular_alertas_inteligentes(df):
                     }
                     lista_segura.append(item)
                 except Exception as e:
-                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    print(f"[WARN] Erro ao processar CTE: {e}")
                     continue
 
             alertas['primeiro_envio_pendente'] = {
@@ -618,10 +680,10 @@ def calcular_alertas_inteligentes(df):
                 'valor': float(ctes_problema['valor_total'].sum()),
                 'lista': lista_segura
             }
-            print(f"✅ Primeiro envio pendente: {len(ctes_problema)} CTEs")
+            print(f"[OK] Primeiro envio pendente: {len(ctes_problema)} CTEs")
 
         # 2. Envio Final Pendente - 🔧 CORRIGIDO: 1 dia após atesto (era 5)
-        print("🔍 Calculando envio final pendente...")
+        print("[SEARCH] Calculando envio final pendente...")
         mask_envio_final = (
             df['data_atesto'].notna() & 
             ((hoje - df['data_atesto']).dt.days > 1) &  # MUDANÇA: 5 → 1
@@ -640,7 +702,7 @@ def calcular_alertas_inteligentes(df):
                     }
                     lista_segura.append(item)
                 except Exception as e:
-                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    print(f"[WARN] Erro ao processar CTE: {e}")
                     continue
 
             alertas['envio_final_pendente'] = {
@@ -648,10 +710,10 @@ def calcular_alertas_inteligentes(df):
                 'valor': float(ctes_problema['valor_total'].sum()),
                 'lista': lista_segura
             }
-            print(f"✅ Envio final pendente: {len(ctes_problema)} CTEs")
+            print(f"[OK] Envio final pendente: {len(ctes_problema)} CTEs")
 
         # 3. Faturas vencidas - 🔧 CORRIGIDO: 90 dias após ENVIO FINAL (era após atesto)
-        print("🔍 Calculando faturas vencidas...")
+        print("[SEARCH] Calculando faturas vencidas...")
         mask_vencidas = (
             df['envio_final'].notna() &  # MUDANÇA: data_atesto → envio_final
             ((hoje - df['envio_final']).dt.days > 90) &  # MUDANÇA: data_atesto → envio_final
@@ -670,7 +732,7 @@ def calcular_alertas_inteligentes(df):
                     }
                     lista_segura.append(item)
                 except Exception as e:
-                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    print(f"[WARN] Erro ao processar CTE: {e}")
                     continue
 
             alertas['faturas_vencidas'] = {
@@ -678,10 +740,10 @@ def calcular_alertas_inteligentes(df):
                 'valor': float(ctes_problema['valor_total'].sum()),
                 'lista': lista_segura
             }
-            print(f"✅ Faturas vencidas: {len(ctes_problema)} CTEs")
+            print(f"[OK] Faturas vencidas: {len(ctes_problema)} CTEs")
 
         # 4. CTEs sem faturas (3 dias após atesto) - ✅ MANTIDO
-        print("🔍 Calculando CTEs sem faturas...")
+        print("[SEARCH] Calculando CTEs sem faturas...")
         mask_sem_faturas = (
             df['data_atesto'].notna() & 
             ((hoje - df['data_atesto']).dt.days > 3) &
@@ -700,7 +762,7 @@ def calcular_alertas_inteligentes(df):
                     }
                     lista_segura.append(item)
                 except Exception as e:
-                    print(f"⚠️ Erro ao processar CTE: {e}")
+                    print(f"[WARN] Erro ao processar CTE: {e}")
                     continue
 
             alertas['ctes_sem_faturas'] = {
@@ -708,12 +770,12 @@ def calcular_alertas_inteligentes(df):
                 'valor': float(ctes_problema['valor_total'].sum()),
                 'lista': lista_segura
             }
-            print(f"✅ CTEs sem faturas: {len(ctes_problema)} CTEs")
+            print(f"[OK] CTEs sem faturas: {len(ctes_problema)} CTEs")
 
-        print("✅ Todos os alertas calculados com sucesso!")
+        print("[OK] Todos os alertas calculados com sucesso!")
 
     except Exception as e:
-        print(f"⚠️ Erro no cálculo de alertas: {str(e)}")
+        print(f"[WARN] Erro no cálculo de alertas: {str(e)}")
         import traceback
         traceback.print_exc()
 
@@ -722,14 +784,14 @@ def calcular_alertas_inteligentes(df):
 
 def _variacoes(df):
     """Calcula variações de tempo entre processos"""
-    print(f"⏱️ Calculando variações para {len(df)} registros")
+    print(f"[TIME] Calculando variações para {len(df)} registros")
     
     configs = [
-        ('rq_tmc_primeiro_envio', 'RQ/TMC → 1º Envio', 'data_rq_tmc', 'primeiro_envio', 3),
-        ('primeiro_envio_atesto', '1º Envio → Atesto', 'primeiro_envio', 'data_atesto', 7),
-        ('atesto_envio_final', 'Atesto → Envio Final', 'data_atesto', 'envio_final', 2),
-        ('cte_inclusao_fatura', 'CTE → Inclusão Fatura', 'data_emissao', 'data_inclusao_fatura', 2),
-        ('cte_baixa', 'CTE → Baixa', 'data_emissao', 'data_baixa', 30),
+        ('rq_tmc_primeiro_envio', 'RQ/TMC - 1º Envio', 'data_rq_tmc', 'primeiro_envio', 3),
+        ('primeiro_envio_atesto', '1º Envio - Atesto', 'primeiro_envio', 'data_atesto', 7),
+        ('atesto_envio_final', 'Atesto - Envio Final', 'data_atesto', 'envio_final', 2),
+        ('cte_inclusao_fatura', 'CTE - Inclusão Fatura', 'data_emissao', 'data_inclusao_fatura', 2),
+        ('cte_baixa', 'CTE - Baixa', 'data_emissao', 'data_baixa', 30),
     ]
     
     out = {}
@@ -772,17 +834,17 @@ def _variacoes(df):
                     'min': int(_dif.min()),
                     'max': int(_dif.max())
                 }
-                print(f"✅ {nome}: {len(_dif)} registros, média {media:.1f} dias")
+                print(f"[OK] {nome}: {len(_dif)} registros, média {media:.1f} dias")
                 
     except Exception as e:
-        print(f"⚠️ Erro no cálculo de variações: {e}")
+        print(f"[WARN] Erro no cálculo de variações: {e}")
 
     return out
 
 
 def _graficos(df):
     """Gera dados para gráficos do dashboard"""
-    print(f"📈 Gerando gráficos para {len(df)} registros")
+    print(f"[GRAPH] Gerando gráficos para {len(df)} registros")
     
     graficos = {
         'evolucao_mensal': {'labels': [], 'valores': [], 'quantidades': []},
@@ -817,9 +879,9 @@ def _graficos(df):
                             'valores': [float(v) for v in receita['valor_total']],
                             'quantidades': [int(q) for q in receita['qtd']]
                         }
-                        print(f"✅ Evolução mensal: {len(receita)} períodos")
+                        print(f"[OK] Evolução mensal: {len(receita)} períodos")
             except Exception as e:
-                print(f"⚠️ Erro na evolução mensal: {e}")
+                print(f"[WARN] Erro na evolução mensal: {e}")
 
         # Top clientes
         if 'destinatario_nome' in df.columns:
@@ -832,9 +894,9 @@ def _graficos(df):
                         'labels': [str(i) for i in top.index],
                         'valores': [float(v) for v in top.values]
                     }
-                    print(f"✅ Top clientes: {len(top)} clientes")
+                    print(f"[OK] Top clientes: {len(top)} clientes")
             except Exception as e:
-                print(f"⚠️ Erro no top clientes: {e}")
+                print(f"[WARN] Erro no top clientes: {e}")
 
         # Distribuição de status
         try:
@@ -851,9 +913,9 @@ def _graficos(df):
                 'baixas': {'labels': ['Com Baixa', 'Sem Baixa'], 'valores': [com_baixa, sem_baixa]},
                 'processos': {'labels': ['Completos', 'Incompletos'], 'valores': [proc_compl, proc_incompl]}
             }
-            print(f"✅ Distribuição: {com_baixa} com baixa, {proc_compl} completos")
+            print(f"[OK] Distribuição: {com_baixa} com baixa, {proc_compl} completos")
         except Exception as e:
-            print(f"⚠️ Erro na distribuição de status: {e}")
+            print(f"[WARN] Erro na distribuição de status: {e}")
 
         # Performance de veículos
         if 'veiculo_placa' in df.columns:
@@ -871,13 +933,13 @@ def _graficos(df):
                         'valores': [float(x) for x in v['valor_total']],
                         'quantidades': [int(x) for x in v['qtd']]
                     }
-                    print(f"✅ Performance veículos: {len(v)} veículos")
+                    print(f"[OK] Performance veículos: {len(v)} veículos")
             except Exception as e:
-                print(f"⚠️ Erro na performance de veículos: {e}")
+                print(f"[WARN] Erro na performance de veículos: {e}")
 
-        print("✅ Gráficos gerados com sucesso!")
+        print("[OK] Gráficos gerados com sucesso!")
 
     except Exception as e:
-        print(f"⚠️ Erro geral nos gráficos: {e}")
+        print(f"[WARN] Erro geral nos gráficos: {e}")
 
     return graficos

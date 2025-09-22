@@ -1,0 +1,445 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}Dashboard Integrado - Transpontual{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<style>
+/* Estilos personalizados para dashboard integrado */
+.metric-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #667eea;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.metric-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.metric-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 5px;
+}
+
+.metric-subtitle {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.action-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin-bottom: 15px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    color: white;
+    text-decoration: none;
+}
+
+.action-button i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 2px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.status-online { background-color: #48bb78; }
+.status-offline { background-color: #f56565; }
+
+.quick-stats {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Principal -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="section-title">Dashboard Integrado Transpontual</h1>
+                    <p class="text-muted">Gestão completa de frotas e finanças</p>
+                </div>
+                <div class="text-end">
+                    <div class="badge bg-success mb-2">
+                        <span class="status-indicator status-online"></span>
+                        Sistema Online
+                    </div>
+                    <br>
+                    <small class="text-muted" id="ultimaAtualizacao">Carregando...</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métricas Financeiras Principais -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="section-title">📊 Métricas Financeiras</h3>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="valorTotal">R$ 0,00</div>
+                <div class="metric-title">💰 Receita Total</div>
+                <div class="metric-subtitle" id="crescimentoMensal">📈 0% vs mês anterior</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="totalCtes">0</div>
+                <div class="metric-title">📋 CTEs Total</div>
+                <div class="metric-subtitle" id="ticketMedio">💵 Ticket médio: R$ 0,00</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="processosCompletos">0</div>
+                <div class="metric-title">✅ Processos Completos</div>
+                <div class="metric-subtitle" id="taxaConclusao">📊 0% do total</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="alertasAtivos">0</div>
+                <div class="metric-title">🚨 Alertas Ativos</div>
+                <div class="metric-subtitle" id="valorRisco">⚠️ R$ 0,00 em risco</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métricas de Frotas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="section-title">🚛 Métricas de Frotas</h3>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="totalChecklists">0</div>
+                <div class="metric-title">📋 Total Checklists</div>
+                <div class="metric-subtitle">Hoje</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="taxaAprovacao">0%</div>
+                <div class="metric-title">Taxa Aprovação</div>
+                <div class="metric-subtitle">Últimos 30 dias</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="veiculosAtivos">0</div>
+                <div class="metric-title">Veículos Ativos</div>
+                <div class="metric-subtitle">Em operação</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="metric-number" id="osAbertas">0</div>
+                <div class="metric-title">🔧 OS Abertas</div>
+                <div class="metric-subtitle">Pendentes</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="section-title">Ações Rápidas</h3>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <a href="/vehicles" class="action-button">
+                <i class="bi bi-truck-flatbed"></i>
+                <span>Veículos</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <a href="/drivers" class="action-button">
+                <i class="bi bi-person-badge"></i>
+                <span>Motoristas</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <a href="/checklists" class="action-button">
+                <i class="bi bi-clipboard-check"></i>
+                <span>Checklists</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <a href="{{ url_for('ctes.listar') }}" class="action-button">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>CTEs</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <a href="{{ url_for('analise_financeira.index') }}" class="action-button">
+                <i class="bi bi-graph-up"></i>
+                <span>Análise Financeira</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <a href="/multas" class="action-button">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span>Multas</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Sistemas Integrados -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="section-title">🔗 Sistemas Integrados</h3>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="http://localhost:8050" target="_blank" class="action-button">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard Frotas</span>
+                <small>Sistema Principal</small>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="http://localhost:8050/abastecimentos" target="_blank" class="action-button">
+                <i class="bi bi-fuel-pump"></i>
+                <span>Abastecimentos</span>
+                <small>Controle de Combustível</small>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="http://localhost:8050/multas" target="_blank" class="action-button">
+                <i class="bi bi-exclamation-circle"></i>
+                <span>Sistema Multas</span>
+                <small>Gestão de Infrações</small>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="{{ url_for('ctes.relatorios_veiculo') }}" class="action-button">
+                <i class="bi bi-file-earmark-bar-graph"></i>
+                <span>Relatórios</span>
+                <small>Relatórios por Veículo</small>
+            </a>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="metric-card">
+                <h5 class="metric-title">📈 Evolução da Receita</h5>
+                <canvas id="chartEvolucaoMensal" height="300"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="metric-card">
+                <h5 class="metric-title">👥 Top 5 Clientes</h5>
+                <canvas id="chartTopClientes" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status dos Sistemas -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="quick-stats">
+                <h6><i class="bi bi-server"></i> Sistema Financeiro</h6>
+                <div class="d-flex align-items-center">
+                    <span class="status-indicator status-online"></span>
+                    <span>Dashboard Baker - Ativo</span>
+                </div>
+                <small class="text-muted">Port: 5000</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="quick-stats">
+                <h6><i class="bi bi-truck"></i> Sistema Frotas</h6>
+                <div class="d-flex align-items-center">
+                    <span class="status-indicator status-online"></span>
+                    <span>Flask Dashboard - Ativo</span>
+                </div>
+                <small class="text-muted">Port: 8050</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="quick-stats">
+                <h6><i class="bi bi-database"></i> Base de Dados</h6>
+                <div class="d-flex align-items-center">
+                    <span class="status-indicator status-online"></span>
+                    <span>SQLite - Conectado</span>
+                </div>
+                <small class="text-muted" id="totalRegistros">Carregando...</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+$(document).ready(function() {
+    console.log('🚀 Inicializando dashboard integrado...');
+
+    // Atualizar timestamp
+    const agora = new Date();
+    $('#ultimaAtualizacao').text('Última atualização: ' + agora.toLocaleString('pt-BR'));
+
+    // Inicializar dashboard financeiro
+    setTimeout(function() {
+        if (typeof inicializarDashboard === 'function') {
+            console.log('✅ Inicializando métricas financeiras...');
+            inicializarDashboard();
+        } else {
+            console.error('❌ Função inicializarDashboard não encontrada');
+        }
+    }, 500);
+
+    // Carregar métricas de frotas
+    carregarMetricasFrotas();
+
+    // Auto-refresh a cada 2 minutos
+    setInterval(function() {
+        const agora = new Date();
+        $('#ultimaAtualizacao').text('Última atualização: ' + agora.toLocaleString('pt-BR'));
+
+        if (typeof carregarDashboard === 'function') {
+            carregarDashboard();
+        }
+        carregarMetricasFrotas();
+    }, 120000);
+});
+
+function carregarMetricasFrotas() {
+    console.log('📊 Carregando métricas de frotas...');
+
+    // Simular chamada para API de frotas
+    fetch('http://localhost:8050/api/stats')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                $('#totalChecklists').text(data.total_checklists || 0);
+                $('#taxaAprovacao').text((data.taxa_aprovacao || 0) + '%');
+                $('#veiculosAtivos').text(data.veiculos_ativos || 0);
+                $('#osAbertas').text(data.os_abertas || 0);
+
+                console.log('✅ Métricas de frotas carregadas');
+            }
+        })
+        .catch(error => {
+            console.warn('⚠️ Erro ao carregar métricas de frotas:', error);
+            // Valores padrão quando o sistema de frotas não está disponível
+            $('#totalChecklists').text('-');
+            $('#taxaAprovacao').text('-');
+            $('#veiculosAtivos').text('-');
+            $('#osAbertas').text('-');
+        });
+
+    // Atualizar status da base de dados
+    fetch('/dashboard/api/debug')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                $('#totalRegistros').text(`${data.debug.total_ctes_db} CTEs registrados`);
+            }
+        })
+        .catch(error => {
+            console.warn('⚠️ Erro ao verificar base de dados:', error);
+            $('#totalRegistros').text('Status desconhecido');
+        });
+}
+
+// Função global para debug
+function testarSistemas() {
+    console.log('🔍 Testando conexão com todos os sistemas...');
+
+    const sistemas = [
+        { nome: 'Dashboard Baker', url: '/dashboard/api/debug' },
+        { nome: 'Sistema Frotas', url: 'http://localhost:8050/api/stats' },
+        { nome: 'API Métricas', url: '/dashboard/api/metricas' }
+    ];
+
+    sistemas.forEach(sistema => {
+        fetch(sistema.url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(`✅ ${sistema.nome}: OK`, data);
+            })
+            .catch(error => {
+                console.log(`❌ ${sistema.nome}: Erro`, error);
+            });
+    });
+}
+</script>
+{% endblock %}

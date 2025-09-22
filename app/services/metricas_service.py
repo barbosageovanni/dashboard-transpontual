@@ -11,12 +11,12 @@ try:
     import pandas as pd
     import numpy as np
     PANDAS_AVAILABLE = True
-    print("✅ Pandas disponível - funcionalidades completas")
+    print("[OK] Pandas disponivel - funcionalidades completas")
 except ImportError:
     pd = None
     np = None
     PANDAS_AVAILABLE = False
-    print("⚠️ Pandas não disponível - modo básico ativado")
+    print("[AVISO] Pandas nao disponivel - modo basico ativado")
 
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
