@@ -219,7 +219,32 @@
                         </a>
                     </li>
 
-                    <!-- Sistema de Frotas -->
+                    <!-- Gestão de Frotas Local -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="frotasLocalDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-truck"></i> Gestão de Frotas
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="frotasLocalDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('frotas_local.index') }}">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard Frotas
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('frotas_local.veiculos') }}">
+                                <i class="fas fa-truck"></i> Gerenciar Veículos
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('frotas_local.motoristas') }}">
+                                <i class="fas fa-users"></i> Gerenciar Motoristas
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('frotas_local.checklists') }}">
+                                <i class="fas fa-clipboard-list"></i> Histórico Checklists
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('frotas_local.novo_checklist') }}">
+                                <i class="fas fa-plus"></i> Novo Checklist
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Sistema de Frotas Externo -->
                     {% if integration_available %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="frotasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

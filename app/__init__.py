@@ -148,6 +148,10 @@ def registrar_blueprints(app):
     from app.routes import frotas_integration
     app.register_blueprint(frotas_integration.bp)
 
+    # Sistema de Frotas Completo
+    from app.routes import frotas
+    app.register_blueprint(frotas.bp, name='frotas_local')
+
     # Blueprint de Permissões
     from app.routes import permissions
     app.register_blueprint(permissions.bp)

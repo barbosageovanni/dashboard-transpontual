@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Sistema de Frotas - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <h6>Sistema de Gestão de Frotas</h6>
+                    <p class="text-sm mb-0">
+                        Controle completo da sua frota de veículos
+                    </p>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <!-- Estatísticas -->
+                    <div class="row">
+                        <div class="col-xl-3 col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Veículos Total</p>
+                                                <h5 class="font-weight-bolder">
+                                                    {{ stats.veiculos.total }}
+                                                </h5>
+                                                <p class="mb-0">
+                                                    <span class="text-success text-sm font-weight-bolder">{{ stats.veiculos.ativos }}</span>
+                                                    ativos
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                                <i class="fas fa-truck text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Motoristas</p>
+                                                <h5 class="font-weight-bolder">
+                                                    {{ stats.motoristas.total }}
+                                                </h5>
+                                                <p class="mb-0">
+                                                    <span class="text-success text-sm font-weight-bolder">{{ stats.motoristas.ativos }}</span>
+                                                    ativos
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
+                                                <i class="fas fa-users text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Checklists</p>
+                                                <h5 class="font-weight-bolder">
+                                                    {{ stats.checklists.total }}
+                                                </h5>
+                                                <p class="mb-0">
+                                                    <span class="text-warning text-sm font-weight-bolder">{{ stats.checklists.pendentes }}</span>
+                                                    pendentes
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                                <i class="fas fa-clipboard-list text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Manutenção</p>
+                                                <h5 class="font-weight-bolder">
+                                                    {{ stats.veiculos.manutencao }}
+                                                </h5>
+                                                <p class="mb-0">
+                                                    <span class="text-danger text-sm font-weight-bolder">veículos</span>
+                                                    em manutenção
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                                <i class="fas fa-tools text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Menu de Ações -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header pb-0">
+                                    <h6>Ações Rápidas</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <a href="{{ url_for('frotas.veiculos') }}" class="btn btn-outline-primary w-100">
+                                                <i class="fas fa-truck"></i>
+                                                Gerenciar Veículos
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <a href="{{ url_for('frotas.motoristas') }}" class="btn btn-outline-info w-100">
+                                                <i class="fas fa-users"></i>
+                                                Gerenciar Motoristas
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <a href="{{ url_for('frotas.checklists') }}" class="btn btn-outline-warning w-100">
+                                                <i class="fas fa-clipboard-list"></i>
+                                                Ver Checklists
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <a href="{{ url_for('frotas.novo_checklist') }}" class="btn btn-outline-success w-100">
+                                                <i class="fas fa-plus"></i>
+                                                Novo Checklist
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh das estatísticas a cada 30 segundos
+setInterval(function() {
+    fetch('{{ url_for("frotas.api_stats") }}')
+        .then(response => response.json())
+        .then(data => {
+            // Atualizar os números na tela
+            console.log('Stats atualizadas:', data);
+        })
+        .catch(error => console.error('Erro ao carregar stats:', error));
+}, 30000);
+</script>
+{% endblock %}

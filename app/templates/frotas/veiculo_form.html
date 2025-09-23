@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if veiculo else 'Novo' }} Veículo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{{ 'Editar' if veiculo else 'Cadastrar Novo' }} Veículo</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="placa" class="form-label">Placa *</label>
+                                <input type="text" class="form-control" id="placa" name="placa"
+                                       value="{{ veiculo.placa if veiculo }}" required maxlength="8"
+                                       placeholder="ABC1234">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="renavam" class="form-label">RENAVAM</label>
+                                <input type="text" class="form-control" id="renavam" name="renavam"
+                                       value="{{ veiculo.renavam if veiculo }}" maxlength="11"
+                                       placeholder="12345678901">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="marca" class="form-label">Marca</label>
+                                <input type="text" class="form-control" id="marca" name="marca"
+                                       value="{{ veiculo.marca if veiculo }}" maxlength="100"
+                                       placeholder="Volkswagen">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="modelo" class="form-label">Modelo</label>
+                                <input type="text" class="form-control" id="modelo" name="modelo"
+                                       value="{{ veiculo.modelo if veiculo }}" maxlength="100"
+                                       placeholder="Constellation 24.280">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="ano" class="form-label">Ano</label>
+                                <input type="number" class="form-control" id="ano" name="ano"
+                                       value="{{ veiculo.ano if veiculo }}" min="1900" max="2030"
+                                       placeholder="2020">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo" class="form-label">Tipo</label>
+                                <select class="form-select" id="tipo" name="tipo">
+                                    <option value="">Selecione...</option>
+                                    <option value="TRUCK" {{ 'selected' if veiculo and veiculo.tipo == 'TRUCK' }}>Caminhão</option>
+                                    <option value="CAVALOMECANICO" {{ 'selected' if veiculo and veiculo.tipo == 'CAVALOMECANICO' }}>Cavalo Mecânico</option>
+                                    <option value="VAN" {{ 'selected' if veiculo and veiculo.tipo == 'VAN' }}>Van</option>
+                                    <option value="UTILITARIO" {{ 'selected' if veiculo and veiculo.tipo == 'UTILITARIO' }}>Utilitário</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="km_atual" class="form-label">Quilometragem Atual</label>
+                                <input type="number" class="form-control" id="km_atual" name="km_atual"
+                                       value="{{ veiculo.km_atual if veiculo else 0 }}" min="0"
+                                       placeholder="100000">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo"
+                                       {{ 'checked' if not veiculo or veiculo.ativo }}>
+                                <label class="form-check-label" for="ativo">
+                                    Veículo ativo
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('frotas_local.veiculos') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {{ 'Atualizar' if veiculo else 'Cadastrar' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
