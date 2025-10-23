@@ -25,14 +25,14 @@ def run_local():
     with app.app_context():
         try:
             db.create_all()
-            print("✅ Banco de dados inicializado")
+            print("[OK] Banco de dados inicializado")
         except Exception as e:
-            print(f"⚠️  Aviso no banco de dados: {e}")
+            print(f"[WARNING] Aviso no banco de dados: {e}")
     
     # Executar aplicação
-    print("🚀 Iniciando Dashboard Baker Flask...")
-    print("📍 Acesse: http://localhost:5000")
-    print("🛑 Para parar: Ctrl+C")
+    print("[STARTUP] Iniciando Dashboard Baker Flask...")
+    print("[INFO] Acesse: http://localhost:5000")
+    print("[INFO] Para parar: Ctrl+C")
     print("-" * 50)
     
     try:
@@ -43,9 +43,9 @@ def run_local():
             use_reloader=True
         )
     except KeyboardInterrupt:
-        print("\n👋 Aplicação encerrada pelo usuário")
+        print("\n[INFO] Aplicacao encerrada pelo usuario")
     except Exception as e:
-        print(f"❌ Erro ao iniciar aplicação: {e}")
+        print(f"[ERROR] Erro ao iniciar aplicacao: {e}")
         return False
     
     return True

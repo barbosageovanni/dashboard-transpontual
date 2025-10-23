@@ -1,11 +1,20 @@
 # ARQUIVO: app/routes/auth.py
 # VERSÃO CORRIGIDA - Remove conflito de rotas api_profile
+# Integrado com SSO Transpontual
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
 from app import db
 from datetime import datetime
+
+# Importar integração SSO
+from app.services.jwt_integration import (
+    decode_jwt_token,
+    get_cross_system_navigation_links,
+    create_user_sso_token,
+    UNIFIED_AUTH_AVAILABLE
+)
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -142,7 +151,22 @@ def users():
             flash('Acesso negado. Apenas administradores.', 'error')
             return redirect(url_for('dashboard.index'))
     
-    return render_template('auth/users.html')
+    # Criar objeto usuario vazio para novos usuários ou carregar existente se for edição
+    usuario = {}
+    user_id = request.args.get('id')
+    if user_id:
+        # Aqui você carregaria o usuário do banco de dados
+        # Por enquanto, simular um usuário existente
+        usuario = {
+            'id': user_id,
+            'nome': 'Usuário Exemplo',
+            'email': 'exemplo@transpontual.com',
+            'papel': 'admin',
+            'ativo': True,
+            'ultimo_acesso': None
+        }
+
+    return render_template('auth/users.html', usuario=usuario)
 
 @bp.route('/api/users')
 @login_required
@@ -257,3 +281,136 @@ def api_change_password():
         'success': False,
         'message': 'Funcionalidade em desenvolvimento'
     }), 501
+
+
+# ===================================================================
+# ROTAS SSO TRANSPONTUAL
+# ===================================================================
+
+@bp.route('/sso-login', methods=['GET', 'POST'])
+def sso_login():
+    """
+    Login via SSO com token JWT de outros sistemas Transpontual
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard.index'))
+
+    # Extrair token JWT da URL ou formulário
+    jwt_token = request.args.get('jwt_token') or request.form.get('jwt_token')
+
+    if not jwt_token:
+        flash('Token SSO não fornecido', 'error')
+        return redirect(url_for('auth.login'))
+
+    try:
+        # Decodificar token JWT
+        payload = decode_jwt_token(jwt_token)
+        if not payload:
+            flash('Token SSO inválido ou expirado', 'error')
+            return redirect(url_for('auth.login'))
+
+        # Extrair informações do usuário
+        user_email = payload.get('email')
+        if not user_email:
+            flash('Token SSO não contém informações válidas do usuário', 'error')
+            return redirect(url_for('auth.login'))
+
+        # Buscar usuário local correspondente
+        user = User.query.filter_by(email=user_email).first()
+
+        if not user:
+            # Criar usuário automaticamente se não existir (opcional)
+            if UNIFIED_AUTH_AVAILABLE:
+                user = User(
+                    username=payload.get('username') or user_email.split('@')[0],
+                    email=user_email,
+                    nome_completo=payload.get('nome', ''),
+                    tipo_usuario='user'  # Tipo padrão
+                )
+                user.set_password('sso_user')  # Senha placeholder
+                db.session.add(user)
+                db.session.commit()
+                flash('Conta criada automaticamente via SSO', 'info')
+            else:
+                flash('Usuário não encontrado no sistema', 'error')
+                return redirect(url_for('auth.login'))
+
+        if not user.ativo:
+            flash('Usuário inativo', 'error')
+            return redirect(url_for('auth.login'))
+
+        # Fazer login automático
+        login_user(user, remember=True)
+        user.registrar_login()
+
+        # Salvar informações SSO na sessão
+        from flask import session
+        session['jwt_token'] = jwt_token
+        session['jwt_user_data'] = payload
+        session['auth_source'] = f"{payload.get('sistema_origem', 'unknown')}_sso"
+
+        flash(f'Login SSO realizado com sucesso! Bem-vindo, {user.nome_completo or user.username}!', 'success')
+
+        # Redirecionar para página solicitada ou dashboard
+        next_page = request.args.get('redirect')
+        if next_page:
+            return redirect(next_page)
+        return redirect(url_for('dashboard.index'))
+
+    except Exception as e:
+        print(f"❌ Erro no SSO login: {e}")
+        flash('Erro interno no processo de SSO', 'error')
+        return redirect(url_for('auth.login'))
+
+
+@bp.route('/api/sso-links')
+@login_required
+def api_sso_links():
+    """
+    API para obter links de navegação SSO para outros sistemas
+    """
+    try:
+        links = get_cross_system_navigation_links(current_user)
+        return jsonify({
+            'success': True,
+            'links': links,
+            'unified_auth_available': UNIFIED_AUTH_AVAILABLE
+        })
+
+    except Exception as e:
+        print(f"❌ Erro obtendo links SSO: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Erro interno',
+            'links': []
+        }), 500
+
+
+@bp.route('/api/create-sso-token')
+@login_required
+def api_create_sso_token():
+    """
+    API para criar token SSO para o usuário atual
+    """
+    try:
+        target_system = request.args.get('target', 'baker')
+        sso_token = create_user_sso_token(current_user, target_system)
+
+        if not sso_token:
+            return jsonify({
+                'success': False,
+                'error': 'Não foi possível criar token SSO'
+            }), 500
+
+        return jsonify({
+            'success': True,
+            'token': sso_token,
+            'message': 'Token SSO criado com sucesso'
+        })
+
+    except Exception as e:
+        print(f"❌ Erro criando token SSO: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Erro interno'
+        }), 500

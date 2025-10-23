@@ -1,0 +1,93 @@
+@bp.route('/api/exportar/excel')
+@login_required
+def exportar_excel():
+    """Exporta análise completa para Excel PROFISSIONAL com Dashboard"""
+    try:
+        filtro_cliente = request.args.get('filtro_cliente', '').strip()
+        filtro_dias = int(request.args.get('filtro_dias', 180))
+        data_inicio = request.args.get('data_inicio')
+        data_fim = request.args.get('data_fim')
+
+        if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
+            filtro_cliente = None
+
+        query = aplicar_filtros_base(filtro_dias, filtro_cliente, data_inicio, data_fim)
+        ctes = query.all()
+
+        if not ctes:
+            return jsonify({'error': 'Nenhum dado para exportar'}), 400
+
+        # Preparar dados
+        dados = []
+        for cte in ctes:
+            # Função helper para acessar campos com segurança
+            def get_field_safe(obj, field_name, default=''):
+                try:
+                    return getattr(obj, field_name, default)
+                except AttributeError:
+                    return default
+
+            def format_date_safe(obj, field_name):
+                try:
+                    field_value = getattr(obj, field_name, None)
+                    if field_value:
+                        return field_value.strftime('%d/%m/%Y')
+                    return ''
+                except (AttributeError, TypeError):
+                    return ''
+
+            row_data = {
+                'Número CTE': cte.numero_cte,
+                'Cliente': cte.destinatario_nome,
+                'Veiculo': get_field_safe(cte, 'veiculo_placa', ''),
+                'Valor Total': float(cte.valor_total or 0),
+                'Data Emissão': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'Data Baixa': cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else '',
+                'Número Fatura': get_field_safe(cte, 'numero_fatura', ''),
+                'Data Inclusão Fatura': format_date_safe(cte, 'data_inclusao_fatura'),
+                'Status': 'Baixado' if cte.data_baixa else 'Pendente'
+            }
+
+            novos_campos = {
+                'Data Envio Processo': format_date_safe(cte, 'data_envio_processo'),
+                'Primeiro Envio': format_date_safe(cte, 'primeiro_envio'),
+                'Data Rq/TMC': format_date_safe(cte, 'data_requisicao'),
+                'Data Atesto': format_date_safe(cte, 'data_atesto'),
+                'Envio Final': format_date_safe(cte, 'envio_final'),
+                'Observações': get_field_safe(cte, 'observacoes', '')
+            }
+
+            row_data.update(novos_campos)
+            dados.append(row_data)
+
+        logger.info(f"Exportando {len(dados)} registros para Excel PROFISSIONAL")
+
+        # USAR MÓDULO PROFISSIONAL
+        from app.services.excel_profissional import gerar_excel_profissional
+
+        buffer = gerar_excel_profissional(dados, {
+            'filtro_cliente': filtro_cliente or 'Todos',
+            'filtro_dias': filtro_dias,
+            'data_inicio': data_inicio,
+            'data_fim': data_fim
+        })
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'analise_financeira_{timestamp}.xlsx'
+
+        return send_file(
+            buffer,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        import traceback
+        logger.error(f"Erro na exportação Excel: {str(e)}")
+        logger.error(f"Stack trace: {traceback.format_exc()}")
+
+        return jsonify({
+            'error': f'Erro na exportação: {str(e)}',
+            'details': 'Verifique se todos os campos existem no modelo CTE'
+        }), 500

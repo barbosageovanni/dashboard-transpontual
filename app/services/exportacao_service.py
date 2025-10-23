@@ -8,7 +8,7 @@ app/services/exportacao_service.py
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from io import BytesIO, StringIO
 import xlsxwriter
 import json
@@ -24,6 +24,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import base64
 import logging
+from flask import render_template
+
+logger = logging.getLogger(__name__)
 
 class ExportacaoService:
     """Serviço para exportação de relatórios em múltiplos formatos"""
@@ -618,42 +621,239 @@ class ExportacaoService:
                 'alertas': [],
                 'recomendacoes': []
             }
-            
+
             # Métricas principais
             if 'receita_mensal' in dados_analise:
                 receita = dados_analise['receita_mensal']
                 resumo['metricas_principais']['receita_mes_corrente'] = receita.get('receita_mes_corrente', 0)
                 resumo['metricas_principais']['variacao_mensal'] = receita.get('variacao_percentual', 0)
-            
+
             # NOVA MÉTRICA no resumo
             if 'receita_por_inclusao_fatura' in dados_analise:
                 inclusao = dados_analise['receita_por_inclusao_fatura']
                 resumo['metricas_principais']['receita_inclusao_fatura'] = inclusao.get('receita_total_periodo', 0)
                 resumo['metricas_principais']['cobertura_inclusao'] = inclusao.get('percentual_cobertura', 0)
-                
+
                 # Alertas baseados na cobertura
                 cobertura = inclusao.get('percentual_cobertura', 0)
                 if cobertura < 50:
                     resumo['alertas'].append('Baixa cobertura de inclusão de faturas - completar dados para análise mais precisa')
-            
+
             # Concentração
             if 'concentracao_clientes' in dados_analise:
                 concentracao = dados_analise['concentracao_clientes']['percentual_top5']
                 resumo['metricas_principais']['concentracao_top5'] = concentracao
-                
+
                 if concentracao > 70:
                     resumo['alertas'].append('Alta concentração de receita - risco de dependência')
                     resumo['recomendacoes'].append('Diversificar base de clientes')
-            
+
             # Tendência
             if 'tendencia_linear' in dados_analise:
                 inclinacao = dados_analise['tendencia_linear']['inclinacao']
                 if inclinacao < 0:
                     resumo['alertas'].append('Tendência de declínio na receita')
                     resumo['recomendacoes'].append('Implementar estratégias de recuperação')
-            
+
             return resumo
-            
+
         except Exception as e:
             logging.error(f"Erro ao gerar resumo executivo: {str(e)}")
             return {'erro': str(e)}
+
+    @staticmethod
+    def preparar_dados_ctes_para_relatorio(ctes, filtros: Dict) -> Dict:
+        """
+        Prepara dados de CTEs para relatórios com métricas e formatação
+
+        Args:
+            ctes: Lista de CTEs do banco
+            filtros: Filtros aplicados
+
+        Returns:
+            Dict com dados estruturados
+        """
+        if not ctes:
+            return {
+                'metricas': {},
+                'ctes_lista': [],
+                'filtros': filtros
+            }
+
+        # Calcular métricas
+        total_ctes = len(ctes)
+        receita_total = sum(float(cte.valor_total or 0) for cte in ctes)
+        ticket_medio = receita_total / total_ctes if total_ctes > 0 else 0
+
+        ctes_baixados = sum(1 for cte in ctes if cte.data_baixa)
+        valor_baixado = sum(float(cte.valor_total or 0) for cte in ctes if cte.data_baixa)
+        taxa_baixa = (ctes_baixados / total_ctes * 100) if total_ctes > 0 else 0
+
+        # Formatar métricas
+        metricas = {
+            'total_ctes': total_ctes,
+            'receita_total': f'R$ {receita_total:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'ticket_medio': f'R$ {ticket_medio:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'ctes_baixados': ctes_baixados,
+            'valor_baixado': f'R$ {valor_baixado:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'taxa_baixa': f'{taxa_baixa:.1f}%'
+        }
+
+        # Lista formatada de CTEs
+        ctes_lista = []
+        for cte in ctes:
+            ctes_lista.append({
+                'numero_cte': cte.numero_cte,
+                'cliente': cte.destinatario_nome,
+                'veiculo': getattr(cte, 'veiculo_placa', ''),
+                'valor': f'R$ {float(cte.valor_total or 0):,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+                'data_emissao': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'data_baixa': cte.data_baixa.strftime('%d/%m/%Y') if cte.data_baixa else None
+            })
+
+        return {
+            'metricas': metricas,
+            'ctes_lista': ctes_lista,
+            'filtros': filtros
+        }
+
+    @staticmethod
+    def gerar_pdf_html_ctes(dados: Dict, graficos: Optional[Dict] = None) -> str:
+        """
+        Gera HTML formatado para PDF de CTEs usando template Jinja
+
+        Args:
+            dados: Dados estruturados do relatório
+            graficos: Dicionário com gráficos em base64
+
+        Returns:
+            HTML renderizado
+        """
+        try:
+            # Preparar contexto para o template
+            contexto = {
+                'data_geracao': datetime.now().strftime('%d/%m/%Y às %H:%M:%S'),
+                'ano_atual': datetime.now().year,
+                'filtro_periodo': f"{dados['filtros'].get('filtro_dias', 180)} dias",
+                'filtro_cliente': dados['filtros'].get('filtro_cliente', 'Todos'),
+                'data_inicio': dados['filtros'].get('data_inicio'),
+                'data_fim': dados['filtros'].get('data_fim'),
+                'metricas': dados['metricas'],
+                'ctes_lista': dados['ctes_lista'],
+                'graficos': graficos or {}
+            }
+
+            # Renderizar template
+            html = render_template('analise_financeira/relatorio_pdf.html', **contexto)
+            return html
+
+        except Exception as e:
+            logger.error(f"Erro ao gerar HTML do PDF: {str(e)}")
+            raise
+
+    @staticmethod
+    def converter_html_para_pdf_weasyprint(html: str) -> BytesIO:
+        """
+        Converte HTML para PDF usando WeasyPrint
+
+        Args:
+            html: String HTML formatada
+
+        Returns:
+            Buffer BytesIO com PDF
+        """
+        try:
+            from weasyprint import HTML, CSS
+            from weasyprint.text.fonts import FontConfiguration
+
+            # Configuração de fontes
+            font_config = FontConfiguration()
+
+            # CSS adicional para PDF
+            css_extra = CSS(string='''
+                @page {
+                    size: A4;
+                    margin: 2cm 1.5cm;
+                }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+            ''', font_config=font_config)
+
+            # Gerar PDF
+            pdf_file = HTML(string=html).write_pdf(
+                stylesheets=[css_extra],
+                font_config=font_config
+            )
+
+            # Criar buffer
+            buffer = BytesIO(pdf_file)
+            buffer.seek(0)
+
+            return buffer
+
+        except ImportError:
+            logger.error("WeasyPrint não instalado")
+            raise ImportError("WeasyPrint não está instalado. Execute: pip install weasyprint")
+        except Exception as e:
+            logger.error(f"Erro ao converter HTML para PDF: {str(e)}")
+            raise
+
+    @staticmethod
+    def processar_graficos_base64(graficos_dict: Dict) -> Dict:
+        """
+        Processa e valida gráficos em formato base64
+
+        Args:
+            graficos_dict: Dicionário com gráficos em base64
+
+        Returns:
+            Dicionário com gráficos validados
+        """
+        graficos_processados = {}
+
+        for key, base64_img in graficos_dict.items():
+            if base64_img and isinstance(base64_img, str):
+                try:
+                    # Remover prefixo se existir
+                    if 'base64,' in base64_img:
+                        base64_img = base64_img.split('base64,')[1]
+
+                    # Validar base64
+                    base64.b64decode(base64_img)
+                    graficos_processados[key] = base64_img
+
+                except Exception as e:
+                    logger.warning(f"Gráfico {key} inválido: {str(e)}")
+                    continue
+
+        return graficos_processados
+
+    @staticmethod
+    def gerar_relatorio_pdf_completo(ctes, filtros: Dict, graficos: Optional[Dict] = None) -> BytesIO:
+        """
+        Gera relatório PDF completo com CTEs, métricas e gráficos usando WeasyPrint
+
+        Args:
+            ctes: Lista de CTEs
+            filtros: Filtros aplicados
+            graficos: Gráficos em base64 (opcional)
+
+        Returns:
+            Buffer com PDF gerado
+        """
+        # Preparar dados
+        dados = ExportacaoService.preparar_dados_ctes_para_relatorio(ctes, filtros)
+
+        # Processar gráficos se fornecidos
+        graficos_processados = None
+        if graficos:
+            graficos_processados = ExportacaoService.processar_graficos_base64(graficos)
+
+        # Gerar HTML
+        html = ExportacaoService.gerar_pdf_html_ctes(dados, graficos_processados)
+
+        # Converter para PDF
+        pdf_buffer = ExportacaoService.converter_html_para_pdf_weasyprint(html)
+
+        return pdf_buffer

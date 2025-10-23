@@ -703,38 +703,37 @@ def api_evolucao_receita_inclusao_fatura():
 # SISTEMA DE EXPORTAÇÃO
 # ============================================================================
 
+
 @bp.route('/api/exportar/excel')
 @login_required
 def exportar_excel():
-    """Exporta análise completa para Excel"""
+    """Exporta análise completa para Excel PROFISSIONAL com Dashboard"""
     try:
         filtro_cliente = request.args.get('filtro_cliente', '').strip()
         filtro_dias = int(request.args.get('filtro_dias', 180))
         data_inicio = request.args.get('data_inicio')
         data_fim = request.args.get('data_fim')
-        
+
         if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
             filtro_cliente = None
-        
+
         query = aplicar_filtros_base(filtro_dias, filtro_cliente, data_inicio, data_fim)
         ctes = query.all()
-        
+
         if not ctes:
             return jsonify({'error': 'Nenhum dado para exportar'}), 400
-        
+
+        # Preparar dados
         dados = []
         for cte in ctes:
             # Função helper para acessar campos com segurança
             def get_field_safe(obj, field_name, default=''):
-                """Acessa campo do modelo com segurança, retornando default se não existir"""
                 try:
                     return getattr(obj, field_name, default)
                 except AttributeError:
                     return default
-            
-            # Função helper para formatar datas com segurança
+
             def format_date_safe(obj, field_name):
-                """Formata data com segurança, retornando string vazia se campo não existir ou for None"""
                 try:
                     field_value = getattr(obj, field_name, None)
                     if field_value:
@@ -742,8 +741,7 @@ def exportar_excel():
                     return ''
                 except (AttributeError, TypeError):
                     return ''
-            
-            # Campos básicos (sempre existem)
+
             row_data = {
                 'Número CTE': cte.numero_cte,
                 'Cliente': cte.destinatario_nome,
@@ -755,8 +753,7 @@ def exportar_excel():
                 'Data Inclusão Fatura': format_date_safe(cte, 'data_inclusao_fatura'),
                 'Status': 'Baixado' if cte.data_baixa else 'Pendente'
             }
-            
-            # Campos novos (podem não existir) - ADICIONAR COM SEGURANÇA
+
             novos_campos = {
                 'Data Envio Processo': format_date_safe(cte, 'data_envio_processo'),
                 'Primeiro Envio': format_date_safe(cte, 'primeiro_envio'),
@@ -765,87 +762,37 @@ def exportar_excel():
                 'Envio Final': format_date_safe(cte, 'envio_final'),
                 'Observações': get_field_safe(cte, 'observacoes', '')
             }
-            
-            # Combinar dados básicos com novos campos
+
             row_data.update(novos_campos)
             dados.append(row_data)
-        
-        # Log para debug
-        logger.info(f"Exportando {len(dados)} registros para Excel")
-        
-        df = pd.DataFrame(dados)
-        
-        buffer = io.BytesIO()
-        
-        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name='Dados CTEs', index=False)
-            
-            # Resumo com cálculos seguros
-            total_ctes = len(df)
-            receita_total = df['Valor Total'].sum()
-            ticket_medio = df['Valor Total'].mean() if total_ctes > 0 else 0
-            ctes_baixados = len(df[df['Status'] == 'Baixado'])
-            valor_baixado = df[df['Status'] == 'Baixado']['Valor Total'].sum()
-            
-            resumo_data = {
-                'Métrica': [
-                    'Total CTEs', 
-                    'Receita Total', 
-                    'Ticket Médio', 
-                    'CTEs com Baixa', 
-                    'Valor Baixado',
-                    'Taxa de Baixa (%)',
-                    'Período Filtro',
-                    'Cliente Filtro'
-                ],
-                'Valor': [
-                    total_ctes,
-                    f'R$ {receita_total:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
-                    f'R$ {ticket_medio:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
-                    ctes_baixados,
-                    f'R$ {valor_baixado:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
-                    f'{(ctes_baixados/total_ctes*100):,.1f}%' if total_ctes > 0 else '0%',
-                    f'{filtro_dias} dias',
-                    filtro_cliente or 'Todos'
-                ]
-            }
-            resumo_df = pd.DataFrame(resumo_data)
-            resumo_df.to_excel(writer, sheet_name='Resumo', index=False)
-            
-            # Formatação
-            workbook = writer.book
-            money_format = workbook.add_format({'num_format': 'R$ #,##0.00'})
-            
-            worksheet = writer.sheets['Dados CTEs']
-            worksheet.set_column('D:D', 12, money_format)  # Coluna Valor Total
-            
-            # Auto-ajustar largura das colunas
-            for i, col in enumerate(df.columns):
-                max_length = max(
-                    df[col].astype(str).map(len).max(),
-                    len(str(col))
-                )
-                worksheet.set_column(i, i, min(max_length + 2, 50))
-        
-        buffer.seek(0)
-        
+
+        logger.info(f"Exportando {len(dados)} registros para Excel PROFISSIONAL")
+
+        # USAR MÓDULO PROFISSIONAL
+        from app.services.excel_profissional import gerar_excel_profissional
+
+        buffer = gerar_excel_profissional(dados, {
+            'filtro_cliente': filtro_cliente or 'Todos',
+            'filtro_dias': filtro_dias,
+            'data_inicio': data_inicio,
+            'data_fim': data_fim
+        })
+
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f'analise_financeira_{timestamp}.xlsx'
-        
+
         return send_file(
             buffer,
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             as_attachment=True,
             download_name=filename
         )
-        
+
     except Exception as e:
-        # Log detalhado do erro
         import traceback
         logger.error(f"Erro na exportação Excel: {str(e)}")
         logger.error(f"Stack trace: {traceback.format_exc()}")
-        
-        # Retornar erro mais específico
+
         return jsonify({
             'error': f'Erro na exportação: {str(e)}',
             'details': 'Verifique se todos os campos existem no modelo CTE'
@@ -907,94 +854,137 @@ def exportar_json():
         logger.error(f"Erro na exportação JSON: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@bp.route('/api/exportar/pdf')
+@bp.route('/api/exportar/pdf', methods=['GET', 'POST'])
 @login_required
 def exportar_pdf():
-    """Exporta relatório em PDF"""
+    """Exporta relatório em PDF com gráficos (POST) ou simples (GET)"""
     try:
-        from flask import current_app
-        
-        filtro_cliente = request.args.get('filtro_cliente', '').strip()
-        filtro_dias = int(request.args.get('filtro_dias', 180))
-        
-        with current_app.test_request_context(query_string=request.query_string):
-            try:
-                metricas_response = api_metricas_mes_corrente()
-                metricas_data = metricas_response.get_json() if hasattr(metricas_response, 'get_json') else metricas_response[0].get_json()
-            except:
-                metricas_data = {'success': False, 'data': {}}
-        
-        if not metricas_data.get('success'):
-            return jsonify({'error': 'Erro ao buscar dados para PDF'}), 500
-        
+        from app.services.exportacao_service import ExportacaoService
+
+        # Determinar se temos gráficos (POST) ou não (GET)
+        graficos = None
+        if request.method == 'POST':
+            data = request.get_json()
+            filtros = data.get('filtros', {})
+            graficos = data.get('graficos', {})
+
+            # Extrair filtros do dict
+            filtro_cliente = filtros.get('filtro_cliente', '').strip()
+            filtro_dias = int(filtros.get('filtro_dias', 180))
+            data_inicio = filtros.get('data_inicio')
+            data_fim = filtros.get('data_fim')
+        else:
+            # GET - filtros via query string
+            filtro_cliente = request.args.get('filtro_cliente', '').strip()
+            filtro_dias = int(request.args.get('filtro_dias', 180))
+            data_inicio = request.args.get('data_inicio')
+            data_fim = request.args.get('data_fim')
+
+        # Normalizar cliente
+        if filtro_cliente and filtro_cliente.lower() in ['todos', 'all', '']:
+            filtro_cliente = None
+
+        # Buscar dados
+        query = aplicar_filtros_base(filtro_dias, filtro_cliente, data_inicio, data_fim)
+        ctes = query.all()
+
+        if not ctes:
+            return jsonify({'error': 'Nenhum dado para exportar'}), 400
+
+        # Preparar dict de filtros para o serviço
+        filtros_dict = {
+            'filtro_cliente': filtro_cliente or 'Todos',
+            'filtro_dias': filtro_dias,
+            'data_inicio': data_inicio,
+            'data_fim': data_fim
+        }
+
+        # Verificar se WeasyPrint está disponível
         try:
-            from reportlab.pdfgen import canvas
-            from reportlab.lib.pagesizes import letter
+            import weasyprint
+            # Usar novo serviço com WeasyPrint
+            pdf_buffer = ExportacaoService.gerar_relatorio_pdf_completo(
+                ctes,
+                filtros_dict,
+                graficos
+            )
+
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f'analise_financeira_{timestamp}.pdf'
+
+            return send_file(
+                pdf_buffer,
+                mimetype='application/pdf',
+                as_attachment=True,
+                download_name=filename
+            )
+
         except ImportError:
-            return jsonify({'error': 'ReportLab não instalado. Execute: pip install reportlab'}), 500
-        
+            # Fallback para ReportLab simples
+            logger.warning("WeasyPrint não disponível, usando ReportLab básico")
+            return exportar_pdf_reportlab_simples(ctes, filtros_dict)
+
+    except Exception as e:
+        import traceback
+        logger.error(f"Erro na exportação PDF: {str(e)}")
+        logger.error(f"Stack trace: {traceback.format_exc()}")
+
+        return jsonify({
+            'error': f'Erro na exportação: {str(e)}',
+            'details': 'Verifique se todos os campos existem no modelo CTE'
+        }), 500
+
+
+def exportar_pdf_reportlab_simples(ctes, filtros_dict):
+    """Fallback: PDF simples com ReportLab quando WeasyPrint não está disponível"""
+    try:
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.pagesizes import letter
+
         buffer = io.BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
         width, height = letter
-        
+
         c.setFont("Helvetica-Bold", 16)
         c.drawString(50, height - 50, "Relatório de Análise Financeira")
-        
+
         c.setFont("Helvetica", 12)
         c.drawString(50, height - 80, f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-        
+
         y_position = height - 120
-        metricas = metricas_data.get('metricas_basicas', {})
-        
+
+        # Métricas básicas
+        total_ctes = len(ctes)
+        receita_total = sum(float(cte.valor_total or 0) for cte in ctes)
+
         c.setFont("Helvetica-Bold", 14)
         c.drawString(50, y_position, "Métricas Principais")
         y_position -= 30
         
         c.setFont("Helvetica", 11)
+
+        ctes_baixados = sum(1 for cte in ctes if cte.data_baixa)
+        valor_baixado = sum(float(cte.valor_total or 0) for cte in ctes if cte.data_baixa)
+        percentual_baixado = (ctes_baixados / total_ctes * 100) if total_ctes > 0 else 0
+        ticket_medio = receita_total / total_ctes if total_ctes > 0 else 0
+
         dados_relatorio = [
-            f"Total de CTEs: {metricas.get('total_ctes', 0)}",
-            f"Receita Total: R$ {metricas.get('receita_mes_atual', 0):,.2f}",
-            f"Ticket Médio: R$ {metricas.get('ticket_medio', 0):,.2f}",
-            f"CTEs com Baixa: {metricas.get('ctes_com_baixa', 0)}",
-            f"Valor Baixado: R$ {metricas.get('valor_baixado', 0):,.2f}",
-            f"Percentual Baixado: {metricas.get('percentual_baixado', 0):.1f}%"
+            f"Total de CTEs: {total_ctes}",
+            f"Receita Total: R$ {receita_total:,.2f}",
+            f"Ticket Médio: R$ {ticket_medio:,.2f}",
+            f"CTEs com Baixa: {ctes_baixados}",
+            f"Valor Baixado: R$ {valor_baixado:,.2f}",
+            f"Percentual Baixado: {percentual_baixado:.1f}%"
         ]
-        
+
         for linha in dados_relatorio:
             c.drawString(50, y_position, linha)
             y_position -= 20
-        
-        receita_faturada = metricas_data.get('receita_faturada', {})
-        if receita_faturada:
-            y_position -= 20
-            c.setFont("Helvetica-Bold", 14)
-            c.drawString(50, y_position, "Receita Faturada")
-            y_position -= 25
-            
-            c.setFont("Helvetica", 11)
-            c.drawString(50, y_position, f"Valor: R$ {receita_faturada.get('receita_total', 0):,.2f}")
-            y_position -= 20
-            c.drawString(50, y_position, f"CTEs: {receita_faturada.get('quantidade_ctes', 0)}")
-            y_position -= 20
-            c.drawString(50, y_position, f"Percentual: {receita_faturada.get('percentual_total', 0):.1f}%")
-        
-        receita_faturas = metricas_data.get('receita_com_faturas', {})
-        if receita_faturas:
-            y_position -= 30
-            c.setFont("Helvetica-Bold", 14)
-            c.drawString(50, y_position, "Receita com Faturas")
-            y_position -= 25
-            
-            c.setFont("Helvetica", 11)
-            c.drawString(50, y_position, f"Valor: R$ {receita_faturas.get('receita_total', 0):,.2f}")
-            y_position -= 20
-            c.drawString(50, y_position, f"CTEs: {receita_faturas.get('quantidade_ctes', 0)}")
-            y_position -= 20
-            c.drawString(50, y_position, f"Cobertura: {receita_faturas.get('percentual_cobertura', 0):.1f}%")
-        
+
+        # Rodapé
         c.setFont("Helvetica", 9)
         c.drawString(50, 50, "Dashboard Baker - Sistema de Análise Financeira")
-        c.drawString(400, 50, f"Página 1 de 1")
+        c.drawString(400, 50, "Página 1 de 1")
         
         c.showPage()
         c.save()

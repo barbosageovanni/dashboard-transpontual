@@ -39,6 +39,33 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
 
+    /* Estilo específico para card de valores pendentes (clicável) */
+    .metric-card[style*="cursor: pointer"]:hover {
+        background: linear-gradient(135deg, rgba(253, 203, 110, 0.05) 0%, rgba(225, 112, 85, 0.05) 100%);
+        border: 1px solid rgba(253, 203, 110, 0.3);
+    }
+
+    .metric-card[style*="cursor: pointer"]:active {
+        transform: translateY(-2px);
+    }
+
+    /* Estilos para os botões de ação no card */
+    .metric-card .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .metric-card .btn-sm:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .metric-card .btn-sm i {
+        font-size: 0.85rem;
+    }
+
     .metric-icon {
         width: 45px;
         height: 45px;
@@ -522,7 +549,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="metric-card">
+        <div class="metric-card" style="cursor: pointer; transition: all 0.3s ease;" onclick="window.abrirModalValoresPendentes()">
             <div class="d-flex justify-content-between">
                 <div class="flex-grow-1">
                     <p class="metric-label">⏳ Valor a Receber</p>
@@ -530,6 +557,20 @@
                 </div>
                 <div class="metric-icon" style="background: linear-gradient(135deg, #fdcb6e, #e17055);">
                     <i class="bi bi-clock-history"></i>
+                </div>
+            </div>
+            <!-- Botões de Ação -->
+            <div class="mt-3 pt-3" style="border-top: 1px solid #e0e0e0;">
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-sm btn-outline-primary flex-fill" onclick="event.stopPropagation(); window.abrirModalValoresPendentes();" title="Ver lista detalhada">
+                        <i class="bi bi-list-ul"></i> Ver Lista
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); window.exportarValoresPendentesExcel();" title="Exportar para Excel">
+                        <i class="bi bi-file-earmark-excel"></i> Excel
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); window.exportarValoresPendentesPDF();" title="Exportar para PDF">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </button>
                 </div>
             </div>
         </div>
@@ -570,24 +611,63 @@
         </h5>
         <div class="row">
             <div class="col-md-4">
-                <div id="alertaPrimeiroEnvio" class="alert-item alert-info" style="border-radius: 10px; padding: 20px; text-align: center;">
+                <div id="alertaPrimeiroEnvio" class="alert-item alert-info" style="border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;" onclick="window.abrirPrimeiroEnvioPendente()">
                     <h6 style="margin-bottom: 10px; font-weight: 600;">🚨 1º Envio Pendente</h6>
                     <p style="margin-bottom: 5px; font-size: 1.2rem;"><strong id="qtdPrimeiroEnvio">0</strong> CTEs pendentes</p>
                     <small id="valorPrimeiroEnvio" style="color: #6c757d;">R$ 0,00 em risco</small>
+
+                    <!-- Botões de ação -->
+                    <div class="mt-3 pt-3 d-flex justify-content-center gap-2" style="border-top: 1px solid rgba(0,0,0,0.1);">
+                        <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); window.abrirPrimeiroEnvioPendente();" title="Ver lista detalhada">
+                            <i class="bi bi-list-ul"></i> Lista
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); window.exportarAlertaExcel('primeiro-envio-pendente');" title="Exportar para Excel">
+                            <i class="bi bi-file-excel"></i> Excel
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); window.exportarAlertaPDF('primeiro-envio-pendente');" title="Exportar para PDF">
+                            <i class="bi bi-file-pdf"></i> PDF
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div id="alertaEnvioFinal" class="alert-item alert-warning" style="border-radius: 10px; padding: 20px; text-align: center;">
+                <div id="alertaEnvioFinal" class="alert-item alert-warning" style="border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;" onclick="window.abrirEnvioFinalPendente()">
                     <h6 style="margin-bottom: 10px; font-weight: 600;">📤 Envio Final Pendente</h6>
                     <p style="margin-bottom: 5px; font-size: 1.2rem;"><strong id="qtdEnvioFinal">0</strong> envios pendentes</p>
                     <small id="valorEnvioFinal" style="color: #6c757d;">R$ 0,00 pendentes</small>
+
+                    <!-- Botões de ação -->
+                    <div class="mt-3 pt-3 d-flex justify-content-center gap-2" style="border-top: 1px solid rgba(0,0,0,0.1);">
+                        <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); window.abrirEnvioFinalPendente();" title="Ver lista detalhada">
+                            <i class="bi bi-list-ul"></i> Lista
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); window.exportarAlertaExcel('envio-final-pendente');" title="Exportar para Excel">
+                            <i class="bi bi-file-excel"></i> Excel
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); window.exportarAlertaPDF('envio-final-pendente');" title="Exportar para PDF">
+                            <i class="bi bi-file-pdf"></i> PDF
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div id="alertaFaturasVencidas" class="alert-item alert-critical" style="border-radius: 10px; padding: 20px; text-align: center;">
+                <div id="alertaFaturasVencidas" class="alert-item alert-critical" style="border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;" onclick="window.abrirFaturasVencidas()">
                     <h6 style="margin-bottom: 10px; font-weight: 600;">💸 Faturas Vencidas</h6>
                     <p style="margin-bottom: 5px; font-size: 1.2rem;"><strong id="qtdFaturasVencidas">0</strong> faturas vencidas</p>
                     <small id="valorFaturasVencidas" style="color: #6c757d;">R$ 0,00 inadimplentes</small>
+
+                    <!-- Botões de ação -->
+                    <div class="mt-3 pt-3 d-flex justify-content-center gap-2" style="border-top: 1px solid rgba(0,0,0,0.1);">
+                        <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); window.abrirFaturasVencidas();" title="Ver lista detalhada">
+                            <i class="bi bi-list-ul"></i> Lista
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); window.exportarAlertaExcel('faturas-vencidas');" title="Exportar para Excel">
+                            <i class="bi bi-file-excel"></i> Excel
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); window.exportarAlertaPDF('faturas-vencidas');" title="Exportar para PDF">
+                            <i class="bi bi-file-pdf"></i> PDF
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -665,7 +745,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- Dashboard.js removido para evitar conflitos com o JavaScript interno -->
+<!-- Carregar dashboard.js para funções de valores pendentes e alertas -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=20251022-v3-alertas"></script>
+
 <script>
 // Carregar estatísticas
 function loadStats() {
@@ -778,40 +860,60 @@ function updateAlertas(data) {
     countBadge.className = alertCount > 0 ? 'badge bg-danger ms-2' : 'badge bg-success ms-2';
 }
 
-// Atualizar alertas inteligentes
+// Atualizar alertas inteligentes com dados reais do banco
 function updateAlertasInteligentes(metricas) {
-    // Simular dados para demonstração usando dados corretos
-    const primeiroEnvioPendente = Math.floor((metricas.total_ctes || 0) * 0.05);
-    const envioFinalPendente = Math.floor((metricas.total_ctes || 0) * 0.03);
-    const faturasVencidas = Math.floor((metricas.total_ctes || 0) * 0.02);
+    console.log('[ALERTAS] Carregando dados reais dos alertas...');
 
-    // 1º Envio Pendente
-    const qtdPrimeiroEnvio = document.getElementById('qtdPrimeiroEnvio');
-    const valorPrimeiroEnvio = document.getElementById('valorPrimeiroEnvio');
-    if (qtdPrimeiroEnvio) qtdPrimeiroEnvio.textContent = primeiroEnvioPendente;
-    if (valorPrimeiroEnvio) valorPrimeiroEnvio.textContent = 'R$ ' + ((metricas.valor_total || 0) * 0.05).toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' em risco';
+    // Buscar dados reais da API
+    fetch('/dashboard/api/alertas/resumo')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('[ALERTAS] Dados reais carregados:', data);
 
-    // Envio Final Pendente
-    const qtdEnvioFinal = document.getElementById('qtdEnvioFinal');
-    const valorEnvioFinal = document.getElementById('valorEnvioFinal');
-    if (qtdEnvioFinal) qtdEnvioFinal.textContent = envioFinalPendente;
-    if (valorEnvioFinal) valorEnvioFinal.textContent = 'R$ ' + ((metricas.valor_total || 0) * 0.03).toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' pendentes';
+                // 1º Envio Pendente
+                const qtdPrimeiroEnvio = document.getElementById('qtdPrimeiroEnvio');
+                const valorPrimeiroEnvio = document.getElementById('valorPrimeiroEnvio');
+                if (qtdPrimeiroEnvio) qtdPrimeiroEnvio.textContent = data.primeiro_envio_pendente.quantidade;
+                if (valorPrimeiroEnvio) valorPrimeiroEnvio.textContent = 'R$ ' + data.primeiro_envio_pendente.valor_total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' em risco';
 
-    // Faturas Vencidas
-    const qtdFaturasVencidas = document.getElementById('qtdFaturasVencidas');
-    const valorFaturasVencidas = document.getElementById('valorFaturasVencidas');
-    if (qtdFaturasVencidas) qtdFaturasVencidas.textContent = faturasVencidas;
-    if (valorFaturasVencidas) valorFaturasVencidas.textContent = 'R$ ' + ((metricas.valor_total || 0) * 0.02).toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' inadimplentes';
+                // Envio Final Pendente
+                const qtdEnvioFinal = document.getElementById('qtdEnvioFinal');
+                const valorEnvioFinal = document.getElementById('valorEnvioFinal');
+                if (qtdEnvioFinal) qtdEnvioFinal.textContent = data.envio_final_pendente.quantidade;
+                if (valorEnvioFinal) valorEnvioFinal.textContent = 'R$ ' + data.envio_final_pendente.valor_total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' pendentes';
 
-    // Atualizar classes dos alertas baseado na quantidade
-    const alertaPrimeiro = document.getElementById('alertaPrimeiroEnvio');
-    const alertaFinal = document.getElementById('alertaEnvioFinal');
-    const alertaVencidas = document.getElementById('alertaFaturasVencidas');
+                // Faturas Vencidas
+                const qtdFaturasVencidas = document.getElementById('qtdFaturasVencidas');
+                const valorFaturasVencidas = document.getElementById('valorFaturasVencidas');
+                if (qtdFaturasVencidas) qtdFaturasVencidas.textContent = data.faturas_vencidas.quantidade;
+                if (valorFaturasVencidas) valorFaturasVencidas.textContent = 'R$ ' + data.faturas_vencidas.valor_total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' inadimplentes';
 
-    // Resetar classes com verificação de null
-    if (alertaPrimeiro) alertaPrimeiro.className = 'alert-item ' + (primeiroEnvioPendente > 10 ? 'alert-warning' : 'alert-info');
-    if (alertaFinal) alertaFinal.className = 'alert-item ' + (envioFinalPendente > 5 ? 'alert-warning' : 'alert-info');
-    if (alertaVencidas) alertaVencidas.className = 'alert-item ' + (faturasVencidas > 3 ? 'alert-critical' : 'alert-info');
+                // Atualizar classes dos alertas baseado na quantidade real
+                const alertaPrimeiro = document.getElementById('alertaPrimeiroEnvio');
+                const alertaFinal = document.getElementById('alertaEnvioFinal');
+                const alertaVencidas = document.getElementById('alertaFaturasVencidas');
+
+                // Atualizar classes mantendo os estilos inline (cursor, transition, etc)
+                if (alertaPrimeiro) {
+                    const baseClass = 'alert-item ' + (data.primeiro_envio_pendente.quantidade > 10 ? 'alert-warning' : 'alert-info');
+                    alertaPrimeiro.className = baseClass;
+                }
+                if (alertaFinal) {
+                    const baseClass = 'alert-item ' + (data.envio_final_pendente.quantidade > 5 ? 'alert-warning' : 'alert-info');
+                    alertaFinal.className = baseClass;
+                }
+                if (alertaVencidas) {
+                    const baseClass = 'alert-item ' + (data.faturas_vencidas.quantidade > 3 ? 'alert-critical' : 'alert-info');
+                    alertaVencidas.className = baseClass;
+                }
+            } else {
+                console.error('[ALERTAS] Erro ao carregar dados:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('[ALERTAS] Erro na requisição:', error);
+        });
 }
 
 function updateVariacoesTemporais(data) {
@@ -886,7 +988,23 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateLastUpdateTime, 1000);
 });
 
-// DEBUG: Força cache refresh - timestamp: 20250921-v3-API-CORRIGIDA
-console.log('🔄 Template atualizado - Performance temporal implementada');
+// DEBUG: Força cache refresh - timestamp: 20251022-v3-SISTEMA-ALERTAS-COMPLETO
+console.log('🔄 Template atualizado - Sistema Completo de Alertas implementado');
+console.log('✅ Funções Valores Pendentes:', {
+    abrirModal: typeof window.abrirModalValoresPendentes,
+    exportExcel: typeof window.exportarValoresPendentesExcel,
+    exportPDF: typeof window.exportarValoresPendentesPDF
+});
+console.log('✅ Funções Alertas Genéricas:', {
+    abrirModalAlerta: typeof window.abrirModalAlerta,
+    exportarAlertaExcel: typeof window.exportarAlertaExcel,
+    exportarAlertaPDF: typeof window.exportarAlertaPDF
+});
+console.log('✅ Funções Alertas Específicas:', {
+    primeiroEnvio: typeof window.abrirPrimeiroEnvioPendente,
+    envioFinal: typeof window.abrirEnvioFinalPendente,
+    faturasVencidas: typeof window.abrirFaturasVencidas,
+    ctesSemFaturas: typeof window.abrirCtesSemFaturas
+});
 </script>
 {% endblock %}

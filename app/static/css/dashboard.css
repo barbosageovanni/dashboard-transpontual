@@ -491,8 +491,39 @@ body {
 /* Sombra suave para cards */
 .metric-card {
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
 }
 
 .metric-card:hover {
     box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+    transform: translateY(-3px);
+}
+
+/* Estilo especial para card de valores pendentes */
+.metric-card[style*="cursor: pointer"]:hover {
+    background: linear-gradient(135deg, rgba(253, 203, 110, 0.05) 0%, rgba(225, 112, 85, 0.05) 100%);
+    border: 1px solid rgba(253, 203, 110, 0.3);
+}
+
+.metric-card[style*="cursor: pointer"]:active {
+    transform: translateY(-2px);
+}
+
+/* Botões dentro do card de valores pendentes */
+.metric-card .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.metric-card .btn-sm:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.metric-card .btn-sm i,
+.metric-card .btn-sm .bi {
+    font-size: 0.85rem;
+    margin-right: 2px;
 }

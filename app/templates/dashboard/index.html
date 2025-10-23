@@ -59,10 +59,21 @@
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="metric-card">
+            <div class="metric-card" style="cursor: pointer; position: relative;" onclick="abrirModalValoresPendentes()">
                 <div class="metric-number" id="valorPendente">R$ 0,00</div>
                 <div class="metric-title">⏳ Valor a Receber</div>
                 <div class="metric-subtitle" id="faturasPendentes">📄 0 faturas pendentes</div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="event.stopPropagation(); abrirModalValoresPendentes();" title="Ver lista detalhada">
+                        <i class="fas fa-list"></i> Ver Lista
+                    </button>
+                    <button class="btn btn-sm btn-outline-success me-2" onclick="event.stopPropagation(); exportarValoresPendentesExcel();" title="Exportar para Excel">
+                        <i class="fas fa-file-excel"></i> Excel
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); exportarValoresPendentesPDF();" title="Exportar para PDF">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">

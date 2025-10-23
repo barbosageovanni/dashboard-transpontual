@@ -1494,45 +1494,102 @@ function exportarExcel() {
 }
 
 function exportarPDF() {
-    console.log('📄 Iniciando exportação PDF...');
-    
-    // MESMA correção para PDF
+    console.log('📄 Iniciando exportação PDF com gráficos...');
+
     if (!filtrosAtivos || typeof filtrosAtivos !== 'object') {
         console.error('Filtros não definidos');
         return;
     }
-    
-    mostrarLoading('Gerando relatório PDF...');
-    
+
+    mostrarLoading('Capturando gráficos e gerando PDF...');
+
     try {
+        // Capturar todos os gráficos como imagens base64
+        const graficosCapturados = capturarGraficosParaExportacao();
+
+        // Montar parâmetros com gráficos
         const params = montarParametrosFiltros();
-        const url = `/analise-financeira/api/exportar/pdf?${new URLSearchParams(params).toString()}`;
-        
-        console.log('🔗 URL de exportação PDF:', url);
-        
-        // Criar link de download
-        const link = document.createElement('a');
-        link.href = url;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        
-        // Configurar resposta
-        link.addEventListener('click', function() {
-            setTimeout(() => {
-                esconderLoading();
-                mostrarToast('✅ Solicitação de PDF enviada. Verifique o download.', 'success');
-            }, 3000);
+
+        // Enviar requisição POST com os gráficos
+        fetch('/analise-financeira/api/exportar/pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                filtros: params,
+                graficos: graficosCapturados
+            })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erro ao gerar PDF');
+            return response.blob();
+        })
+        .then(blob => {
+            // Criar download do PDF
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `analise_financeira_${new Date().getTime()}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            esconderLoading();
+            mostrarToast('✅ PDF gerado com sucesso!', 'success');
+        })
+        .catch(error => {
+            console.error('❌ Erro ao gerar PDF:', error);
+            esconderLoading();
+            mostrarToast('❌ Erro ao gerar PDF: ' + error.message, 'error');
         });
-        
-        link.click();
-        document.body.removeChild(link);
-        
-        console.log('✅ Download PDF solicitado');
-        
+
     } catch (error) {
         console.error('❌ Erro na exportação PDF:', error);
         esconderLoading();
         mostrarToast('❌ Erro ao gerar relatório PDF: ' + error.message, 'error');
+    }
+}
+
+function capturarGraficosParaExportacao() {
+    console.log('📊 Capturando gráficos Chart.js...');
+
+    const graficos = {};
+
+    try {
+        // Capturar cada gráfico se existir
+        const chartsMap = {
+            'receita_mensal': 'chartReceitaMensal',
+            'status_ctes': 'chartStatusCTEs',
+            'top_clientes': 'chartTopClientes',
+            'receita_faturada': 'chartReceitaFaturada',
+            'comparativo': 'chartComparativo'
+        };
+
+        for (const [key, chartId] of Object.entries(chartsMap)) {
+            if (chartsFinanceira[chartId]) {
+                try {
+                    // Obter canvas do Chart.js
+                    const canvas = chartsFinanceira[chartId].canvas;
+                    if (canvas) {
+                        // Converter para base64 (remover prefixo data:image/png;base64,)
+                        const base64 = canvas.toDataURL('image/png').split(',')[1];
+                        graficos[key] = base64;
+                        console.log(`✅ Gráfico ${key} capturado`);
+                    }
+                } catch (err) {
+                    console.warn(`⚠️ Erro ao capturar gráfico ${key}:`, err);
+                }
+            }
+        }
+
+        console.log(`📊 Total de gráficos capturados: ${Object.keys(graficos).length}`);
+        return graficos;
+
+    } catch (error) {
+        console.error('❌ Erro ao capturar gráficos:', error);
+        return {};
     }
 }
 

@@ -593,11 +593,11 @@ def api_relatorio_executivo():
         data = _calcular_metricas_completas().get_json()
         if not data.get('success'):
             raise Exception(data.get('error', 'Erro desconhecido'))
-        
+
         m = data['metricas']
         a = data['alertas']
         v = data.get('variacoes', {})
-        
+
         relatorio = {
             'titulo': 'Relatório Executivo - Dashboard Baker',
             'data_geracao': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
@@ -623,13 +623,886 @@ def api_relatorio_executivo():
             },
             'performance_temporal': v
         }
-        
+
         return jsonify({'success': True, 'relatorio': relatorio})
-        
+
     except Exception as e:
         print(f"[ERROR] Erro no relatório executivo: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
-    
+
+# ================================
+# ROTAS PARA VALORES PENDENTES
+# ================================
+
+@bp.route('/api/valores-pendentes')
+@login_required
+def api_valores_pendentes():
+    """API para listar CTEs com valores pendentes (sem baixa)"""
+    try:
+        # Parâmetros de paginação e filtro
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 50))
+        cliente_filtro = request.args.get('cliente', '').strip()
+
+        # Query base: CTEs sem baixa
+        query = CTE.query.filter(CTE.data_baixa.is_(None))
+
+        # Aplicar filtro de cliente se fornecido
+        if cliente_filtro:
+            query = query.filter(CTE.destinatario_nome.ilike(f'%{cliente_filtro}%'))
+
+        # Ordenar por data de emissão (mais antigos primeiro)
+        query = query.order_by(CTE.data_emissao.asc())
+
+        # Executar paginação
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        ctes = pagination.items
+
+        # Preparar dados para resposta
+        lista_ctes = []
+        total_valor = 0.0
+
+        for cte in ctes:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+
+            # Calcular dias pendentes
+            dias_pendentes = 0
+            if cte.envio_final:
+                dias_pendentes = (datetime.now().date() - cte.envio_final).days
+            elif cte.data_emissao:
+                dias_pendentes = (datetime.now().date() - cte.data_emissao).days
+
+            lista_ctes.append({
+                'numero_cte': int(cte.numero_cte) if cte.numero_cte else 0,
+                'data_emissao': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'destinatario_nome': cte.destinatario_nome or '',
+                'numero_fatura': cte.numero_fatura or '',
+                'valor_total': valor,
+                'envio_final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                'dias_pendentes': dias_pendentes,
+                'veiculo_placa': cte.veiculo_placa or '',
+                'observacao': cte.observacao or ''
+            })
+
+        return jsonify({
+            'success': True,
+            'dados': lista_ctes,
+            'total_registros': pagination.total,
+            'total_valor': total_valor,
+            'pagina_atual': page,
+            'total_paginas': pagination.pages,
+            'tem_proxima': pagination.has_next,
+            'tem_anterior': pagination.has_prev
+        })
+
+    except Exception as e:
+        print(f"[ERROR] Erro na API valores pendentes: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@bp.route('/api/valores-pendentes/exportar/excel')
+@login_required
+def exportar_valores_pendentes_excel():
+    """Exporta valores pendentes para Excel"""
+    try:
+        from io import BytesIO
+        from flask import send_file
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils import get_column_letter
+
+        # Buscar CTEs sem baixa
+        cliente_filtro = request.args.get('cliente', '').strip()
+        query = CTE.query.filter(CTE.data_baixa.is_(None))
+
+        if cliente_filtro:
+            query = query.filter(CTE.destinatario_nome.ilike(f'%{cliente_filtro}%'))
+
+        ctes = query.order_by(CTE.data_emissao.asc()).all()
+
+        if not ctes:
+            return jsonify({'error': 'Nenhum valor pendente encontrado'}), 400
+
+        # Criar workbook
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Valores Pendentes"
+
+        # Estilos
+        header_fill = PatternFill(start_color="0f4c75", end_color="0f4c75", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF", size=12)
+        border = Border(
+            left=Side(style='thin'),
+            right=Side(style='thin'),
+            top=Side(style='thin'),
+            bottom=Side(style='thin')
+        )
+
+        # Cabeçalhos
+        headers = ['Nº CTE', 'Data Emissão', 'Cliente', 'Nº Fatura', 'Valor', 'Envio Final', 'Dias Pendentes', 'Veículo', 'Observação']
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+            cell.border = border
+
+        # Dados
+        total_valor = 0.0
+        for row_idx, cte in enumerate(ctes, 2):
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+
+            dias_pendentes = 0
+            if cte.envio_final:
+                dias_pendentes = (datetime.now().date() - cte.envio_final).days
+            elif cte.data_emissao:
+                dias_pendentes = (datetime.now().date() - cte.data_emissao).days
+
+            ws.cell(row=row_idx, column=1, value=int(cte.numero_cte) if cte.numero_cte else 0)
+            ws.cell(row=row_idx, column=2, value=cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '')
+            ws.cell(row=row_idx, column=3, value=cte.destinatario_nome or '')
+            ws.cell(row=row_idx, column=4, value=cte.numero_fatura or '')
+            ws.cell(row=row_idx, column=5, value=valor)
+            ws.cell(row=row_idx, column=6, value=cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '')
+            ws.cell(row=row_idx, column=7, value=dias_pendentes)
+            ws.cell(row=row_idx, column=8, value=cte.veiculo_placa or '')
+            ws.cell(row=row_idx, column=9, value=cte.observacao or '')
+
+            # Formatar valor como moeda
+            ws.cell(row=row_idx, column=5).number_format = 'R$ #,##0.00'
+
+            # Aplicar bordas
+            for col in range(1, 10):
+                ws.cell(row=row_idx, column=col).border = border
+
+        # Linha de total
+        total_row = len(ctes) + 2
+        ws.cell(row=total_row, column=4, value='TOTAL:').font = Font(bold=True)
+        ws.cell(row=total_row, column=5, value=total_valor).font = Font(bold=True)
+        ws.cell(row=total_row, column=5).number_format = 'R$ #,##0.00'
+
+        # Ajustar largura das colunas
+        column_widths = [12, 15, 35, 15, 15, 15, 15, 12, 40]
+        for i, width in enumerate(column_widths, 1):
+            ws.column_dimensions[get_column_letter(i)].width = width
+
+        # Salvar em buffer
+        buffer = BytesIO()
+        wb.save(buffer)
+        buffer.seek(0)
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'valores_pendentes_{timestamp}.xlsx'
+
+        return send_file(
+            buffer,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        print(f"[ERROR] Erro ao exportar Excel: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/api/valores-pendentes/exportar/pdf')
+@login_required
+def exportar_valores_pendentes_pdf():
+    """Exporta valores pendentes para PDF"""
+    try:
+        from io import BytesIO
+        from flask import send_file
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import A4, landscape
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import cm
+        from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+
+        # Buscar CTEs sem baixa
+        cliente_filtro = request.args.get('cliente', '').strip()
+        query = CTE.query.filter(CTE.data_baixa.is_(None))
+
+        if cliente_filtro:
+            query = query.filter(CTE.destinatario_nome.ilike(f'%{cliente_filtro}%'))
+
+        ctes = query.order_by(CTE.data_emissao.asc()).all()
+
+        if not ctes:
+            return jsonify({'error': 'Nenhum valor pendente encontrado'}), 400
+
+        # Criar PDF
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(A4), rightMargin=1*cm, leftMargin=1*cm,
+                              topMargin=1.5*cm, bottomMargin=1.5*cm)
+
+        elements = []
+        styles = getSampleStyleSheet()
+
+        # Título
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=16,
+            textColor=colors.HexColor('#0f4c75'),
+            spaceAfter=12,
+            alignment=TA_CENTER
+        )
+
+        title = Paragraph('Relatório de Valores Pendentes', title_style)
+        elements.append(title)
+
+        # Subtítulo com data
+        subtitle_style = ParagraphStyle(
+            'CustomSubtitle',
+            parent=styles['Normal'],
+            fontSize=10,
+            alignment=TA_CENTER,
+            spaceAfter=20
+        )
+        subtitle = Paragraph(f'Gerado em: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}', subtitle_style)
+        elements.append(subtitle)
+
+        # Tabela de dados
+        data = [['Nº CTE', 'Data', 'Cliente', 'Fatura', 'Valor', 'Envio', 'Dias', 'Veículo', 'Observação']]
+
+        total_valor = 0.0
+        for cte in ctes:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+
+            dias_pendentes = 0
+            if cte.envio_final:
+                dias_pendentes = (datetime.now().date() - cte.envio_final).days
+            elif cte.data_emissao:
+                dias_pendentes = (datetime.now().date() - cte.data_emissao).days
+
+            data.append([
+                str(int(cte.numero_cte) if cte.numero_cte else 0),
+                cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                (cte.destinatario_nome or '')[:20],  # Truncar nome longo
+                cte.numero_fatura or '',
+                f'R$ {valor:,.2f}',
+                cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                str(dias_pendentes),
+                cte.veiculo_placa or '',
+                (cte.observacao or '')[:30]  # Truncar observação
+            ])
+
+        # Linha de total
+        data.append(['', '', '', 'TOTAL:', f'R$ {total_valor:,.2f}', '', '', '', ''])
+
+        # Criar tabela com larguras ajustadas
+        table = Table(data, colWidths=[1.5*cm, 2*cm, 4.5*cm, 2*cm, 2.5*cm, 2*cm, 1.5*cm, 2*cm, 6*cm])
+
+        # Estilo da tabela
+        table.setStyle(TableStyle([
+            # Cabeçalho
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0f4c75')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+
+            # Dados
+            ('FONTNAME', (0, 1), (-1, -2), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -2), 8),
+            ('ALIGN', (0, 1), (0, -1), 'CENTER'),  # Nº CTE
+            ('ALIGN', (4, 1), (4, -1), 'RIGHT'),   # Valor
+            ('ALIGN', (6, 1), (6, -1), 'CENTER'),  # Dias
+
+            # Linha de total
+            ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, -1), (-1, -1), 10),
+            ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#e8f4f8')),
+
+            # Bordas
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('BOX', (0, 0), (-1, -1), 1, colors.HexColor('#0f4c75')),
+
+            # Alternância de cores
+            ('ROWBACKGROUNDS', (0, 1), (-1, -2), [colors.white, colors.HexColor('#f7f7f7')])
+        ]))
+
+        elements.append(table)
+
+        # Construir PDF
+        doc.build(elements)
+        buffer.seek(0)
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'valores_pendentes_{timestamp}.pdf'
+
+        return send_file(
+            buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        print(f"[ERROR] Erro ao exportar PDF: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+# ================================
+# SISTEMA DE ALERTAS - APIs Genéricas
+# ================================
+
+def _criar_exportacao_excel_alerta(ctes, titulo, filename_prefix):
+    """Função genérica para criar Excel de alertas"""
+    try:
+        from io import BytesIO
+        from flask import send_file
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils import get_column_letter
+
+        if not ctes:
+            return jsonify({'error': 'Nenhum registro encontrado'}), 400
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = titulo[:31]  # Excel limita a 31 caracteres
+
+        # Estilos
+        header_fill = PatternFill(start_color="dc3545", end_color="dc3545", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF", size=12)
+        border = Border(
+            left=Side(style='thin'), right=Side(style='thin'),
+            top=Side(style='thin'), bottom=Side(style='thin')
+        )
+
+        # Cabeçalhos
+        headers = ['Nº CTE', 'Data Emissão', 'Cliente', 'Nº Fatura', 'Valor', 'Envio Final', 'Dias', 'Veículo', 'Observação']
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+            cell.border = border
+
+        # Dados
+        total_valor = 0.0
+        for row_idx, cte in enumerate(ctes, 2):
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+
+            dias_pendentes = 0
+            if cte.envio_final:
+                dias_pendentes = (datetime.now().date() - cte.envio_final).days
+            elif cte.data_emissao:
+                dias_pendentes = (datetime.now().date() - cte.data_emissao).days
+
+            ws.cell(row=row_idx, column=1, value=int(cte.numero_cte) if cte.numero_cte else 0)
+            ws.cell(row=row_idx, column=2, value=cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '')
+            ws.cell(row=row_idx, column=3, value=cte.destinatario_nome or '')
+            ws.cell(row=row_idx, column=4, value=cte.numero_fatura or '')
+            ws.cell(row=row_idx, column=5, value=valor)
+            ws.cell(row=row_idx, column=6, value=cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '')
+            ws.cell(row=row_idx, column=7, value=dias_pendentes)
+            ws.cell(row=row_idx, column=8, value=cte.veiculo_placa or '')
+            ws.cell(row=row_idx, column=9, value=cte.observacao or '')
+
+            ws.cell(row=row_idx, column=5).number_format = 'R$ #,##0.00'
+            for col in range(1, 10):
+                ws.cell(row=row_idx, column=col).border = border
+
+        # Linha de total
+        total_row = len(ctes) + 2
+        ws.cell(row=total_row, column=4, value='TOTAL:').font = Font(bold=True)
+        ws.cell(row=total_row, column=5, value=total_valor).font = Font(bold=True)
+        ws.cell(row=total_row, column=5).number_format = 'R$ #,##0.00'
+
+        # Ajustar larguras
+        column_widths = [12, 15, 35, 15, 15, 15, 12, 12, 40]
+        for i, width in enumerate(column_widths, 1):
+            ws.column_dimensions[get_column_letter(i)].width = width
+
+        buffer = BytesIO()
+        wb.save(buffer)
+        buffer.seek(0)
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'{filename_prefix}_{timestamp}.xlsx'
+
+        return send_file(
+            buffer,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        print(f"[ERROR] Erro ao exportar Excel: {e}")
+        return jsonify({'error': str(e)}), 500
+
+def _criar_exportacao_pdf_alerta(ctes, titulo, filename_prefix):
+    """Função genérica para criar PDF de alertas"""
+    try:
+        from io import BytesIO
+        from flask import send_file
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import A4, landscape
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import cm
+        from reportlab.lib.enums import TA_CENTER
+
+        if not ctes:
+            return jsonify({'error': 'Nenhum registro encontrado'}), 400
+
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(A4), rightMargin=1*cm, leftMargin=1*cm,
+                              topMargin=1.5*cm, bottomMargin=1.5*cm)
+
+        elements = []
+        styles = getSampleStyleSheet()
+
+        # Título
+        title_style = ParagraphStyle(
+            'CustomTitle', parent=styles['Heading1'], fontSize=16,
+            textColor=colors.HexColor('#dc3545'), spaceAfter=12, alignment=TA_CENTER
+        )
+        title = Paragraph(titulo, title_style)
+        elements.append(title)
+
+        # Subtítulo
+        subtitle_style = ParagraphStyle(
+            'CustomSubtitle', parent=styles['Normal'], fontSize=10,
+            alignment=TA_CENTER, spaceAfter=20
+        )
+        subtitle = Paragraph(f'Gerado em: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}', subtitle_style)
+        elements.append(subtitle)
+
+        # Tabela
+        data = [['Nº CTE', 'Data', 'Cliente', 'Fatura', 'Valor', 'Envio', 'Dias', 'Veíc.', 'Obs.']]
+
+        total_valor = 0.0
+        for cte in ctes:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+
+            dias_pendentes = 0
+            if cte.envio_final:
+                dias_pendentes = (datetime.now().date() - cte.envio_final).days
+            elif cte.data_emissao:
+                dias_pendentes = (datetime.now().date() - cte.data_emissao).days
+
+            data.append([
+                str(int(cte.numero_cte) if cte.numero_cte else 0),
+                cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                (cte.destinatario_nome or '')[:18],
+                cte.numero_fatura or '',
+                f'R$ {valor:,.2f}',
+                cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                str(dias_pendentes),
+                cte.veiculo_placa or '',
+                (cte.observacao or '')[:25]
+            ])
+
+        data.append(['', '', '', 'TOTAL:', f'R$ {total_valor:,.2f}', '', '', '', ''])
+
+        table = Table(data, colWidths=[1.5*cm, 2*cm, 4*cm, 2*cm, 2.5*cm, 2*cm, 1.5*cm, 1.8*cm, 5.7*cm])
+
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#dc3545')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 9),
+            ('FONTNAME', (0, 1), (-1, -2), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -2), 7),
+            ('ALIGN', (0, 1), (0, -1), 'CENTER'),
+            ('ALIGN', (4, 1), (4, -1), 'RIGHT'),
+            ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+            ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#f8d7da')),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -2), [colors.white, colors.HexColor('#f7f7f7')])
+        ]))
+
+        elements.append(table)
+        doc.build(elements)
+        buffer.seek(0)
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'{filename_prefix}_{timestamp}.pdf'
+
+        return send_file(buffer, mimetype='application/pdf', as_attachment=True, download_name=filename)
+
+    except Exception as e:
+        print(f"[ERROR] Erro ao exportar PDF: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# ================================
+# 1º ENVIO PENDENTE
+# ================================
+
+@bp.route('/api/primeiro-envio-pendente')
+@login_required
+def api_primeiro_envio_pendente():
+    """Lista CTEs com 1º envio pendente"""
+    try:
+        hoje = datetime.now().date()
+        data_limite = hoje - timedelta(days=10)
+
+        query = CTE.query.filter(
+            CTE.data_emissao < data_limite,
+            CTE.primeiro_envio.is_(None)
+        ).order_by(CTE.data_emissao.asc())
+
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 50))
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        lista = []
+        total_valor = 0.0
+        for cte in pagination.items:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+            dias = (hoje - cte.data_emissao).days if cte.data_emissao else 0
+
+            lista.append({
+                'numero_cte': int(cte.numero_cte) if cte.numero_cte else 0,
+                'data_emissao': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'destinatario_nome': cte.destinatario_nome or '',
+                'numero_fatura': cte.numero_fatura or '',
+                'valor_total': valor,
+                'envio_final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                'dias_pendentes': dias,
+                'veiculo_placa': cte.veiculo_placa or '',
+                'observacao': cte.observacao or ''
+            })
+
+        return jsonify({
+            'success': True,
+            'dados': lista,
+            'total_registros': pagination.total,
+            'total_valor': total_valor,
+            'pagina_atual': page,
+            'total_paginas': pagination.pages
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/api/primeiro-envio-pendente/exportar/excel')
+@login_required
+def exportar_primeiro_envio_excel():
+    """Exporta 1º envio pendente para Excel"""
+    hoje = datetime.now().date()
+    data_limite = hoje - timedelta(days=10)
+    ctes = CTE.query.filter(CTE.data_emissao < data_limite, CTE.primeiro_envio.is_(None)).all()
+    return _criar_exportacao_excel_alerta(ctes, '1º Envio Pendente', 'primeiro_envio_pendente')
+
+@bp.route('/api/primeiro-envio-pendente/exportar/pdf')
+@login_required
+def exportar_primeiro_envio_pdf():
+    """Exporta 1º envio pendente para PDF"""
+    hoje = datetime.now().date()
+    data_limite = hoje - timedelta(days=10)
+    ctes = CTE.query.filter(CTE.data_emissao < data_limite, CTE.primeiro_envio.is_(None)).all()
+    return _criar_exportacao_pdf_alerta(ctes, 'Relatório: 1º Envio Pendente', 'primeiro_envio_pendente')
+
+# ================================
+# ENVIO FINAL PENDENTE
+# ================================
+
+@bp.route('/api/envio-final-pendente')
+@login_required
+def api_envio_final_pendente():
+    """Lista CTEs com envio final pendente (todos sem envio final)"""
+    try:
+        hoje = datetime.now().date()
+
+        # Buscar TODOS os CTEs sem envio final (sem filtro de data)
+        query = CTE.query.filter(
+            CTE.envio_final.is_(None)
+        ).order_by(CTE.data_emissao.asc())
+
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 50))
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        lista = []
+        total_valor = 0.0
+        for cte in pagination.items:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+            # Calcular dias desde a emissão
+            dias = (hoje - cte.data_emissao).days if cte.data_emissao else 0
+
+            lista.append({
+                'numero_cte': int(cte.numero_cte) if cte.numero_cte else 0,
+                'data_emissao': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'destinatario_nome': cte.destinatario_nome or '',
+                'numero_fatura': cte.numero_fatura or '',
+                'valor_total': valor,
+                'envio_final': '',
+                'dias_pendentes': dias,
+                'veiculo_placa': cte.veiculo_placa or '',
+                'observacao': cte.observacao or ''
+            })
+
+        return jsonify({
+            'success': True,
+            'dados': lista,
+            'total_registros': pagination.total,
+            'total_valor': total_valor,
+            'pagina_atual': page,
+            'total_paginas': pagination.pages
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/api/envio-final-pendente/exportar/excel')
+@login_required
+def exportar_envio_final_excel():
+    """Exporta TODOS os CTEs sem envio final para Excel"""
+    # Buscar TODOS os CTEs sem envio final (sem filtro de data)
+    ctes = CTE.query.filter(CTE.envio_final.is_(None)).order_by(CTE.data_emissao.asc()).all()
+    return _criar_exportacao_excel_alerta(ctes, 'Envio Final Pendente', 'envio_final_pendente')
+
+@bp.route('/api/envio-final-pendente/exportar/pdf')
+@login_required
+def exportar_envio_final_pdf():
+    """Exporta TODOS os CTEs sem envio final para PDF"""
+    # Buscar TODOS os CTEs sem envio final (sem filtro de data)
+    ctes = CTE.query.filter(CTE.envio_final.is_(None)).order_by(CTE.data_emissao.asc()).all()
+    return _criar_exportacao_pdf_alerta(ctes, 'Relatório: Envio Final Pendente', 'envio_final_pendente')
+
+# ================================
+# FATURAS VENCIDAS
+# ================================
+
+@bp.route('/api/faturas-vencidas')
+@login_required
+def api_faturas_vencidas():
+    """Lista faturas vencidas (90+ dias)"""
+    try:
+        hoje = datetime.now().date()
+        data_limite = hoje - timedelta(days=90)
+
+        query = CTE.query.filter(
+            CTE.envio_final < data_limite,
+            CTE.data_baixa.is_(None)
+        ).order_by(CTE.envio_final.asc())
+
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 50))
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        lista = []
+        total_valor = 0.0
+        for cte in pagination.items:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+            dias = (hoje - cte.envio_final).days if cte.envio_final else 0
+
+            lista.append({
+                'numero_cte': int(cte.numero_cte) if cte.numero_cte else 0,
+                'data_emissao': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'destinatario_nome': cte.destinatario_nome or '',
+                'numero_fatura': cte.numero_fatura or '',
+                'valor_total': valor,
+                'envio_final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                'dias_pendentes': dias,
+                'veiculo_placa': cte.veiculo_placa or '',
+                'observacao': cte.observacao or ''
+            })
+
+        return jsonify({
+            'success': True,
+            'dados': lista,
+            'total_registros': pagination.total,
+            'total_valor': total_valor,
+            'pagina_atual': page,
+            'total_paginas': pagination.pages
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/api/faturas-vencidas/exportar/excel')
+@login_required
+def exportar_faturas_vencidas_excel():
+    """Exporta faturas vencidas para Excel"""
+    hoje = datetime.now().date()
+    data_limite = hoje - timedelta(days=90)
+    ctes = CTE.query.filter(CTE.envio_final < data_limite, CTE.data_baixa.is_(None)).all()
+    return _criar_exportacao_excel_alerta(ctes, 'Faturas Vencidas', 'faturas_vencidas')
+
+@bp.route('/api/faturas-vencidas/exportar/pdf')
+@login_required
+def exportar_faturas_vencidas_pdf():
+    """Exporta faturas vencidas para PDF"""
+    hoje = datetime.now().date()
+    data_limite = hoje - timedelta(days=90)
+    ctes = CTE.query.filter(CTE.envio_final < data_limite, CTE.data_baixa.is_(None)).all()
+    return _criar_exportacao_pdf_alerta(ctes, 'Relatório: Faturas Vencidas (90+ dias)', 'faturas_vencidas')
+
+# ================================
+# CTES SEM FATURAS
+# ================================
+
+@bp.route('/api/ctes-sem-faturas')
+@login_required
+def api_ctes_sem_faturas():
+    """Lista CTEs sem número de fatura"""
+    try:
+        hoje = datetime.now().date()
+        data_limite = hoje - timedelta(days=3)
+
+        query = CTE.query.filter(
+            CTE.data_atesto < data_limite,
+            db.or_(CTE.numero_fatura.is_(None), CTE.numero_fatura == '')
+        ).order_by(CTE.data_atesto.asc())
+
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 50))
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        lista = []
+        total_valor = 0.0
+        for cte in pagination.items:
+            valor = float(cte.valor_total or 0)
+            total_valor += valor
+            dias = (hoje - cte.data_atesto).days if cte.data_atesto else 0
+
+            lista.append({
+                'numero_cte': int(cte.numero_cte) if cte.numero_cte else 0,
+                'data_emissao': cte.data_emissao.strftime('%d/%m/%Y') if cte.data_emissao else '',
+                'destinatario_nome': cte.destinatario_nome or '',
+                'numero_fatura': '',
+                'valor_total': valor,
+                'envio_final': cte.envio_final.strftime('%d/%m/%Y') if cte.envio_final else '',
+                'dias_pendentes': dias,
+                'veiculo_placa': cte.veiculo_placa or '',
+                'observacao': cte.observacao or ''
+            })
+
+        return jsonify({
+            'success': True,
+            'dados': lista,
+            'total_registros': pagination.total,
+            'total_valor': total_valor,
+            'pagina_atual': page,
+            'total_paginas': pagination.pages
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/api/ctes-sem-faturas/exportar/excel')
+@login_required
+def exportar_ctes_sem_faturas_excel():
+    """Exporta CTEs sem faturas para Excel"""
+    hoje = datetime.now().date()
+    data_limite = hoje - timedelta(days=3)
+    ctes = CTE.query.filter(
+        CTE.data_atesto < data_limite,
+        db.or_(CTE.numero_fatura.is_(None), CTE.numero_fatura == '')
+    ).all()
+    return _criar_exportacao_excel_alerta(ctes, 'CTEs sem Faturas', 'ctes_sem_faturas')
+
+@bp.route('/api/ctes-sem-faturas/exportar/pdf')
+@login_required
+def exportar_ctes_sem_faturas_pdf():
+    """Exporta CTEs sem faturas para PDF"""
+    hoje = datetime.now().date()
+    data_limite = hoje - timedelta(days=3)
+    ctes = CTE.query.filter(
+        CTE.data_atesto < data_limite,
+        db.or_(CTE.numero_fatura.is_(None), CTE.numero_fatura == '')
+    ).all()
+    return _criar_exportacao_pdf_alerta(ctes, 'Relatório: CTEs sem Faturas', 'ctes_sem_faturas')
+
+# ================================
+# API DE RESUMO DOS ALERTAS (TOTAIS REAIS)
+# ================================
+
+@bp.route('/api/alertas/resumo')
+@login_required
+def api_alertas_resumo():
+    """Retorna totais reais de cada tipo de alerta para os cards"""
+    try:
+        hoje = datetime.now().date()
+
+        # 1º Envio Pendente (emitidos há mais de 10 dias sem primeiro envio)
+        data_limite_primeiro = hoje - timedelta(days=10)
+        query_primeiro = CTE.query.filter(
+            CTE.data_emissao < data_limite_primeiro,
+            CTE.primeiro_envio.is_(None)
+        )
+        qtd_primeiro = query_primeiro.count()
+        valor_primeiro = db.session.query(db.func.sum(CTE.valor_total)).filter(
+            CTE.data_emissao < data_limite_primeiro,
+            CTE.primeiro_envio.is_(None)
+        ).scalar() or 0.0
+
+        # Envio Final Pendente (TODOS os CTEs sem envio final)
+        # IMPORTANTE: Usar mesmos critérios das APIs de listagem/exportação
+        query_final = CTE.query.filter(
+            CTE.envio_final.is_(None)
+        )
+        qtd_final = query_final.count()
+        valor_final = db.session.query(db.func.sum(CTE.valor_total)).filter(
+            CTE.envio_final.is_(None)
+        ).scalar() or 0.0
+
+        # Faturas Vencidas (envio final há mais de 90 dias sem data de baixa)
+        # IMPORTANTE: Usar mesmos critérios das APIs de listagem/exportação
+        data_limite_vencidas = hoje - timedelta(days=90)
+        query_vencidas = CTE.query.filter(
+            CTE.envio_final < data_limite_vencidas,
+            CTE.data_baixa.is_(None)
+        )
+        qtd_vencidas = query_vencidas.count()
+        valor_vencidas = db.session.query(db.func.sum(CTE.valor_total)).filter(
+            CTE.envio_final < data_limite_vencidas,
+            CTE.data_baixa.is_(None)
+        ).scalar() or 0.0
+
+        # CTEs sem Faturas (atesto há mais de 3 dias sem número de fatura)
+        data_limite_sem_fatura = hoje - timedelta(days=3)
+        query_sem_fatura = CTE.query.filter(
+            CTE.data_atesto < data_limite_sem_fatura,
+            db.or_(CTE.numero_fatura.is_(None), CTE.numero_fatura == '')
+        )
+        qtd_sem_fatura = query_sem_fatura.count()
+        valor_sem_fatura = db.session.query(db.func.sum(CTE.valor_total)).filter(
+            CTE.data_atesto < data_limite_sem_fatura,
+            db.or_(CTE.numero_fatura.is_(None), CTE.numero_fatura == '')
+        ).scalar() or 0.0
+
+        return jsonify({
+            'success': True,
+            'primeiro_envio_pendente': {
+                'quantidade': qtd_primeiro,
+                'valor_total': float(valor_primeiro)
+            },
+            'envio_final_pendente': {
+                'quantidade': qtd_final,
+                'valor_total': float(valor_final)
+            },
+            'faturas_vencidas': {
+                'quantidade': qtd_vencidas,
+                'valor_total': float(valor_vencidas)
+            },
+            'ctes_sem_faturas': {
+                'quantidade': qtd_sem_fatura,
+                'valor_total': float(valor_sem_fatura)
+            }
+        })
+    except Exception as e:
+        print(f"[ERROR] Erro ao calcular resumo de alertas: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
     # ================================
 # ADICIONAR ESTAS FUNÇÕES no arquivo dashboard.py
 # ================================
